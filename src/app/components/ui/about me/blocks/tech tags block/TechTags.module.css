@@ -1,0 +1,189 @@
+:root {
+  --block-radius: 1.875rem;
+  --block-padding: 2rem;
+  --block-height: 18.75rem;
+  --grid-gap: 1.5rem;
+  --block-backdrop-blur: 1.5rem;
+  --tag-radius: 1rem;
+  --tag-blur: 0.8rem;
+  --tag-shadow: 0 0 0.3125rem rgb(0,0,0);
+  --offset-top: 1rem;
+  --tag-height: 4rem;           /* ارتفاع کارت‌ها کمی بیشتر شد */
+  --scroll-column-width: 50%;    /* عرض ستون‌ها نصف بخش راست */
+}
+
+/* کانتینر اصلی */
+.blockContainer {
+  position: relative;
+  width: 100%;
+  height: var(--block-height);
+  overflow: hidden;
+  border-radius: var(--block-radius);
+  padding: var(--block-padding);
+  background-color: rgba(18, 18, 24, 0.26);
+  backdrop-filter: blur(var(--block-backdrop-blur));
+  border: var(--card-border-md);
+  z-index: 0;
+  transition: none; /* حذف transition برای transform */
+}
+
+/* گرید داخلی */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 100%;
+  gap: var(--grid-gap);
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .gridContainer {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* بخش چپ */
+.leftSection {
+  grid-column: span 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .leftSection {
+    grid-column: span 4; /* کاهش عرض بخش محتوا */
+  }
+}
+
+/* بخش راست */
+.rightSection {
+  grid-column: span 12;
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  position: relative;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+@media (min-width: 768px) {
+  .rightSection {
+    grid-column: span 8; /* افزایش عرض ستون‌ها */
+  }
+}
+
+/* ستون اسکرول */
+.scrollColumn {
+  flex: 1;
+  width: var(--scroll-column-width);
+  height: 100%;
+  overflow: hidden;
+  transition: none; /* حذف transition برای transform */
+}
+
+.scrollTarget {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.scrollColumn:hover .scrollTarget {
+  animation-play-state: paused;
+}
+
+/* کارت‌ها (Tag Items) */
+.tagItem {
+  position: relative;
+  width: 100%;
+  height: var(--tag-height);  /* ارتفاع کارت بیشتر */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;       /* متن جمع و جورتر */
+  border-radius: var(--tag-radius);
+  border: var(--card-border-md);
+  box-shadow: var(--tag-shadow);
+  color: white;
+  font-weight: 500;           /* سبک‌تر */
+  font-size: 0.875rem;        /* متن کوچک‌تر */
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;        /* متن یک خط */
+  text-overflow: ellipsis;    /* کوتاه کردن متن طولانی با ... */
+  transition: all 0.3s;
+}
+
+.tagItem::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--block-radius);
+  border: 1px solid transparent;
+  background: var(--tag-bg-gradiant);
+  opacity: 0.4;
+  filter: blur(var(--tag-blur));
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.tagItem:hover::before {
+  opacity: 0.6;
+}
+
+/* انیمیشن اسکرول */
+@keyframes scrollDownSmooth {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-33.3333%); }
+}
+
+@keyframes scrollUpSmooth {
+  0% { transform: translateY(-33.3333%); }
+  100% { transform: translateY(0); }
+}
+
+.animateScrollDown {
+  animation: scrollDownSmooth 90s linear infinite;
+}
+
+.animateScrollUp {
+  animation: scrollUpSmooth 90s linear infinite;
+}
+
+.offsetTop {
+  margin-top: var(--offset-top);
+}
+
+/* ==================== Media Queries ==================== */
+
+/* تبلت */
+@media (max-width: 1024px) {
+  :root {
+    --block-padding: 1.75rem;
+    --block-height: 16rem;
+    --grid-gap: 1.25rem;
+    --tag-height: 3.5rem;  /* ارتفاع کارت تبلت کمی بیشتر */
+    --scroll-column-width: 50%;
+    --tag-padding-y: 0.4rem;
+    --tag-padding-x: 0.8rem;
+  }
+}
+
+/* موبایل */
+@media (max-width: 640px) {
+  :root {
+    --block-padding: 1.25rem;
+    --block-height: 14rem;
+    --grid-gap: 1rem;
+    --tag-height: 3rem;    /* ارتفاع کارت موبایل کمی بیشتر */
+    --scroll-column-width: 100%;
+    --tag-padding-y: 0.3rem;
+    --tag-padding-x: 0.6rem;
+  }
+
+  .leftSection,
+  .rightSection {
+    grid-column: span 12;
+  }
+}

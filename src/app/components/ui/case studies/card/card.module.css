@@ -1,0 +1,94 @@
+/* card.module.css */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  /* حالت شیشه‌ای تیره */
+  background: rgba(19, 19, 43, 0.8);
+  backdrop-filter: blur(12px);
+  /* حاشیه نئونی بسیار ظریف */
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(124, 58, 237, 0.05);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.8), transparent);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(124, 58, 237, 0.6);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(124, 58, 237, 0.2);
+}
+
+/* بخش آیکون دایره‌ای با پالس نئون */
+.iconBox {
+  width: 64px;
+  height: 64px;
+  margin: 1.5rem auto 0;
+  background: radial-gradient(circle at center, #2d1b69 0%, #13132b 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.featureImage {
+  width: 55%;
+  height: 55%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+/* تصویر اصلی ۱۶:۹ با افکت Overlay */
+.imageWrapper {
+  width: calc(100% - 2rem);
+  margin: 1rem;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* لایه رنگی روی عکس برای خوانایی بیشتر */
+.imageWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(19, 19, 43, 0.9));
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.5px;
+}
+
+.description {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding: 0 1.5rem 1.5rem;
+}

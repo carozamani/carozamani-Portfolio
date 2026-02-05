@@ -1,0 +1,7 @@
+:root {
+  /* ===============================
+     BORDER RADII
+  =============================== */
+  --radius-full: 9999px; /* معادل rounded-full */
+  --radius-slider: 9999px; /* برای Liquid Glass Slider */
+}

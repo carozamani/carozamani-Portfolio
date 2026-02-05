@@ -1,0 +1,10 @@
+:root {
+  --space-1: clamp(0.25rem, 1vw, 0.5rem); /* 4px تا 8px */
+  --space-2: clamp(0.5rem, 2vw, 1rem);   /* 8px تا 16px */
+  --space-3: clamp(0.75rem, 3vw, 1.5rem);/* 12px تا 24px */
+  --space-4: clamp(1rem, 4vw, 2rem);     /* 16px تا 32px */
+  --space-5: clamp(1.25rem, 5vw, 2.5rem);/* 20px تا 40px */
+  --space-6: clamp(1.5rem, 6vw, 3rem);   /* 24px تا 48px */
+  --space-7: clamp(2rem, 7vw, 4rem);     /* 32px تا 64px */
+  --space-8: clamp(2.5rem, 8vw, 5rem);   /* 40px تا 80px */
+}

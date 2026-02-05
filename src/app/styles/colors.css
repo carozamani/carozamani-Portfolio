@@ -1,0 +1,80 @@
+:root {
+  /* ====================== */
+  /* Typography / Text      */
+  /* ====================== */
+  --color-text-primary: hsl(0, 0%, 100%);
+  --color-text-secondary: hsla(0, 0%, 100%, 0.6);
+  --color-text-muted: hsla(0, 0%, 100%, 0.4);
+
+  /* ====================== */
+  /* Icons                  */
+  /* ====================== */
+  --color-icon-primary: hsl(0, 0%, 100%);
+  --color-icon-progress-bg: hsla(180, 100%, 50%, 0.3);
+  --color-icon-progress: hsl(180, 100%, 50%);
+
+  /* ====================== */
+  /* Card                   */
+  /* ====================== */
+
+
+  /* ====================== */
+  /* Brand                  */
+  /* ====================== */
+  --color-brand-primary-hsl: hsl(195, 100%, 50%);
+  --color-brand-secondary-hsl: hsl(196, 100%, 23%);
+
+  /* ====================== */
+  /* Primary Color Palette  */
+  /* ====================== */
+/* Sci-Fi Teal/Cyan Palette */
+  /* H: 190 (Teal/Blue-Green), S: 70%, L: 50% (Base) */
+  /* ====================== */
+
+
+
+  /* ====================== */
+  /* Custom Effects */
+  /* ====================== */
+  --image-border-color: rgba(0, 217, 255, 0.877);
+--card-border-color: rgba(0, 110, 255, 0.322);
+--card-border-xl:5px solid var(--image-border-color);
+--card-border-md:1px solid var(--card-border-color);
+
+--card-bg-gradiant:linear-gradient(to bottom right, rgba(0, 191, 255, 0.2), rgba(0, 12, 119, 0.2));
+--tag-bg-gradiant:radial-gradient(circle at center, rgb(0, 110, 255), rgba(0, 68, 255, 0.774));
+--card-bg-circle-gradiant:radial-gradient(circle at center,hsla(234, 100%, 50%, 0.103) , transparent 30%);
+--hero-bg-gradient: linear-gradient(
+  to bottom,
+  hsla(0, 0%, 0%, 0),   
+  hsla(229, 100%, 50%, 0.007),                        
+  hsla(226, 100%, 50%, 0.137),        
+  hsla(226, 100%, 50%, 0.308),           
+  hsla(226, 100%, 50%, 0.137), 
+  hsla(229, 100%, 50%, 0.027), 
+  hsla(229, 100%, 50%, 0.027),             
+  hsla(0, 0%, 0%, 0)                     
+);
+
+--card-box-shadow: 0 0 25px hsla(195, 100%, 50%, 0.6), inset 0 0 20px hsla(195, 100%, 50%, 0.3);
+
+--drop-shadow:hsla(212, 100%, 50%, 0.6);
+
+--background-glow:  hsla(226, 100%, 50%, 0.308);
+
+
+--grid-pattern: 
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+
+    --grid-pattern-card: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);;
+
+
+}
+
+  /* --color-card-border: hsla(195, 100%, 50%, 0.33);
+  --color-card-shadow: hsla(195, 100%, 50%, 0.2);
+  --color-card-hover-border: hsla(195, 100%, 50%, 0.8);
+  --color-card-hover-shadow: hsla(195, 100%, 50%, 0.53);
+  --color-card-glow: hsla(180, 100%, 50%, 0.1); */

@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/components/ui/button/SocialIcons.jsx", "src/app/components/ui/case studies/quantum carousel/QuantumCarousel.component.tsx", "src/app/components/ui/button/social media/SocialIcons.tsx"  ],
   "exclude": ["node_modules"]
 }

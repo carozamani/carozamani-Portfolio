@@ -1,0 +1,36 @@
+.section {
+  margin: 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* دو ستون در دسکتاپ */
+  gap: 2rem;
+  align-items: start;
+}
+
+.cards {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.content {
+  color: white;
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* حالت تبلت و موبایل: ستون ها */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr; /* یک ستون */
+  }
+}

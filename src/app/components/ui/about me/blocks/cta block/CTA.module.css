@@ -1,0 +1,119 @@
+:root {
+  --wrapper-padding: 2.5rem;
+  --wrapper-radius: 1.875rem;
+  --content-gap: 1.5rem;
+  --content-max-width: 24rem;
+  --button-padding-y: 1rem;
+  --button-padding-x: 2.5rem;
+  --button-radius: 1.25rem;
+  --icon-size: 2.5rem;
+  --icon-radius: 0.75rem;
+  --text-size: 0.875rem;
+  --glow-blur: 5rem; /* 80px ≈ 5rem */
+}
+
+
+/* Wrapper اصلی */
+.wrapper {
+  position: relative;
+  padding: var(--wrapper-padding);
+  border-radius: var(--wrapper-radius);
+  overflow: hidden;
+  animation: floatWrapper 12s ease-in-out infinite;
+}
+
+/* Glow */
+.glow {
+  position: absolute;
+  inset: 0;
+  filter: blur(var(--glow-blur));
+}
+
+/* محتوای داخلی */
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-gap);
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* دکمه */
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: var(--button-padding-y) var(--button-padding-x);
+  border-radius: var(--button-radius);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(90px);
+  border: var(--card-border-md);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  border-color: var(--image-border-color);
+  box-shadow: 0 0 1.5625rem var(--drop-shadow); /* 25px -> 1.5625rem */
+  transform: scale(1.02);
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+/* آیکون */
+.icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--icon-radius);
+  box-shadow: inset 0 0 0.3125rem rgba(0,0,0,0.2); /* 5px -> 0.3125rem */
+  transition: transform 0.3s;
+}
+
+.button:hover .icon {
+  transform: scale(1.1);
+}
+
+/* متن دکمه */
+.text {
+  font-size: var(--text-size);
+  font-weight: 600;
+}
+
+/* ==================== Media Queries ==================== */
+
+/* تبلت */
+@media (max-width: 1024px) {
+  :root {
+    --wrapper-padding: 2rem;
+    --content-gap: 1.25rem;
+    --content-max-width: 20rem;
+    --button-padding-y: 0.875rem;
+    --button-padding-x: 2rem;
+    --icon-size: 2rem;
+    --text-size: 0.8125rem;
+    --glow-blur: 3.75rem; /* 60px ≈ 3.75rem */
+  }
+}
+
+/* موبایل */
+@media (max-width: 640px) {
+  :root {
+    --wrapper-padding: 1.5rem;
+    --content-gap: 1rem;
+    --content-max-width: 100%;
+    --button-padding-y: 0.75rem;
+    --button-padding-x: 1.5rem;
+    --icon-size: 1.75rem;
+    --text-size: 0.75rem;
+    --glow-blur: 2.5rem; /* 40px ≈ 2.5rem */
+  }
+}

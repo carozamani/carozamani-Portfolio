@@ -1,0 +1,159 @@
+/* =========================
+   Hero Section
+========================= */
+
+.heroSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding-inline: 1rem; /* همان 16px */
+  color: white;
+
+  background: var(--hero-bg-gradient);
+  overflow: hidden;
+}
+
+/* =========================
+   Grid Overlay (UNCHANGED)
+========================= */
+
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.123) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.126) 1px, transparent 1px);
+
+  background-size: 6.25rem 6.25rem; /* 100px — ثابت */
+}
+
+/* =========================
+   Profile Wrapper
+========================= */
+
+.profileWrapper {
+  position: relative;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* 16px */
+
+  margin-bottom: 1.5rem; /* 24px */
+  width: 100%;
+}
+
+/* =========================
+   Profile Image
+========================= */
+
+.profileImageContainer {
+  position: relative;
+
+  padding: 0.5rem; /* 8px */
+  border-radius: 50%;
+
+  border: var(--card-border-xl);
+  box-shadow: var(--card-box-shadow);
+}
+
+.profileImage {
+  width: 230px;
+  height: 230px;
+
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* =========================
+   Logo
+========================= */
+
+.logoImage {
+  margin-top: 0.5rem; /* 8px */
+  width: 250px;
+  height: auto;
+
+  filter: drop-shadow(0 0 0.625rem rgba(0, 0, 0, 0.5));
+}
+
+/* =========================
+   Title
+========================= */
+
+.titleContainer {
+  position: relative;
+  z-index: 10;
+
+  text-align: center;
+  margin-bottom: 1rem; /* 16px */
+}
+
+/* =========================
+   Subtitle
+========================= */
+
+.subtitleContainer {
+  position: relative;
+  z-index: 10;
+
+  text-align: center;
+  max-width: 43.75rem; /* 700px */
+
+  padding-inline: 0.5rem; /* 8px */
+  margin-bottom: 2.5rem; /* 40px */
+}
+
+/* =========================
+   Social Icons
+========================= */
+
+.socialContainer {
+  position: relative;
+  z-index: 10;
+
+  display: flex;
+  gap: 1rem; /* 16px */
+}
+
+/* =========================
+   Responsive Adjustments
+========================= */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .profileImage {
+    width: 200px;
+    height: 200px;
+  }
+
+  .logoImage {
+    width: 220px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .profileImage {
+    width: 180px;
+    height: 180px;
+  }
+
+  .logoImage {
+    width: 200px;
+  }
+
+  .subtitleContainer {
+    max-width: 100%;
+  }
+}
