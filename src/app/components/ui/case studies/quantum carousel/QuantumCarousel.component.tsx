@@ -1,7 +1,8 @@
 'use client';
 import React from 'react';
+import styles from './QuantumCarousel.module.css';
 
-// Reusable Feature Item Component با پس‌زمینه و آیکون
+// Reusable Feature Item Component
 const FeatureItem = ({
   backgroundImage,
   iconImage,
@@ -14,39 +15,32 @@ const FeatureItem = ({
   description: string;
 }) => {
   return (
-    <div className="relative flex flex-col items-center text-center p-6 z-10 max-w-sm mx-auto group">
-      {/* Container با پس‌زمینه */}
-      <div className="absolute inset-0 rounded-2xl overflow-hidden z-0">
-        {/* پس‌زمینه */}
+    <div className={styles.featureItem}>
+      <div className={styles.featureBackground}>
         <img 
           src={backgroundImage} 
           alt={`${title} background`}
-          className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+          className={styles.backgroundImage}
         />
-        {/* Overlay برای خوانایی بهتر */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-purple-900/70 to-slate-900/90"></div>
+        <div className={styles.backgroundOverlay}></div>
       </div>
 
-      {/* محتوا */}
-      <div className="relative z-10">
-        {/* آیکون */}
-        <div className="mb-4 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 shadow-inner shadow-purple-900/20 backdrop-blur-sm inline-flex">
-          <img src={iconImage} alt={title} className="w-10 h-10 object-contain" />
+      <div className={styles.featureContent}>
+        <div className={styles.iconWrapper}>
+          <img src={iconImage} alt={title} className={styles.iconImage} />
         </div>
-
-        <h3 className="text-xl font-bold text-white mb-3 tracking-wide">{title}</h3>
-        <p className="text-slate-300 text-sm leading-relaxed font-light">{description}</p>
+        <h3 className={styles.featureTitle}>{title}</h3>
+        <p className={styles.featureDescription}>{description}</p>
       </div>
     </div>
   );
 };
 
 const QuantumCarousel = () => {
-  // داده‌های نمونه - شما می‌توانید این‌ها را با داده‌های واقعی جایگزین کنید
   const features = [
     {
-      backgroundImage: "/backgrounds/cloak-bg.jpg", // عکس کیس استادی
-      iconImage: "/icons/cloak.png", // لوگوی شرکت
+      backgroundImage: "/backgrounds/cloak-bg.jpg",
+      iconImage: "/icons/cloak.png",
       title: "Cloak Mode",
       description: "Overcomes VPN blocks by disguising your VPN traffic as regular web traffic."
     },
@@ -71,31 +65,20 @@ const QuantumCarousel = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative py-12">
-      
-      {/* ---------- Background Lines + Glow ---------- */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Horizontal Line */}
-        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400/50 to-transparent -translate-y-1/2" />
-        {/* Vertical Line */}
-        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-gradient-to-b from-transparent via-blue-400/50 to-transparent -translate-x-1/2" />
-        {/* Glow */}
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
+    <div className={styles.carouselContainer}>
+      {/* Background Lines + Glow */}
+      <div className={styles.backgroundEffects}>
+        <div className={styles.horizontalLine}></div>
+        <div className={styles.verticalLine}></div>
+        <div className={styles.centerGlow}></div>
       </div>
 
-      {/* ---------- Main Grid Layout ---------- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative z-10 px-4">
-        
+      {/* Main Grid */}
+      <div className={styles.gridLayout}>
         {features.map((feature, index) => (
           <div 
             key={index}
-            className={`
-              flex justify-center
-              ${index === 0 ? 'md:justify-end md:pr-6' : ''}
-              ${index === 1 ? 'md:justify-start md:pl-6' : ''}
-              ${index === 2 ? 'md:justify-end md:pr-6 md:pt-8' : ''}
-              ${index === 3 ? 'md:justify-start md:pl-6 md:pt-8' : ''}
-            `}
+            className={`${styles.gridItem} ${styles[`item${index}`]}`}
           >
             <FeatureItem
               backgroundImage={feature.backgroundImage}
@@ -107,12 +90,9 @@ const QuantumCarousel = () => {
         ))}
       </div>
 
-      {/* ---------- Center Rectangle با افکت بهتر ---------- */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="relative">
-          {/* Outer Glow Effect */}
-          <div className="w-48 h-48 md:w-64 md:h-64 border-2 border-blue-400/30 rounded-2xl shadow-[0_0_60px_20px_rgba(59,130,246,0.15)]"></div>
-        </div>
+      {/* Center Rectangle Glow */}
+      <div className={styles.centerRectangle}>
+        <div className={styles.rectangleGlow}></div>
       </div>
     </div>
   );

@@ -1,239 +1,165 @@
 :root {
-  --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.65);
-  --color-brand-primary: hsl(195, 100%, 50%);
-  --color-brand-secondary: hsl(196, 100%, 23%);
-  --drop-shadow: rgba(0, 110, 255, 0.35);
-  --input-bg: rgba(18, 18, 24, 0.55);
-  --button-bg: rgba(0, 110, 255, 0.08);
-  --button-hover-bg: rgba(0, 110, 255, 0.12);
+  --bg-dark: #05070f;
+  --primary: #00f0ff;
+  --secondary: #6a00ff;
+  --glass: rgba(15, 20, 40, 0.65);
+  --border: rgba(0, 240, 255, 0.25);
+  --text-main: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.6);
 }
 
 /* ====================== */
-/* Wrapper                */
+/* WRAPPER & CONTAINER */
 /* ====================== */
 .wrapper {
-  width: 100%;
-  min-height: 100vh;
-  padding: 60px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
-  color: var(--color-text-primary);
-  background: linear-gradient(160deg, #0d0d140a, #1c1c2a1c);
+  align-items: center;
+  min-height: 100vh;
+  padding: 100px 40px;
+  background: var(--bg-dark);
+  font-family: "Inter", sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  padding: 60px;
+  border-radius: 1.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(1rem);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 15px rgba(0,240,255,0.2);
   overflow: hidden;
 }
 
 /* ====================== */
-/* Container              */
+/* INFO SIDE */
 /* ====================== */
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 80px;
-  width: 100%;
-  max-width: 1200px;
-}
-
-/* ====================== */
-/* Info Box               */
-/* ====================== */
-.infoBox {
+.info {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  z-index: 1;
 }
 
 .title {
   font-size: 2.8rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #00c3ff, #0070ff);
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 12px rgba(0, 200, 255, 0.3);
 }
 
 .subtitle {
-  font-size: 1.1rem;
-  color: var(--color-text-secondary);
+  color: var(--text-dim);
   line-height: 1.6;
-  max-width: 400px;
 }
 
-/* ====================== */
-/* Contact Boxes          */
-/* ====================== */
-.contactBoxes {
+.meta {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
-.contactBox {
-  position: relative;
-  padding: 20px;
-  border-radius: 1.5rem;
-  background: rgba(53, 53, 100, 0.11);
-  backdrop-filter: blur(25px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-
-/* ====================== */
-/* Form Box               */
-/* ====================== */
-.formBox {
-  padding: 2rem;
-
+.label {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--primary);
 }
 
 /* ====================== */
-/* Form                   */
+/* FORM SIDE */
 /* ====================== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 28px;
 }
 
-/* ====================== */
-/* Input Wrapper (Glow)   */
-/* ====================== */
-.inputWrapper {
+.field {
   position: relative;
-  border-radius: 1.2rem;
-  
 }
 
-.inputWrapper::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-
-  opacity: 0;
-  transition: 0.35s ease;
-  pointer-events: none;
-}
-
-.inputWrapper:focus-within::before {
-  opacity: 1;
-
-}
-
-/* ====================== */
-/* Inputs & Textarea      */
-/* ====================== */
-.input,
-.textarea {
-  overflow: hidden;
-  transition: all 0.5s;
-  background-color: rgba(18, 18, 24, 0.55);
-  backdrop-filter: blur(2xl);
-  border: var(--card-border-md); /* px باقی موند */
-  box-shadow: 0 0 5px var(--drop-shadow); /* px باقی موند */
+.field input,
+.field textarea {
   width: 100%;
-  padding: 16px 18px;
-  border-radius: 1.2rem;
+  padding: 18px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text-main);
   font-size: 1rem;
-  color: var(--color-text-primary);
-  border: 1px solid rgba(0, 140, 255, 0.15);
-
-  background: rgba(0, 119, 255, 0.082);
-     box-shadow:
-    0 0 5px rgba(0, 200, 255, 0),
-    inset 0 0 50px rgba(0, 0, 0, 0.765);
-  
-  
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   outline: none;
-  transition:
-    border 0.25s ease,
-
-    transform 0.15s ease;
+  transition: 0.3s ease;
 }
 
-.input:hover,
-.textarea:hover {
-    border: var(--card-border-md); /* px باقی موند */
-
-
+.field label {
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  color: var(--text-dim);
+  pointer-events: none;
+  transition: 0.3s ease;
 }
 
-.input:focus,
-.textarea:focus {
-  border-color: var(--card-border-color);
-
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0,240,255,0.4);
 }
 
-.input::placeholder,
-.textarea::placeholder {
-  color: var(--color-text-secondary);
-  opacity: 0.7;
-  letter-spacing: 0.4px;
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:focus + label,
+.field textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 12px;
+  font-size: 0.7rem;
+  background: rgba(15, 20, 40, 0.65);
+  padding: 0 6px;
+  color: var(--primary);
 }
 
 /* ====================== */
-/* Button (Glass Neon)    */
-/* ====================== */
+/* BUTTON ====================== */
 .button {
-  border-radius: 1.2rem;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--primary);
+  background: linear-gradient(90deg, #00f0ff20, #6a00ff20);
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: 2px;
   cursor: pointer;
-  padding: 0.85rem 1.8rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: white;
-  border: 1px solid rgba(0, 170, 255, 0.35);
-  background: rgba(0, 160, 255, 0.18);
-    
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
- box-shadow:
-    0 0 5px rgba(0, 200, 255, 0.6),
-    inset 0 0 50px rgba(0, 0, 0, 0.765);
-  transition: all 0.3s ease;
+  transition: 0.4s ease;
+  box-shadow: 0 0 20px rgba(0,240,255,0.3);
 }
 
 .button:hover {
-  
-  transform: scale(1.01);
-  border-color: rgba(0, 220, 255, 0.9);
-  box-shadow:
-    0 0 5px rgba(0, 200, 255, 0.6),
-    inset 0 0 10px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px var(--primary), 0 0 80px rgba(106,0,255,0.4);
 }
 
 .button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 5px rgba(0, 200, 255, 0.3);
-}
-
-.button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
+  transform: scale(0.96);
 }
 
 /* ====================== */
-/* Responsive             */
-/* ====================== */
+/* RESPONSIVE ====================== */
 @media (max-width: 900px) {
-  .container {
+  .card {
     grid-template-columns: 1fr;
   }
 
-  .infoBox {
-    align-items: center;
+  .info {
     text-align: center;
-  }
-
-  .formBox {
-    margin-top: 40px;
+    align-items: center;
   }
 }
