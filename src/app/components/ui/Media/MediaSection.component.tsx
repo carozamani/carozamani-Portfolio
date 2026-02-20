@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Section from './Section';
 import { CardProps } from './card/Card';
@@ -45,32 +46,35 @@ export default function MediaSection() {
 
 /* ----------------- Helper Components ----------------- */
 
-const AnimatedBlock = ({ children, delay }: { children: React.ReactNode; delay: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay }}
-    viewport={{ once: true }}
-    className={styles.animatedBlock}
-  >
-    {children}
-  </motion.div>
+const AnimatedBlock = memo(
+  ({ children, delay }: { children: React.ReactNode; delay: number }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay }}
+      viewport={{ once: true }}
+      className={styles.animatedBlock}
+    >
+      {children}
+    </motion.div>
+  )
 );
 
-const ContentBlock = ({ title, description }: { title: string; description: string }) => (
-  <div className={styles.contentBlock}>
-    <TypographyComponent variant="h2" color="text-primary" className={styles.title}>
-      {title}
-    </TypographyComponent>
-
-    <TypographyComponent variant="body1" color="text-secondary" className={styles.description}>
-      {description}
-    </TypographyComponent>
-  </div>
+const ContentBlock = memo(
+  ({ title, description }: { title: string; description: string }) => (
+    <div className={styles.contentBlock}>
+      <TypographyComponent variant="h2" color="text-primary" className={styles.title}>
+        {title}
+      </TypographyComponent>
+      <TypographyComponent variant="body1" color="text-secondary" className={styles.description}>
+        {description}
+      </TypographyComponent>
+    </div>
+  )
 );
 
-const GridBackground = () => <div className={styles.gridBackground} />;
-const GlowEffect = () => <div className={styles.glowEffect} />;
+const GridBackground = memo(() => <div className={styles.gridBackground} />);
+const GlowEffect = memo(() => <div className={styles.glowEffect} />);
 
 /* ----------------- Data ----------------- */
 

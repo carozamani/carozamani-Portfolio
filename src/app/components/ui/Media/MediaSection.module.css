@@ -5,7 +5,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0rem; /* قبلاً 4rem بود، حالا نصف شد */
+  gap: 0rem;
   padding: 6rem;
   color: white;
   overflow: visible;
@@ -22,7 +22,7 @@
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 80rem; /* معادل max-w-7xl */
+  max-width: 80rem;
   margin: 1rem auto;
 }
 
@@ -30,6 +30,13 @@
   text-align: left;
 }
 
+.title {
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  line-height: 1.6;
+}
 
 .gridBackground {
   position: absolute;
