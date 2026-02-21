@@ -14,7 +14,7 @@ export default function GridPortfolio() {
   const blocks = [
     { id: 1, component: <BlockIntro />, className: styles.block1 },
     { id: 2, component: <BlockTechTags />, className: styles.block2 },
-    { id: 3, component: <BlockCTA />, className: styles.block3 },
+    { id: 3, component: <BlockCTA fullWidth  />, className: styles.block3 },
     { id: 4, component: <DesignPhilosophyCard />, className: styles.block4 },
   ];
 
