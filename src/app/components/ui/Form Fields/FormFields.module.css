@@ -1,0 +1,71 @@
+.field {
+  position: relative;
+  width: 100%;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 18px 16px;
+  background: rgb(0, 0, 0);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s ease;
+  font-family: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.field label {
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transition: 0.3s ease;
+  background: transparent;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:focus + label,
+.field textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 12px;
+  font-size: 0.7rem;
+  background: rgb(0, 0, 0);
+  padding: 0 6px;
+  color: #00f0ff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .field input,
+  .field textarea {
+    padding: 14px 12px;
+  }
+  
+  .field label {
+    top: 14px;
+  }
+  
+  .field input:focus + label,
+  .field input:not(:placeholder-shown) + label,
+  .field textarea:focus + label,
+  .field textarea:not(:placeholder-shown) + label {
+    top: -8px;
+    font-size: 0.65rem;
+  }
+}

@@ -4,6 +4,7 @@ import { memo } from "react";
 import { motion } from "framer-motion";
 import styles from "./ContactSection.module.css";
 import SocialIcons, { SocialItem } from "../button/social media/SocialIcons";
+import FormFields from "../Form Fields/FormFields";
 
 const socialLinks: SocialItem[] = [
   { type: "linkedin", href: "https://linkedin.com/in/username", color: "#00f0ff" },
@@ -26,6 +27,9 @@ function ContactSectionComponent() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
+          {/* Grid Pattern Layer */}
+          <div className={styles.gridPattern}></div>
+
           {/* INFO SIDE */}
           <div className={styles.info}>
             <h2 className={styles.title}>INITIATE CONTACT</h2>
@@ -44,25 +48,31 @@ function ContactSectionComponent() {
               </div>
             </div>
 
-            <SocialIcons items={socialLinks}  bordered={false} />
+            <SocialIcons items={socialLinks} bordered={false} />
           </div>
 
           {/* FORM SIDE */}
           <form className={styles.form}>
-            {[
-              { type: "text", label: "Full Name" },
-              { type: "email", label: "Email Address" },
-            ].map((field) => (
-              <div className={styles.field} key={field.label}>
-                <input type={field.type} placeholder=" " required />
-                <label>{field.label}</label>
-              </div>
-            ))}
-
-            <div className={styles.field}>
-              <textarea rows={4} placeholder=" " required />
-              <label>Your Message</label>
-            </div>
+            {/* استفاده از کامپوننت با واریانت‌های مختلف */}
+            <FormFields 
+              variant="text" 
+              label="Full Name" 
+              required 
+            />
+            
+            <FormFields 
+              variant="email" 
+              label="Email Address" 
+              required 
+            />
+            
+            <FormFields 
+              variant="textarea" 
+              label="Your Message" 
+              rows={4}
+              required 
+            />
+            
 
             <button type="submit" className={styles.button}>
               TRANSMIT
@@ -74,5 +84,4 @@ function ContactSectionComponent() {
   );
 }
 
-// Memoization برای جلوگیری از re-render غیرضروری
 export default memo(ContactSectionComponent);

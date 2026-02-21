@@ -5,38 +5,23 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0rem;
-  padding: 6rem;
+  gap: 0rem; /* قبلاً 4rem بود، حالا نصف شد */
+
   color: white;
   overflow: visible;
-}
-
-@media (min-width: 768px) {
-  .section {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
 }
 
 .animatedBlock {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 80rem;
-  margin: 1rem auto;
+  max-width: 80rem; /* معادل max-w-7xl */
 }
 
 .contentBlock {
   text-align: left;
 }
 
-.title {
-  margin-bottom: 0.5rem;
-}
-
-.description {
-  line-height: 1.6;
-}
 
 .gridBackground {
   position: absolute;

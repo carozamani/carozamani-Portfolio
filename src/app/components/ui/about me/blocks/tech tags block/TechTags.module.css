@@ -157,6 +157,29 @@
 
 /* ==================== Media Queries ==================== */
 
+
+@media (max-width: 767px) {
+
+  .blockContainer {
+  height: 270px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  /* بخش راست موبایل: کارت‌ها زیر هم قرار بگیرن */
+  .rightSection {
+    flex-direction: column; /* ستون‌ها عمودی */
+  }
+
+  .scrollColumn {
+    width: 100%; /* هر ستون کارت‌ها تمام عرض */
+  }
+}
+
+
 /* تبلت */
 @media (max-width: 1024px) {
   :root {
@@ -187,3 +210,5 @@
     grid-column: span 12;
   }
 }
+
+

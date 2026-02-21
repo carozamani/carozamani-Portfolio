@@ -1,10 +1,20 @@
 :root {
-  --space-1: clamp(0.25rem, 1vw, 0.5rem); /* 4px تا 8px */
-  --space-2: clamp(0.5rem, 2vw, 1rem);   /* 8px تا 16px */
-  --space-3: clamp(0.75rem, 3vw, 1.5rem);/* 12px تا 24px */
-  --space-4: clamp(1rem, 4vw, 2rem);     /* 16px تا 32px */
-  --space-5: clamp(1.25rem, 5vw, 2.5rem);/* 20px تا 40px */
-  --space-6: clamp(1.5rem, 6vw, 3rem);   /* 24px تا 48px */
-  --space-7: clamp(2rem, 7vw, 4rem);     /* 32px تا 64px */
-  --space-8: clamp(2.5rem, 8vw, 5rem);   /* 40px تا 80px */
+  /* --- Base 8px Scale (Fluid) --- */
+  /* xs: 4px - 8px */
+  --space-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem); 
+  /* s: 8px - 16px */
+  --space-s:  clamp(0.5rem, 0.4rem + 0.5vw, 1rem);    
+  /* m: 16px - 32px (استانداردترین فاصله برای پدینگ کارت‌ها) */
+  --space-m:  clamp(1rem, 0.8rem + 1vw, 2rem);       
+  /* l: 24px - 48px */
+  --space-l:  clamp(1.5rem, 1.2rem + 1.5vw, 3rem);   
+  /* xl: 32px - 64px (مناسب برای فاصله بین بخش‌های اصلی) */
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 4rem);       
+  /* xxl: 48px - 96px */
+  --space-xxl: clamp(3rem, 2.4rem + 3vw, 6rem);      
+
+  /* --- هماهنگی با گرید ۸ پیکسلی برای Border Radius (اختیاری اما توصیه شده) --- */
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
 }

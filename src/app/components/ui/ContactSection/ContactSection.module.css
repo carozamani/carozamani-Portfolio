@@ -1,7 +1,7 @@
 :root {
-  --bg-dark: #05070f;
+  --bg-dark: #05070f00;
   --primary: #00f0ff;
-  --secondary: #6a00ff;
+  --secondary: #ffffff;
   --glass: rgba(15, 20, 40, 0.65);
   --border: rgba(0, 240, 255, 0.25);
   --text-main: #ffffff;
@@ -9,17 +9,22 @@
 }
 
 /* ====================== */
-/* WRAPPER & CONTAINER */
+/* WRAPPER */
 /* ====================== */
+
 .wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
   padding: 100px 40px;
-  background: var(--bg-dark);
+  background: transparent;
   font-family: "Inter", sans-serif;
 }
+
+/* ====================== */
+/* CONTAINER & CARD */
+/* ====================== */
 
 .container {
   width: 100%;
@@ -28,21 +33,57 @@
 }
 
 .card {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 60px;
   padding: 60px;
   border-radius: 1.875rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(1rem);
-  border: 1px solid var(--border);
-  box-shadow: 0 0 15px rgba(0,240,255,0.2);
+  background: linear-gradient(45deg, rgba(0, 38, 255, 0.171),rgba(255, 255, 255, 0.048),rgba(255, 255, 255, 0.048),rgba(255, 255, 255, 0.021), transparent,transparent ,transparent);
+  
+  backdrop-filter: blur(20px);
+  border: var(--card-border-md);
+  box-shadow: 0 0 5px var(--drop-shadow);
   overflow: hidden;
+}
+
+/* ====================== */
+/* Grid Pattern + Glow inside card */
+/* ====================== */
+
+.gridPattern {
+  position: absolute;
+
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 90px 90px;
+
+  mask-image: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+  -webkit-mask-image: linear-gradient(to right, rgba(255,255,255,1), rgb(255, 255, 255));
+
+  opacity: 0.6;
+}
+
+
+/* ====================== */
+/* CONTENT */
+/* ====================== */
+
+.content {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
 }
 
 /* ====================== */
 /* INFO SIDE */
 /* ====================== */
+
 .info {
   display: flex;
   flex-direction: column;
@@ -52,7 +93,7 @@
 .title {
   font-size: 2.8rem;
   font-weight: 900;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  background: #ffffff;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -77,6 +118,7 @@
 /* ====================== */
 /* FORM SIDE */
 /* ====================== */
+
 .form {
   display: flex;
   flex-direction: column;
@@ -91,8 +133,8 @@
 .field textarea {
   width: 100%;
   padding: 18px 16px;
-  background: transparent;
-  border: 1px solid var(--border);
+  background: rgb(0, 0, 0);
+  border: 1px solid var(--card-border-color);
   border-radius: 14px;
   color: var(--text-main);
   font-size: 1rem;
@@ -122,29 +164,33 @@
   top: -10px;
   left: 12px;
   font-size: 0.7rem;
-  background: rgba(15, 20, 40, 0.65);
+  background: rgb(0, 0, 0);
   padding: 0 6px;
   color: var(--primary);
 }
 
 /* ====================== */
 /* BUTTON ====================== */
+
 .button {
   padding: 16px;
   border-radius: 16px;
-  border: 1px solid var(--primary);
-  background: linear-gradient(90deg, #00f0ff20, #6a00ff20);
-  color: var(--text-main);
+  border: 1px solid var(--card-border-color);
+background: rgb(29, 29, 29);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 81, 255, 0.5);
+  color: white;
   font-weight: 700;
   letter-spacing: 2px;
   cursor: pointer;
   transition: 0.4s ease;
-  box-shadow: 0 0 20px rgba(0,240,255,0.3);
+
 }
 
 .button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 30px var(--primary), 0 0 80px rgba(106,0,255,0.4);
+  transform: scale(1.01);
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 10px var(--primary);
 }
 
 .button:active {
@@ -153,13 +199,87 @@
 
 /* ====================== */
 /* RESPONSIVE ====================== */
-@media (max-width: 900px) {
+
+/* ====================== */
+/* RESPONSIVE ====================== */
+
+@media (max-width: 1024px) {
   .card {
-    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 40px;
+  }
+  
+  .title {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 850px) {
+  .wrapper {
+    padding: 60px 20px; /* کاهش فاصله بیرونی برای فضای بیشتر */
+  }
+
+  .card {
+    /* تغییر از 2 ستون به 1 ستون */
+    grid-template-columns: 1fr; 
+    gap: 50px;
+    padding: 40px 24px;
   }
 
   .info {
     text-align: center;
     align-items: center;
+  }
+
+  .meta {
+    flex-direction: row; /* در حالت تبلت ایمیل و لوکیشن کنار هم باشند */
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 30px 16px;
+    border-radius: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+  }
+
+  .meta {
+    flex-direction: column; /* در موبایل کوچک دوباره زیر هم بروند */
+    gap: 16px;
+    width: 100%;
+  }
+
+  .meta > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .field input,
+  .field textarea {
+    padding: 14px 12px; /* فشرده‌تر شدن فیلدها */
+  }
+
+  .button {
+    padding: 14px;
+  }
+}
+
+/* اصلاح الگوی گرید برای موبایل که کشیده نشود */
+@media (max-width: 600px) {
+  .gridPattern {
+    background-size: 50px 50px;
+    opacity: 0.4;
   }
 }
