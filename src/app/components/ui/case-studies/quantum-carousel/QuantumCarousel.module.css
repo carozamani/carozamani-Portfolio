@@ -1,9 +1,12 @@
 .carouselContainer {
   width: 100%;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   position: relative;
-  padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+  padding: var(--space-xl) var(--space-l);
   overflow: hidden;
 }
 

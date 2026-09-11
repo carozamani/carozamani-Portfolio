@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import styles from './FeatureCard.module.css';
+import styles from './card.module.css';
 
 export interface Feature {
   title: string;

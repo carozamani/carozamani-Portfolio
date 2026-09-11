@@ -5,10 +5,10 @@ import dynamic from 'next/dynamic';
 import styles from './AboutMe.module.css';
 
 // بارگذاری داینامیک بلاک‌ها
-const BlockIntro = dynamic(() => import('./blocks/about me block/AboutMe.component'), { ssr: false });
-const BlockTechTags = dynamic(() => import('./blocks/tech tags block/TechTags.component'), { ssr: false });
-const BlockCTA = dynamic(() => import('./blocks/cta block/CTA.component'), { ssr: false });
-const DesignPhilosophyCard = dynamic(() => import('./blocks/design philosophy card/DesignPhilosophy.component'), { ssr: false });
+const BlockIntro = dynamic(() => import('./blocks/about-me-block/AboutMe.component'), { ssr: false });
+const BlockTechTags = dynamic(() => import('./blocks/tech-tags-block/TechTags.component'), { ssr: false });
+const BlockCTA = dynamic(() => import('./blocks/cta-block/CTA.component'), { ssr: false });
+const DesignPhilosophyCard = dynamic(() => import('./blocks/design-philosophy-card/DesignPhilosophy.component'), { ssr: false });
 
 export default function GridPortfolio() {
   const blocks = [

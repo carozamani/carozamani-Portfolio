@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import FeatureGrid from "./components/ui/about me/AboutMe.section";
+import FeatureGrid from "./components/ui/about-me/AboutMe.section";
 import HeroSection from "./components/ui/HeroSection/HeroSection";
 import MediaSection from "./components/ui/Media/MediaSection.component";
 
 import ContactSection from './components/ui/ContactSection/ContactSection';
-import QuantumCarousel from './components/ui/case studies/quantum carousel/QuantumCarousel.component';
+import QuantumCarousel from './components/ui/case-studies/quantum-carousel/QuantumCarousel.component';
+import Footer from './components/ui/Footer/Footer';
 
 export default function HomePage() {
   const sectionAnimation = {
@@ -14,7 +15,7 @@ export default function HomePage() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const transition = { duration: 0.7, ease: 'easeOut' };
+  const transition = { duration: 0.7, ease: 'easeOut' as const };
 
   return (
     <div className="relative w-screen text-white overflow-x-hidden bg-black">
@@ -44,7 +45,7 @@ export default function HomePage() {
           <FeatureGrid />
         </motion.section>
 
-        {/* Swiper Showcase */}
+        {/* Case Studies Carousel */}
         <motion.section
           id="projects"
           initial="hidden"
@@ -79,6 +80,8 @@ export default function HomePage() {
         >
           <ContactSection />
         </motion.section>
+
+        <Footer />
 
       </div>
     </div>

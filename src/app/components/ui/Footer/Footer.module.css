@@ -1,0 +1,61 @@
+.footer {
+  background: linear-gradient(
+    to right,
+    var(--surface-0),
+    var(--surface-2),
+    var(--surface-0)
+  );
+  color: var(--color-text-primary);
+  padding: 2rem 1rem;
+  font-family: var(--font-primary);
+}
+
+.container {
+  padding-top: 50px;
+  padding-bottom: 10px;
+  max-width: 900px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem; /* معادل space-y-6 */
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem; /* text-xs */
+  color: var(--color-text-secondary);
+  gap: 1rem;
+}
+
+.logoWrapper {
+  color: var(--primary-base);
+  font-family: var(--font-secondary);
+  font-size: 1.125rem; /* text-lg */
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.logo {
+  height: 2rem; /* h-8 */
+  width: auto;
+  font-size: 0.75rem; /* مرجع محاسبه‌ی واحد ch برای margin-left */
+  margin-left: 2ch; /* لوگو از سومین کاراکتر POWERED BY شروع می‌شه */
+}
+
+.powered {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+}
+
+.poweredText {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}

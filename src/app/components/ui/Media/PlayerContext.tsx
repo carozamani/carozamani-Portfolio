@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useRef } from 'react';
 
 interface PlayerContextType {
   currentId: string | null;
-  play: (id: string, audioRef: React.RefObject<HTMLAudioElement>) => void;
+  play: (id: string, audioRef: React.RefObject<HTMLAudioElement | null>) => void;
   stop: () => void;
 }
 
@@ -14,7 +14,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [currentId, setCurrentId] = useState<string | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const play = (id: string, audioRef: React.RefObject<HTMLAudioElement>) => {
+  const play = (id: string, audioRef: React.RefObject<HTMLAudioElement | null>) => {
     if (currentAudioRef.current && currentId !== id) {
       currentAudioRef.current.pause();
     }

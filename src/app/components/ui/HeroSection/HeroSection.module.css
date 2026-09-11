@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
 
-  padding-inline: 1rem; /* همان 16px */
+  padding: var(--space-xl) var(--space-l);
   color: white;
 
   background: var(--hero-bg-gradient);

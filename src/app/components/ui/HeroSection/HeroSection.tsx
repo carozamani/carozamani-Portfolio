@@ -12,7 +12,7 @@ import {
 import TextRotator from './TextRotator';
 import SocialIcons, {
   SocialItem,
-} from '../button/social media/SocialIcons';
+} from '../button/social-media/SocialIcons';
 
 import TypographyComponent from '../typography/Typography.component';
 import styles from './HeroSection.module.css';
@@ -172,7 +172,6 @@ export default function HeroSection() {
       >
         <SocialIcons
           items={socialLinks}
-          size="md"
           bordered
         />
       </motion.div>

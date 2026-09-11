@@ -1,5 +1,5 @@
 .section {
-  margin: 1rem 3rem;
+  margin: 1rem 0;
   display: flex;
   flex-direction: column;
 }
@@ -28,9 +28,17 @@
   direction: ltr;
 }
 
-/* حالت تبلت و موبایل: ستون ها */
+/* حالت تبلت و موبایل: ستون ها، همیشه عنوان/توضیح/دکمه بالای کارت‌ها */
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: 1fr; /* یک ستون */
+  }
+
+  .content {
+    order: -1;
+  }
+
+  .cards {
+    order: 0;
   }
 }

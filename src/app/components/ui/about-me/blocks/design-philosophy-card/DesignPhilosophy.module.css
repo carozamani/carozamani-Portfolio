@@ -1,4 +1,5 @@
-:root {
+/* کارت */
+.cardContainer {
   --card-padding-y: 1rem;
   --card-padding-x: 2rem;
   --card-radius: 1.5rem;
@@ -7,10 +8,7 @@
   --neon-blur: 7.5rem; /* 120px ≈ 7.5rem */
   --heading-margin-bottom: 0.5rem;
   --paragraph-line-height: 1.625rem;
-}
 
-/* کارت */
-.cardContainer {
   position: relative;
   width: 100%;
   border-radius: var(--card-radius);
@@ -50,7 +48,7 @@
 
 /* تبلت */
 @media (max-width: 1024px) {
-  :root {
+  .cardContainer {
     --card-padding-y: 0.875rem;
     --card-padding-x: 1.5rem;
     --backdrop-blur: 1rem;
@@ -63,7 +61,7 @@
 
 /* موبایل */
 @media (max-width: 640px) {
-  :root {
+  .cardContainer {
     --card-padding-y: 0.75rem;
     --card-padding-x: 1rem;
     --backdrop-blur: 0.875rem;

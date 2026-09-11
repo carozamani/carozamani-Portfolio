@@ -33,6 +33,7 @@ type Props = PropsWithChildren<{
   variant: VariantType;
   color?: TypographyColorType;
   className?: string;
+  id?: string;
 }>;
 
 export default function TypographyComponent({
@@ -40,10 +41,12 @@ export default function TypographyComponent({
   variant,
   color = "text-primary",
   className,
+  id,
   children,
 }: Props): ReactElement {
   return (
     <div
+      id={id}
       className={clsx(
         styles.typography,
         ellipsis && styles.ellipsis,

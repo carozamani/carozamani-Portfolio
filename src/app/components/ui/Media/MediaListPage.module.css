@@ -1,0 +1,37 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+}
+
+.pageBackground {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 6.25rem 6.25rem;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: clamp(6rem, 10vw, 8rem) var(--space-l) clamp(4rem, 8vw, 6rem);
+}
+
+.description {
+  margin-top: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

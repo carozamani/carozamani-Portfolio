@@ -1,4 +1,5 @@
-:root {
+/* کانتینر اصلی */
+.blockContainer {
   --block-radius: 1.875rem;
   --block-padding: 2rem;
   --block-height: 18.75rem;
@@ -10,10 +11,7 @@
   --offset-top: 1rem;
   --tag-height: 4rem;           /* ارتفاع کارت‌ها کمی بیشتر شد */
   --scroll-column-width: 50%;    /* عرض ستون‌ها نصف بخش راست */
-}
 
-/* کانتینر اصلی */
-.blockContainer {
   position: relative;
   width: 100%;
   height: var(--block-height);
@@ -182,7 +180,7 @@
 
 /* تبلت */
 @media (max-width: 1024px) {
-  :root {
+  .blockContainer {
     --block-padding: 1.75rem;
     --block-height: 16rem;
     --grid-gap: 1.25rem;
@@ -195,7 +193,7 @@
 
 /* موبایل */
 @media (max-width: 640px) {
-  :root {
+  .blockContainer {
     --block-padding: 1.25rem;
     --block-height: 14rem;
     --grid-gap: 1rem;

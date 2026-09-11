@@ -1,4 +1,8 @@
-:root {
+/* ====================== */
+/* WRAPPER */
+/* ====================== */
+
+.wrapper {
   --bg-dark: #05070f00;
   --primary: #00f0ff;
   --secondary: #ffffff;
@@ -6,18 +10,12 @@
   --border: rgba(0, 240, 255, 0.25);
   --text-main: #ffffff;
   --text-dim: rgba(255, 255, 255, 0.6);
-}
 
-/* ====================== */
-/* WRAPPER */
-/* ====================== */
-
-.wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 100px 40px;
+  padding: var(--space-xl) var(--space-l);
   background: transparent;
   font-family: "Inter", sans-serif;
 }
@@ -215,10 +213,6 @@ background: rgb(29, 29, 29);
 }
 
 @media (max-width: 850px) {
-  .wrapper {
-    padding: 60px 20px; /* کاهش فاصله بیرونی برای فضای بیشتر */
-  }
-
   .card {
     /* تغییر از 2 ستون به 1 ستون */
     grid-template-columns: 1fr; 

@@ -99,4 +99,3 @@ const QuantumCarousel = () => {
 };
 
 export default QuantumCarousel;
-export const SwiperShowcase = QuantumCarousel;

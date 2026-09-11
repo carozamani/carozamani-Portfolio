@@ -1,0 +1,70 @@
+.button {
+  --button-padding-y: 1rem;
+  --button-padding-x: 3.5rem;
+  --icon-size: 2.5rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  padding: var(--button-padding-y) var(--button-padding-x);
+  border-radius: var(--button-radius);
+
+  background: rgba(19, 19, 19, 0.623);
+  backdrop-filter: blur(90px);
+  border: var(--card-border-md);
+    box-shadow: 0 0 5px var(--drop-shadow); /* px باقی موند */
+
+
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  width: fit-content;
+  max-width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button:hover {
+  border-color: var(--image-border-color);
+  box-shadow: 0 0 1.5625rem var(--drop-shadow);
+  transform: scale(1.02);
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--icon-radius);
+  box-shadow: inset 0 0 0.3125rem rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.button:hover .icon {
+  transform: scale(1.1);
+}
+
+/* فول ویدث دسکتاپ وقتی پراپس داده شده */
+.buttonFullWidthDesktop {
+  width: 100%;
+}
+
+/* فول ویدث موبایل و تبلت */
+@media (max-width: 1024px) {
+  .button {
+    width: 100%;
+    display: flex;
+    align-self: stretch;
+  }
+}
+

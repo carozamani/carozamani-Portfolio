@@ -8,6 +8,7 @@ import "./styles/typography.css";
 import "./styles/colors.css";
 import "./styles/shadows.css";
 import "./styles/shapes.css";
+import "./styles/spacing.css";
 
 import './globals.css';
 

@@ -1,4 +1,5 @@
-:root {
+/* Wrapper اصلی */
+.wrapper {
   --wrapper-padding: 2.5rem;
   --wrapper-radius: 1.875rem;
   --content-gap: 1.5rem;
@@ -10,11 +11,7 @@
   --icon-radius: 0.75rem;
   --text-size: 0.875rem;
   --glow-blur: 5rem; /* 80px ≈ 5rem */
-}
 
-
-/* Wrapper اصلی */
-.wrapper {
   position: relative;
   padding: var(--wrapper-padding);
   border-radius: var(--wrapper-radius);
@@ -92,7 +89,7 @@
 
 /* تبلت */
 @media (max-width: 1024px) {
-  :root {
+  .wrapper {
     --wrapper-padding: 2rem;
     --content-gap: 1.25rem;
     --content-max-width: 20rem;
@@ -106,7 +103,7 @@
 
 /* موبایل */
 @media (max-width: 640px) {
-  :root {
+  .wrapper {
     --wrapper-padding: 1.5rem;
     --content-gap: 1rem;
     --content-max-width: 100%;
