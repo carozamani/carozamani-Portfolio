@@ -10,6 +10,7 @@ type Props = {
   as?: ElementType;
   text?: string;
   href?: string;
+  download?: boolean | string;
   Icon?: typeof FaFilePdf | null;
   fullWidth?: boolean;
   fullWidthMobile?: boolean;
@@ -29,6 +30,7 @@ export default function CtaComponent({
   as,
   text = 'Download Resume',
   href,
+  download,
   Icon = FaFilePdf,
   fullWidth = false,
   fullWidthMobile = true,
@@ -55,6 +57,7 @@ export default function CtaComponent({
   return (
     <Component
       href={isLink ? href : undefined}
+      download={isLink ? download : undefined}
       type={isLink ? undefined : type}
       onClick={onClick}
       disabled={disabled || loading}

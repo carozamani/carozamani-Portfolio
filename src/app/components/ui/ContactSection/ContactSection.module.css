@@ -3,13 +3,13 @@
 /* ====================== */
 
 .wrapper {
-  --bg-dark: #05070f00;
-  --primary: #00f0ff;
-  --secondary: #ffffff;
+  --bg-dark: hsla(228, 50%, 4%, 0);
+  --primary: var(--color-neon-primary);
+  --secondary: var(--color-text-primary);
   --glass: rgba(15, 20, 40, 0.65);
-  --border: rgba(0, 240, 255, 0.25);
-  --text-main: #ffffff;
-  --text-dim: rgba(255, 255, 255, 0.6);
+  --border: hsla(184, 100%, 50%, 0.25);
+  --text-main: var(--color-text-primary);
+  --text-dim: var(--color-text-secondary);
 
   display: flex;
   align-items: center;
@@ -91,7 +91,7 @@
 .title {
   font-size: 2.8rem;
   font-weight: 900;
-  background: #ffffff;
+  background: var(--color-text-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

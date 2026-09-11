@@ -47,6 +47,6 @@
 }
 
 .highlight {
-  color: #00BFFF;
+  color: var(--color-brand-primary-hsl);
   font-weight: 600;
 }

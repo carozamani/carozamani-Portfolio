@@ -46,7 +46,7 @@
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    #0c0d18 0%,
+    var(--color-bg-canvas-alt) 0%,
     rgba(0, 110, 255, 0.11) 50%,
     transparent 100%
   );

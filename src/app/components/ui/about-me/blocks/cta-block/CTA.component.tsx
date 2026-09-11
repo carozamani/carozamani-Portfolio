@@ -3,7 +3,7 @@
 import { FaFilePdf } from 'react-icons/fa';
 import clsx from 'clsx';
 import styles from './CTA.module.css';
-import TypographyComponent from '../../../typography/Typography.component';
+import CtaComponent from '../../../Cta/CTA.component';
 
 type Props = {
   text?: string;
@@ -37,33 +37,20 @@ export default function BlockCTA({
       {/* Neon Glow Background */}
       <div
         className={styles.glow}
-        style={{ backgroundColor: `${glowColor}/10` }}
+        style={{ backgroundColor: glowColor, opacity: 0.1 }}
       />
 
       {/* CTA Content */}
       <div className={styles.content}>
-        <a
+        <CtaComponent
+          text={text}
           href={href}
           download
-          className={clsx(styles.button, fullWidth && styles.buttonFullWidth)}
-        >
-          {/* Icon */}
-          {Icon && (
-            <span
-              className={styles.icon}
-              style={{
-                background: `linear-gradient(to bottom right, ${gradientFrom}, ${gradientTo})`,
-              }}
-            >
-              <Icon size={20} />
-            </span>
-          )}
-
-          {/* Button Text */}
-          <TypographyComponent variant="button" color="text-primary">
-            {text}
-          </TypographyComponent>
-        </a>
+          Icon={Icon}
+          fullWidth={fullWidth}
+          iconGradientFrom={gradientFrom}
+          iconGradientTo={gradientTo}
+        />
       </div>
     </div>
   );

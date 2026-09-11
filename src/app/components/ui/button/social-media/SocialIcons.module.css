@@ -12,7 +12,7 @@
 ====================== */
 
 .icon {
-  --social-color: #fff;
+  --social-color: var(--color-text-primary);
 
   position: relative;
 
@@ -92,7 +92,7 @@
 
   pointer-events: none;
 
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 /* ✨ متن هم‌رنگ آیکون */

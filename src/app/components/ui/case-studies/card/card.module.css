@@ -1,9 +1,9 @@
 .card {
-  --neon-primary: #00f0ff;
-  --neon-secondary: #6a00ff;
-  --bg-dark: #13132b;
-  --text-main: #ffffff;
-  --text-dim: rgba(255, 255, 255, 0.7);
+  --neon-primary: var(--color-neon-primary);
+  --neon-secondary: var(--color-neon-secondary);
+  --bg-dark: var(--color-bg-card-dark);
+  --text-main: var(--color-text-primary);
+  --text-dim: hsla(0, 0%, 100%, 0.7);
   --shadow-glow: rgba(124, 58, 237, 0.45);
 
   display: flex;

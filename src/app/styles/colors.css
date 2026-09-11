@@ -23,6 +23,16 @@
   /* ====================== */
   --color-brand-primary-hsl: hsl(195, 100%, 50%);
   --color-brand-secondary-hsl: hsl(196, 100%, 23%);
+  --color-neon-primary: hsl(184, 100%, 50%);
+  --color-neon-secondary: hsl(265, 100%, 50%);
+
+  /* ====================== */
+  /* Background              */
+  /* ====================== */
+  --color-bg-canvas: hsl(233, 100%, 5%);
+  --color-bg-canvas-alt: hsl(235, 33%, 7%);
+  --color-bg-elevated: hsl(0, 0%, 12%);
+  --color-bg-card-dark: hsl(240, 39%, 12%);
 
   /* ====================== */
   /* Primary Color Palette  */
