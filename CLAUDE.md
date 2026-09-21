@@ -21,8 +21,8 @@ src/
     media/components/ + hooks/
     contact/components/
   components/
-    ui/                 # Atoms (Typography, GlassButton, CTA, AnimatedGradientText, FormFields)
-    shared/             # Product composition (GlassMenu, CursorGlow, Footer, Section)
+    ui/                 # Atoms (Typography, GlassButton, CTA, AnimatedGradientText, FormFields, SocialIcons)
+    shared/             # Product composition (GlassMenu, CursorGlow, Footer, AnimatedSection)
   hooks/                # Global shared hooks
   lib/                  # Shared config, providers, contexts
   types/                # Shared TypeScript types
