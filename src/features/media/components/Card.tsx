@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, MouseEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Card.module.css';
-import { usePlayer } from '../PlayerContext';
+import { usePlayer } from '../hooks/usePlayer';
 import TypographyComponent from '@/components/ui/Typography';
 import type { CardProps } from '@/types/card';
 

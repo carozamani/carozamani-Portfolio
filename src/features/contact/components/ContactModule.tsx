@@ -2,12 +2,12 @@
 
 import { memo } from "react";
 import { motion } from "framer-motion";
-import styles from "./ContactSection.module.css";
+import styles from "./ContactModule.module.css";
 import SocialIcons from '@/components/ui/SocialIcons';
 import FormFields from '@/components/ui/FormFields';
 import { contactSocialLinks } from '@/data/contact';
 
-function ContactSectionComponent() {
+function ContactModuleComponent() {
   return (
     <section className={styles.wrapper}>
       {/* Background effects */}
@@ -79,4 +79,4 @@ function ContactSectionComponent() {
   );
 }
 
-export default memo(ContactSectionComponent);
+export const ContactModule = memo(ContactModuleComponent);

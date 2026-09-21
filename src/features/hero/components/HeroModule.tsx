@@ -14,7 +14,7 @@ import SocialIcons from '@/components/ui/SocialIcons';
 import { titlesToRotate, heroSocialLinks } from '@/data/hero';
 
 import TypographyComponent from '@/components/ui/Typography';
-import styles from './HeroSection.module.css';
+import styles from './HeroModule.module.css';
 
 /* =========================
    Constants (No magic numbers)
@@ -24,7 +24,7 @@ const GLOW_CENTER = 50;
 const GLOW_X_SPEED = 2500;
 const GLOW_Y_SPEED = 3000;
 
-export default function HeroSection() {
+export function HeroModule() {
   const reduceMotion = useReducedMotion();
 
   /* =========================

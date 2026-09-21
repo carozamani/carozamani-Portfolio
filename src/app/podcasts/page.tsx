@@ -1,4 +1,4 @@
-import MediaListPage from '../components/ui/Media/MediaListPage';
+import MediaListPage from '@/features/media/components/MediaListPage';
 import { podcastCards } from '@/data/media';
 
 export default function PodcastsPage() {

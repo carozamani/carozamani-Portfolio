@@ -1,4 +1,4 @@
-import MediaListPage from '../components/ui/Media/MediaListPage';
+import MediaListPage from '@/features/media/components/MediaListPage';
 import { articleCards } from '@/data/media';
 
 export default function ArticlesPage() {

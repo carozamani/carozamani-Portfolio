@@ -1,9 +1,9 @@
 'use client';
 
-import { PlayerProvider } from './PlayerContext';
-import Card from './card/Card';
+import { PlayerProvider } from '../hooks/usePlayer';
+import Card from './Card';
 import type { CardProps } from '@/types/card';
-import styles from './Section.module.css';
+import styles from './MediaSection.module.css';
 
 interface SectionProps {
   type: 'podcast' | 'article';

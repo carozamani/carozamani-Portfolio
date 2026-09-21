@@ -2,15 +2,15 @@
 
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import styles from './AboutMe.module.css';
+import styles from './AboutMeModule.module.css';
 
 // بارگذاری داینامیک بلاک‌ها
-const BlockIntro = dynamic(() => import('./blocks/about-me-block/AboutMe.component'), { ssr: false });
-const BlockTechTags = dynamic(() => import('./blocks/tech-tags-block/TechTags.component'), { ssr: false });
-const BlockCTA = dynamic(() => import('./blocks/cta-block/CTA.component'), { ssr: false });
-const DesignPhilosophyCard = dynamic(() => import('./blocks/design-philosophy-card/DesignPhilosophy.component'), { ssr: false });
+const BlockIntro = dynamic(() => import('./blocks/about-me-block/AboutMeIntro'), { ssr: false });
+const BlockTechTags = dynamic(() => import('./blocks/tech-tags-block/TechTags'), { ssr: false });
+const BlockCTA = dynamic(() => import('./blocks/cta-block/CTA'), { ssr: false });
+const DesignPhilosophyCard = dynamic(() => import('./blocks/design-philosophy-card/DesignPhilosophy'), { ssr: false });
 
-export default function GridPortfolio() {
+export function AboutMeModule() {
   const blocks = [
     { id: 1, component: <BlockIntro />, className: styles.block1 },
     { id: 2, component: <BlockTechTags />, className: styles.block2 },

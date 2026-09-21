@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { caseStudies, getCaseStudyBySlug } from '@/data/caseStudies';
-import CaseStudyDetail from './CaseStudyDetail';
+import CaseStudyDetail from '@/features/case-studies/components/CaseStudyDetail';
 
 export function generateStaticParams() {
   return caseStudies.map((caseStudy) => ({ slug: caseStudy.slug }));

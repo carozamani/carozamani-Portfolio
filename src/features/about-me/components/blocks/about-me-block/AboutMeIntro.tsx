@@ -3,7 +3,7 @@
 import { ReactElement } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import styles from './AboutMe.module.css';
+import styles from './AboutMeIntro.module.css';
 import TypographyComponent from '@/components/ui/Typography';
 
 type Props = {

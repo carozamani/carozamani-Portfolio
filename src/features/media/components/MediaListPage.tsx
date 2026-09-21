@@ -1,7 +1,7 @@
 'use client';
 
-import { PlayerProvider } from './PlayerContext';
-import Card from './card/Card';
+import { PlayerProvider } from '../hooks/usePlayer';
+import Card from './Card';
 import type { CardProps } from '@/types/card';
 import TypographyComponent from '@/components/ui/Typography';
 import styles from './MediaListPage.module.css';
