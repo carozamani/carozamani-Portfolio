@@ -1,6 +1,20 @@
 'use client';
 
-export default function AnimatedGradientText({ children, className = '', colors = ['#A78BFA', '#8B5CF6'], duration = 6 }) {
+import type { ReactNode } from 'react';
+
+type AnimatedGradientTextProps = {
+  children: ReactNode;
+  className?: string;
+  colors?: string[];
+  duration?: number;
+};
+
+export default function AnimatedGradientText({
+  children,
+  className = '',
+  colors = ['#A78BFA', '#8B5CF6'],
+  duration = 6,
+}: AnimatedGradientTextProps) {
   const gradientColors = colors.join(', ');
 
   return (

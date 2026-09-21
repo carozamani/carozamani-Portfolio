@@ -1,5 +1,5 @@
 import MediaListPage from '../components/ui/Media/MediaListPage';
-import { podcastCards } from '../data/media';
+import { podcastCards } from '@/data/media';
 
 export default function PodcastsPage() {
   return (

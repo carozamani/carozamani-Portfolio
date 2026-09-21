@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Section from './Section';
-import { CardProps } from './card/Card';
+import type { CardProps } from '@/types/card';
 import styles from './MediaSection.module.css';
-import TypographyComponent from '../typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 
 export default function MediaSection() {
   return (

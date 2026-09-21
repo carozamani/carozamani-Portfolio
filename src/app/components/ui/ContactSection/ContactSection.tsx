@@ -3,8 +3,8 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 import styles from "./ContactSection.module.css";
-import SocialIcons, { SocialItem } from "../button/social-media/SocialIcons";
-import FormFields from "../form-fields/FormFields";
+import SocialIcons, { SocialItem } from '@/components/ui/SocialIcons';
+import FormFields from '@/components/ui/FormFields';
 
 const socialLinks: SocialItem[] = [
   { type: "linkedin", href: "https://linkedin.com/in/username", color: "#00f0ff" },

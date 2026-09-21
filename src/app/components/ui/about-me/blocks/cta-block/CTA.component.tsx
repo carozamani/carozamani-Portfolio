@@ -3,7 +3,7 @@
 import { FaFilePdf } from 'react-icons/fa';
 import clsx from 'clsx';
 import styles from './CTA.module.css';
-import CtaComponent from '../../../Cta/CTA.component';
+import CtaComponent from '@/components/ui/CTA';
 
 type Props = {
   text?: string;

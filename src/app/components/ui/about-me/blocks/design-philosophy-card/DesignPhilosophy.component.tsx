@@ -4,7 +4,7 @@ import { motion, useAnimationFrame } from 'framer-motion';
 import { useState } from 'react';
 
 import styles from './DesignPhilosophy.module.css';
-import TypographyComponent from '../../../typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 
 export default function DesignPhilosophyCard() {
   const [pos, setPos] = useState({ x: 50, y: 50 });

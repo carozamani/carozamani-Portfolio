@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import styles from './TechTags.module.css';
-import TypographyComponent from '../../../typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 
 interface AutoScrollColumnProps {
   tags: string[];

@@ -5,22 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Card.module.css';
 import { usePlayer } from '../PlayerContext';
-import TypographyComponent from '../../typography/Typography.component';
-
-
-export interface CardProps {
-  id: string;
-  type: 'podcast' | 'article';
-  title: string;
-  summary: string;
-  image?: string;
-  audioSrc?: string;
-  href?: string;
-  date: string;
-  listeners?: number;
-  duration?: string;
-  readTime?: string;
-}
+import TypographyComponent from '@/components/ui/Typography';
+import type { CardProps } from '@/types/card';
 
 export default function Card({
   id,

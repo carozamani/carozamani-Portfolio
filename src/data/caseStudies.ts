@@ -1,9 +1,4 @@
-export type CaseStudy = {
-  slug: string;
-  title: string;
-  /** مسیر عکس کیس‌استادی که تو فیگما طراحی می‌کنی، داخل public/case-studies بذار و آدرسش رو اینجا بده. مثال: '/case-studies/project-one.jpg' */
-  image: string;
-};
+import type { CaseStudy } from '@/types/caseStudy';
 
 export const caseStudies: CaseStudy[] = [
   {

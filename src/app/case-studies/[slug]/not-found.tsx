@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import TypographyComponent from '../../components/ui/typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 
 export default function CaseStudyNotFound() {
   return (

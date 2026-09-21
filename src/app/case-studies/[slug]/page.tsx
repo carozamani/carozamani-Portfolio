@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { caseStudies, getCaseStudyBySlug } from '../../data/caseStudies';
+import { caseStudies, getCaseStudyBySlug } from '@/data/caseStudies';
 import CaseStudyDetail from './CaseStudyDetail';
 
 export function generateStaticParams() {

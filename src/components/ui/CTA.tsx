@@ -4,7 +4,7 @@ import { ElementType } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 import clsx from 'clsx';
 import styles from './CTA.module.css';
-import TypographyComponent from '../typography/Typography.component';
+import TypographyComponent from './Typography';
 
 type Props = {
   as?: ElementType;

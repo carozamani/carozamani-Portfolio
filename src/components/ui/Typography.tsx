@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 
 import styles from "./Typography.module.css";
-import { ColorType } from "@/app/types/color.type";
+import { ColorType } from "@/types/color";
 
 type VariantType =
   | "h1"

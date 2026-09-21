@@ -1,4 +1,4 @@
-import type { CardProps } from '../components/ui/Media/card/Card';
+import type { CardProps } from '@/types/card';
 
 export const podcastCards: CardProps[] = [
   {

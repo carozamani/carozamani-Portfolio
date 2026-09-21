@@ -12,9 +12,9 @@ import {
 import TextRotator from './TextRotator';
 import SocialIcons, {
   SocialItem,
-} from '../button/social-media/SocialIcons';
+} from '@/components/ui/SocialIcons';
 
-import TypographyComponent from '../typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 import styles from './HeroSection.module.css';
 
 /* =========================

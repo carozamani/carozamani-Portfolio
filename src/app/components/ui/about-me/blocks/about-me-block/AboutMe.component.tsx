@@ -4,7 +4,7 @@ import { ReactElement } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './AboutMe.module.css';
-import TypographyComponent from '../../../typography/Typography.component';
+import TypographyComponent from '@/components/ui/Typography';
 
 type Props = {
   title?: string;

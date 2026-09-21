@@ -1,7 +1,7 @@
 'use client';
 
-import CtaComponent from '../../components/ui/Cta/CTA.component';
-import type { CaseStudy } from '../../data/caseStudies';
+import CtaComponent from '@/components/ui/CTA';
+import type { CaseStudy } from '@/types/caseStudy';
 import styles from './CaseStudyDetail.module.css';
 
 export default function CaseStudyDetail({ caseStudy }: { caseStudy: CaseStudy }) {

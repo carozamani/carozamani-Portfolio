@@ -1,7 +1,8 @@
 'use client';
 
 import { PlayerProvider } from './PlayerContext';
-import Card, { CardProps } from './card/Card';
+import Card from './card/Card';
+import type { CardProps } from '@/types/card';
 import styles from './Section.module.css';
 
 interface SectionProps {
