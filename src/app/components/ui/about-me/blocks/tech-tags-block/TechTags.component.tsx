@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import styles from './TechTags.module.css';
 import TypographyComponent from '@/components/ui/Typography';
+import { tagsLeft, tagsRight } from '@/data/techTags';
 
 interface AutoScrollColumnProps {
   tags: string[];
@@ -30,20 +31,6 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
 }
 
 export default function BlockTechTags() {
- const tagsLeftBase = [
-  'User Research',
-  'Wireframing',
-  'Prototyping',
-  'Interaction Design'
-];
-
-const tagsRightBase = [
-  'Visual Design',
-  'Figma',
-  'Usability Testing',
-  'Design Systems'
-];
-
   return (
     <div className={styles.blockContainer}>
       <div className={styles.gridContainer}>
@@ -59,8 +46,8 @@ const tagsRightBase = [
 
         {/* ستون راست */}
         <div className={styles.rightSection}>
-          <AutoScrollColumn tags={tagsLeftBase} />
-          <AutoScrollColumn tags={tagsRightBase} reverse offsetClass={styles.offsetTop} />
+          <AutoScrollColumn tags={tagsLeft} />
+          <AutoScrollColumn tags={tagsRight} reverse offsetClass={styles.offsetTop} />
         </div>
       </div>
     </div>

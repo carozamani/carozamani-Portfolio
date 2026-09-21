@@ -1,7 +1,7 @@
 // app/layout.tsx یا app/layout.jsx
 import { Toaster } from 'sonner'; // ✨ وارد کردن Toaster
-import CursorGlow from './components/ui/CursorGlow';
-import GlassMenu from './components/ui/GlassMenu';
+import CursorGlow from '@/components/shared/CursorGlow';
+import GlassMenu from '@/components/shared/GlassMenu';
 
 
 import "@/styles/typography.css";

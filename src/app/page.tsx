@@ -7,7 +7,7 @@ import MediaSection from "./components/ui/Media/MediaSection.component";
 
 import ContactSection from './components/ui/ContactSection/ContactSection';
 import QuantumCarousel from './components/ui/case-studies/quantum-carousel/QuantumCarousel.component';
-import Footer from './components/ui/Footer/Footer';
+import Footer from '@/components/shared/Footer';
 
 export default function HomePage() {
   const sectionAnimation = {

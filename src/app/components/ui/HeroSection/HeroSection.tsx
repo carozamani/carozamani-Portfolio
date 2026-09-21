@@ -10,9 +10,8 @@ import {
 } from 'framer-motion';
 
 import TextRotator from './TextRotator';
-import SocialIcons, {
-  SocialItem,
-} from '@/components/ui/SocialIcons';
+import SocialIcons from '@/components/ui/SocialIcons';
+import { titlesToRotate, heroSocialLinks } from '@/data/hero';
 
 import TypographyComponent from '@/components/ui/Typography';
 import styles from './HeroSection.module.css';
@@ -24,40 +23,6 @@ const GLOW_RADIUS = 1000;
 const GLOW_CENTER = 50;
 const GLOW_X_SPEED = 2500;
 const GLOW_Y_SPEED = 3000;
-
-/* =========================
-   Rotating titles
-========================= */
-const titlesToRotate: string[] = [
-  'User Experience Designer',
-  'Product Designer',
-  'UI Designer',
-  'Interaction Designer',
-  'Visual Designer',
-  'Creative Problem Solver',
-];
-
-/* =========================
-   Social Links (NEW API)
-   👇 فقط type + href + color
-========================= */
-const socialLinks: SocialItem[] = [
-  {
-    type: 'linkedin',
-    href: 'https://linkedin.com/in/username',
-    color: '#0077B5',
-  },
-  {
-    type: 'dribbble',
-    href: 'https://dribbble.com/username',
-    color: '#EA4C89',
-  },
-  {
-    type: 'castbox',
-    href: 'https://castbox.fm/username',
-    color: '#FF5E00',
-  },
-];
 
 export default function HeroSection() {
   const reduceMotion = useReducedMotion();
@@ -171,7 +136,7 @@ export default function HeroSection() {
         transition={{ duration: 0.4, delay: 0.6 }}
       >
         <SocialIcons
-          items={socialLinks}
+          items={heroSocialLinks}
           bordered
         />
       </motion.div>

@@ -2,14 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
-
-const navItems = [
-  { href: '#Home', label: 'Home' },
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#testimonials', label: 'Media' },
-  { href: '#contact', label: 'Contact' },
-];
+import { navItems } from '@/data/navigation';
 
 export default function GlassMenu() {
   const [currentHash, setCurrentHash] = useState('#Home');

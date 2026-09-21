@@ -3,14 +3,9 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 import styles from "./ContactSection.module.css";
-import SocialIcons, { SocialItem } from '@/components/ui/SocialIcons';
+import SocialIcons from '@/components/ui/SocialIcons';
 import FormFields from '@/components/ui/FormFields';
-
-const socialLinks: SocialItem[] = [
-  { type: "linkedin", href: "https://linkedin.com/in/username", color: "#00f0ff" },
-  { type: "castbox", href: "https://castbox.fm/username", color: "#ff6b00" },
-  { type: "github", href: "https://github.com/username", color: "#ffffff" },
-];
+import { contactSocialLinks } from '@/data/contact';
 
 function ContactSectionComponent() {
   return (
@@ -48,7 +43,7 @@ function ContactSectionComponent() {
               </div>
             </div>
 
-            <SocialIcons items={socialLinks} bordered={false} />
+            <SocialIcons items={contactSocialLinks} bordered={false} />
           </div>
 
           {/* FORM SIDE */}
