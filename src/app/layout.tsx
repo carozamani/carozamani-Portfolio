@@ -1,4 +1,5 @@
 // app/layout.tsx یا app/layout.jsx
+import type { Metadata } from 'next';
 import { Toaster } from 'sonner'; // ✨ وارد کردن Toaster
 import CursorGlow from '@/components/shared/CursorGlow';
 import GlassMenu from '@/components/shared/GlassMenu';
@@ -11,6 +12,12 @@ import "@/styles/shapes.css";
 import "@/styles/spacing.css";
 
 import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'Caro Zamani — UX & Product Designer',
+  description:
+    'Portfolio of Caro Zamani, a UX/Product Designer crafting seamless, user-centered digital experiences.',
+};
 
 type RootLayoutProps = {
   children: React.ReactNode;
