@@ -1,18 +1,11 @@
 'use client';
 
-import styles from "./SocialIcons.module.css";
-import {
-  FaLinkedin,
-  FaGithub,
-  FaTwitter,
-  FaDribbble,
-} from "react-icons/fa";
-import { SiCastbox } from "react-icons/si";
-import React from "react";
+import styles from './SocialIcons.module.css';
+import { FaLinkedin, FaGithub, FaTwitter, FaDribbble } from 'react-icons/fa';
+import { SiCastbox } from 'react-icons/si';
+import React from 'react';
+import clsx from 'clsx';
 
-/* =========================
-   Icon Registry
-========================= */
 const ICON_MAP = {
   linkedin: FaLinkedin,
   github: FaGithub,
@@ -23,10 +16,6 @@ const ICON_MAP = {
 
 type SocialType = keyof typeof ICON_MAP;
 
-/* =========================
-   Types
-========================= */
-
 export type SocialItem = {
   type: SocialType;
   href?: string;
@@ -34,49 +23,33 @@ export type SocialItem = {
 };
 
 type Props = {
-  items?: SocialItem[]; // ← safe
+  items?: SocialItem[];
   bordered?: boolean;
   className?: string;
 };
 
-/* =========================
-   Component
-========================= */
-
-export default function SocialIcons({
-  items = [], // ← ضد کرش
-  bordered = true,
-  className = "",
-}: Props) {
+export default function SocialIcons({ items = [], bordered = true, className = '' }: Props) {
   return (
-    <ul className={`${styles.wrapper} ${className}`}>
+    <ul className={clsx(styles.wrapper, className)}>
       {items.map((item) => {
         const Icon = ICON_MAP[item.type];
+        const label = item.type.charAt(0).toUpperCase() + item.type.slice(1);
 
         return (
           <li
             key={item.type}
-            className={`
-              ${styles.icon}
-              ${!bordered ? styles.noBorder : ""}
-            `}
-            style={
-              {
-                "--social-color": item.color ?? "#ffffff",
-              } as React.CSSProperties
-            }
+            className={clsx(styles.icon, !bordered && styles.noBorder)}
+            style={{ '--social-color': item.color ?? '#ffffff' } as React.CSSProperties}
           >
             <a
               href={item.href}
               target="_blank"
               rel="noreferrer"
               className={styles.link}
+              aria-label={label}
             >
-                <Icon />
-
-              <span className={styles.tooltip}>
-                {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-              </span>
+              <Icon aria-hidden="true" />
+              <span className={styles.tooltip}>{label}</span>
             </a>
           </li>
         );
