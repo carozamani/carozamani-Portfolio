@@ -10,187 +10,294 @@
   overflow: hidden;
 }
 
-/* ================= GRID ================= */
-
-.gridLayout {
-  width: 100%;
-  max-width: 1200px;
-  display: grid;
-  gap: clamp(1.5rem, 3vw, 3rem);
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+.header {
   position: relative;
   z-index: 10;
-}
-
-/* تبلت */
-@media (min-width: 768px) {
-  .gridLayout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* دسکتاپ */
-@media (min-width: 1200px) {
-  .gridLayout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.gridItem {
   width: 100%;
-  display: flex;
+  max-width: 75rem;
+  text-align: left;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
 }
 
-/* ================= FEATURE CARD ================= */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-hero-ring);
+}
 
-.featureItem {
+.eyebrow::before,
+.eyebrow::after {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-hero-ring));
+}
+
+.eyebrow::after {
+  background: linear-gradient(to left, transparent, var(--color-hero-ring));
+}
+
+.sectionTitle {
+  margin-top: 0.75rem;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.sectionDescription {
+  margin-top: 0.75rem;
+  font-size: var(--font-size-body1);
+  color: var(--color-text-secondary);
+}
+
+/* ==================== Editorial project table ==================== */
+/* A real CSS Grid table: .list defines the column tracks once, and every
+   row's <li>/<Link> collapse with display:contents so their cells become
+   direct grid items sharing those SAME tracks. That's what makes the
+   vertical dividers land in exactly the same spot on every row, automatically
+   — no per-row measuring or magic-number offsets needed. */
+
+.listWrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 75rem;
+}
+
+.list {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-radius: 1rem;
-  background: transparent;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  overflow: hidden;
-  text-align: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr 20rem;
+  border-top: 1px solid var(--color-neutral-gray-soft);
+}
 
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+  .list {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.listItem {
+  display: contents;
+}
+
+.row {
+  display: contents;
+}
+
+.rowLogoColumn,
+.rowTitleWrap,
+.rowPreviewCell {
+  border-bottom: 1px solid var(--color-neutral-gray-soft);
+}
+
+.rowLogoColumn {
+  grid-column: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(1.25rem, 3vw, 1.75rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
+  border-right: 1px solid var(--color-neutral-gray-soft);
+}
+
+.rowLogo {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: hsla(233, 60%, 8%, 0.6);
+  border: 1px solid var(--color-border-muted);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  transition: opacity var(--transition-slow);
+}
+
+.rowLogoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+.rowLogoGlyph {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.rowTitleWrap {
+  grid-column: 2;
+  position: relative;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  /* این خط خیلی مهمه 👇 */
-  min-width: 0;
+  gap: 0.5rem;
+  padding-block: clamp(1.25rem, 3vw, 1.75rem);
+  padding-inline: clamp(1rem, 3vw, 2rem);
 }
 
-/* جلوگیری از کش آمدن آیتم داخل ستون */
-.gridItem > .featureItem {
-  flex: 1;
-}
-
-/* ================= BACKGROUND ================= */
-
-.featureBackground {
+/* extend the divider past the table's own top/bottom edge, on the first
+   and last row only — a literal extension of the same border, so it can't
+   go out of alignment with it */
+.listItem:first-child .rowLogoColumn::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  top: -1.5rem;
+  right: -1px;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--color-neutral-gray-soft);
 }
 
-.backgroundImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.2;
-  transition: opacity 0.3s ease;
-}
-
-.featureItem:hover .backgroundImage {
-  opacity: 0.3;
-}
-
-.backgroundOverlay {
+.listItem:last-child .rowLogoColumn::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: transparent;
+  bottom: -1.5rem;
+  right: -1px;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--color-neutral-gray-soft);
 }
 
-/* ================= CONTENT ================= */
+.rowTitle {
+  display: block;
+  max-width: min(100%, 24ch);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.05;
+  color: var(--color-text-secondary);
+  transition:
+    color var(--transition-normal),
+    opacity var(--transition-slow);
+}
 
-.featureContent {
+.rowSummary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-width: 34rem;
+  min-height: 3em;
+  line-height: 1.5;
+  overflow: hidden;
+  font-size: var(--font-size-body2);
+  color: var(--color-text-muted);
+  transition:
+    color var(--transition-normal),
+    opacity var(--transition-slow);
+}
+
+.rowSubtitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  transition:
+    color var(--transition-normal),
+    opacity var(--transition-slow);
+}
+
+/* ---- fixed image reveal, tilted — sized to fit inside its own row's height,
+   so it (and its glow) never spills into a neighboring row's border ---- */
+
+.rowPreviewCell {
+  grid-column: 3;
   position: relative;
-  z-index: 10;
 }
 
-.iconWrapper {
-  margin-bottom: clamp(0.75rem, 2vw, 1rem);
-  padding: clamp(0.75rem, 2vw, 1rem);
-  border-radius: 0.75rem;
-  background-color: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(71, 85, 105, 0.3);
-  display: inline-flex;
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+  .rowPreviewCell {
+    display: none;
+  }
 }
 
-.iconImage {
-  width: clamp(2rem, 4vw, 2.5rem);
-  height: clamp(2rem, 4vw, 2.5rem);
-  object-fit: contain;
-}
-
-.featureTitle {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.featureDescription {
-  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-}
-
-/* ================= BACKGROUND EFFECTS ================= */
-
-.backgroundEffects {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.horizontalLine {
+.rowPreview {
   position: absolute;
   top: 50%;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(59,130,246,.5), transparent);
-  transform: translateY(-50%);
-  opacity: .2;
+  left: 50%;
+  height: clamp(11rem, 17vw, 14rem);
+  z-index: 3;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface-canvas);
+  border: 1px solid rgba(0, 110, 255, 0.322);
+  box-shadow: 0 0 25px hsla(212, 100%, 50%, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-4deg) scale(0.94);
+  transition:
+    opacity var(--transition-normal),
+    transform var(--transition-normal);
 }
 
-.verticalLine {
-  position: absolute;
-  left: 50%;
+.row[data-active='true'] .rowPreview {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(-4deg) scale(1);
+}
+
+.row[data-active='true'] .rowTitle {
+  color: var(--color-text-primary);
+}
+
+.row[data-active='true'] .rowSummary {
+  color: var(--color-text-secondary);
+}
+
+.row[data-active='true'] .rowSubtitle {
+  color: hsla(0, 0%, 100%, 0.92);
+}
+
+.rowPreviewImage {
+  object-fit: cover;
+}
+
+.rowPreviewPlaceholder {
+  width: 100%;
   height: 100%;
-  width: 1px;
-  background: linear-gradient(to bottom, transparent, rgba(59,130,246,.5), transparent);
-  transform: translateX(-50%);
-  opacity: .2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, hsl(222, 100%, 14%), hsl(226, 100%, 9%));
+  font-size: 3rem;
+  font-weight: var(--font-weight-bold);
+  color: hsla(193, 100%, 75%, 0.55);
+}
+
+.emptyState {
+  position: relative;
+  z-index: 10;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body1);
 }
 
 .centerGlow {
   position: absolute;
   top: 50%;
-  left: 50%;
-  width: clamp(12rem, 25vw, 18rem);
-  height: clamp(12rem, 25vw, 18rem);
-  background: rgba(59,130,246,.15);
+  left: 0;
+  width: 100%;
+  height: clamp(20rem, 32vw, 28rem);
+  background: hsla(212, 100%, 50%, 0.16);
   border-radius: 50%;
-  filter: blur(80px);
-  transform: translate(-50%, -50%);
-}
-
-/* ================= CENTER RECTANGLE GLOW ================= */
-
-/* پیش‌فرض: مخفی (موبایل) */
-.centerRectangle {
-  display: none;
-}
-
-/* از تبلت به بالا نمایش داده شود */
-@media (min-width: 768px) {
-  .centerRectangle {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-}
-@media (max-width: 767px) {
-  .horizontalLine,
-  .verticalLine {
-    display: none;
-  }
+  filter: blur(140px);
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
 }

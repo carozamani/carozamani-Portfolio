@@ -1,101 +1,94 @@
 'use client';
-import React from 'react';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { caseStudies } from '@/data/caseStudies';
 import styles from './QuantumCarousel.module.css';
 
-// Reusable Feature Item Component
-const FeatureItem = ({
-  backgroundImage,
-  iconImage,
-  title,
-  description,
-}: {
-  backgroundImage: string;
-  iconImage: string;
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className={styles.featureItem}>
-      <div className={styles.featureBackground}>
-        <img 
-          src={backgroundImage} 
-          alt={`${title} background`}
-          className={styles.backgroundImage}
-        />
-        <div className={styles.backgroundOverlay}></div>
-      </div>
+const DEFAULT_ACTIVE_SLUG = caseStudies[0]?.slug ?? null;
 
-      <div className={styles.featureContent}>
-        <div className={styles.iconWrapper}>
-          <img src={iconImage} alt={title} className={styles.iconImage} />
-        </div>
-        <h3 className={styles.featureTitle}>{title}</h3>
-        <p className={styles.featureDescription}>{description}</p>
-      </div>
-    </div>
-  );
-};
-
-const QuantumCarousel = () => {
-  const features = [
-    {
-      backgroundImage: "/backgrounds/cloak-bg.jpg",
-      iconImage: "/icons/cloak.png",
-      title: "Cloak Mode",
-      description: "Overcomes VPN blocks by disguising your VPN traffic as regular web traffic."
-    },
-    {
-      backgroundImage: "/backgrounds/split-bg.jpg",
-      iconImage: "/icons/split.png",
-      title: "Split Tunneling",
-      description: "Split traffic by country, apps, and IPs to save data and boost speed."
-    },
-    {
-      backgroundImage: "/backgrounds/dns-bg.jpg",
-      iconImage: "/icons/dns.png",
-      title: "Private DNS",
-      description: "Manage how website addresses resolve using Private DNS configuration."
-    },
-    {
-      backgroundImage: "/backgrounds/kill-bg.jpg",
-      iconImage: "/icons/kill.png",
-      title: "Kill Switch",
-      description: "Automatically blocks all internet traffic if the VPN disconnects."
-    }
-  ];
+export default function QuantumCarousel() {
+  const [activeSlug, setActiveSlug] = useState<string | null>(DEFAULT_ACTIVE_SLUG);
 
   return (
     <div className={styles.carouselContainer}>
-      {/* Background Lines + Glow */}
-      <div className={styles.backgroundEffects}>
-        <div className={styles.horizontalLine}></div>
-        <div className={styles.verticalLine}></div>
-        <div className={styles.centerGlow}></div>
+      <div className={styles.header}>
+        <h2 className={styles.sectionTitle}>Projects</h2>
+        <p className={styles.sectionDescription}>
+          A selection of case studies from my recent work.
+        </p>
       </div>
 
-      {/* Main Grid */}
-      <div className={styles.gridLayout}>
-        {features.map((feature, index) => (
-          <div 
-            key={index}
-            className={`${styles.gridItem} ${styles[`item${index}`]}`}
-          >
-            <FeatureItem
-              backgroundImage={feature.backgroundImage}
-              iconImage={feature.iconImage}
-              title={feature.title}
-              description={feature.description}
-            />
-          </div>
-        ))}
-      </div>
+      {caseStudies.length > 0 ? (
+        <div className={styles.listWrapper}>
+          <div className={styles.centerGlow} aria-hidden="true" />
 
-      {/* Center Rectangle Glow */}
-      <div className={styles.centerRectangle}>
-        <div className={styles.rectangleGlow}></div>
-      </div>
+          <ul className={styles.list}>
+            {caseStudies.map((caseStudy) => {
+              const isActive = activeSlug === caseStudy.slug;
+              const subtitle = [caseStudy.tag, caseStudy.year].filter(Boolean).join(' · ');
+
+              return (
+                <li key={caseStudy.slug} className={styles.listItem}>
+                  <Link
+                    href={`/case-studies/${caseStudy.slug}`}
+                    className={styles.row}
+                    data-active={isActive}
+                    onMouseEnter={() => setActiveSlug(caseStudy.slug)}
+                  >
+                    <span className={styles.rowLogoColumn}>
+                      <span className={styles.rowLogo} title={caseStudy.companyName}>
+                        {caseStudy.companyLogo ? (
+                          <Image
+                            src={caseStudy.companyLogo}
+                            alt={caseStudy.companyName ?? ''}
+                            width={28}
+                            height={28}
+                            className={styles.rowLogoImage}
+                          />
+                        ) : (
+                          <span className={styles.rowLogoGlyph}>
+                            {(caseStudy.companyName ?? caseStudy.title).charAt(0)}
+                          </span>
+                        )}
+                      </span>
+                    </span>
+
+                    <span className={styles.rowTitleWrap}>
+                      <span className={styles.rowTitle}>{caseStudy.title}</span>
+                      {caseStudy.description && (
+                        <span className={styles.rowSummary}>{caseStudy.description}</span>
+                      )}
+                      {subtitle && <span className={styles.rowSubtitle}>{subtitle}</span>}
+                    </span>
+
+                    <span className={styles.rowPreviewCell} aria-hidden="true">
+                      <span className={styles.rowPreview}>
+                        {caseStudy.image ? (
+                          <Image
+                            src={caseStudy.image}
+                            alt=""
+                            fill
+                            sizes="384px"
+                            className={styles.rowPreviewImage}
+                          />
+                        ) : (
+                          <div className={styles.rowPreviewPlaceholder}>
+                            <span>{caseStudy.title.charAt(0)}</span>
+                          </div>
+                        )}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : (
+        <p className={styles.emptyState}>Case studies are coming soon.</p>
+      )}
     </div>
   );
-};
-
-export default QuantumCarousel;
+}

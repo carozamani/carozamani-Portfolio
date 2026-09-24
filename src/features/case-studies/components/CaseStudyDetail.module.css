@@ -20,10 +20,16 @@
   padding: clamp(6rem, 10vw, 8rem) var(--space-l) clamp(4rem, 8vw, 6rem);
 }
 
-.caseStudyImage {
-  display: block;
+.caseStudyImageWrapper {
+  position: relative;
   width: 100%;
-  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg, 1rem);
+  overflow: hidden;
+}
+
+.caseStudyImage {
+  object-fit: cover;
 }
 
 .placeholder {
