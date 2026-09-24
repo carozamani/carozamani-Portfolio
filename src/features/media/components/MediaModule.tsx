@@ -5,6 +5,8 @@ import MediaSection from './MediaSection';
 import { podcastCards, articleCards } from '@/data/media';
 import styles from './MediaModule.module.css';
 import TypographyComponent from '@/components/ui/Typography';
+import Button from '@/components/ui/Button';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 export function MediaModule() {
   return (
@@ -20,6 +22,8 @@ export function MediaModule() {
             <ContentBlock
               title="Podcasts"
               description="Episodes about design, UX, product thinking, and challenges."
+              href="/podcasts"
+              iconLeft={<FiArrowLeft />}
             />
           }
           cards={podcastCards}
@@ -34,6 +38,8 @@ export function MediaModule() {
             <ContentBlock
               title="Articles"
               description="Read insightful articles about UX, UI, and design systems."
+              href="/articles"
+              iconRight={<FiArrowRight />}
             />
           }
           cards={articleCards}
@@ -57,7 +63,15 @@ const AnimatedBlock = ({ children, delay }: { children: React.ReactNode; delay: 
   </motion.div>
 );
 
-const ContentBlock = ({ title, description }: { title: string; description: string }) => (
+interface ContentBlockProps {
+  title: string;
+  description: string;
+  href: string;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
+}
+
+const ContentBlock = ({ title, description, href, iconLeft, iconRight }: ContentBlockProps) => (
   <div className={styles.contentBlock}>
     <TypographyComponent variant="h2" color="text-primary" className={styles.title}>
       {title}
@@ -66,6 +80,15 @@ const ContentBlock = ({ title, description }: { title: string; description: stri
     <TypographyComponent variant="body1" color="text-secondary" className={styles.description}>
       {description}
     </TypographyComponent>
+
+    <Button
+      text="View more"
+      variant="ghost"
+      href={href}
+      iconLeft={iconLeft}
+      iconRight={iconRight}
+      className={styles.viewMore}
+    />
   </div>
 );
 
