@@ -1,140 +1,122 @@
-/* =========================
-   Hero Section
-========================= */
-
 .heroSection {
   position: relative;
   width: 100%;
   min-height: 100vh;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   padding: var(--space-xl) var(--space-l);
-  color: white;
-
-  background: var(--hero-bg-gradient);
+  color: var(--color-text-primary);
+  background: var(--gradient-hero-bg);
   overflow: hidden;
 }
-
-/* =========================
-   Grid Overlay (UNCHANGED)
-========================= */
 
 .gridOverlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.123) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.126) 1px, transparent 1px);
-
-  background-size: 6.25rem 6.25rem; /* 100px — ثابت */
+  background-image: var(--grid-pattern);
+  background-size: 6.25rem 6.25rem;
 }
-
-/* =========================
-   Profile Wrapper
-========================= */
 
 .profileWrapper {
   position: relative;
   z-index: 10;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem; /* 16px */
-
-  margin-bottom: 1.5rem; /* 24px */
+  gap: 1rem;
+  margin-bottom: 1.5rem;
   width: 100%;
 }
 
-/* =========================
-   Profile Image
-========================= */
-
 .profileImageContainer {
   position: relative;
-
-  padding: 0.5rem; /* 8px */
+  padding: 1.5rem;
   border-radius: 50%;
-
-  border: var(--card-border-xl);
-  box-shadow: var(--card-box-shadow);
+  border: var(--hero-ring-border);
+  box-shadow: var(--hero-ring-shadow);
 }
 
-.profileImage {
-  width: 230px;
-  height: 230px;
+.flipCard {
+  width: 190px;
+  height: 190px;
+  perspective: 62.5rem;
+}
 
+.flipInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--duration-slower) cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flipCard:hover .flipInner {
+  transform: rotateY(180deg);
+}
+
+.flipFace {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 50%;
+}
+
+.flipBack {
+  transform: rotateY(180deg);
+}
+
+.flipBackImage {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
 
-/* =========================
-   Logo
-========================= */
-
-.logoImage {
-  margin-top: 0.5rem; /* 8px */
-  width: 250px;
-  height: auto;
-
-  filter: drop-shadow(0 0 0.625rem rgba(0, 0, 0, 0.5));
+.profileImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-/* =========================
-   Title
-========================= */
+.logoImage {
+  margin-top: 0.5rem;
+  width: 250px;
+  height: auto;
+  filter: drop-shadow(0 0 0.625rem hsla(0, 0%, 0%, 0.5));
+}
 
 .titleContainer {
   position: relative;
   z-index: 10;
-
   text-align: center;
-  margin-bottom: 1rem; /* 16px */
+  margin-bottom: 1rem;
 }
-
-/* =========================
-   Subtitle
-========================= */
 
 .subtitleContainer {
   position: relative;
   z-index: 10;
-
   text-align: center;
-  max-width: 43.75rem; /* 700px */
-
-  padding-inline: 0.5rem; /* 8px */
-  margin-bottom: 2.5rem; /* 40px */
+  max-width: 43.75rem;
+  padding-inline: 0.5rem;
+  margin-bottom: 2.5rem;
 }
-
-/* =========================
-   Social Icons
-========================= */
 
 .socialContainer {
   position: relative;
   z-index: 10;
-
   display: flex;
-  gap: 1rem; /* 16px */
+  gap: 1rem;
 }
 
-/* =========================
-   Responsive Adjustments
-========================= */
-
-/* Tablet */
 @media (max-width: 768px) {
-  .profileImage {
-    width: 200px;
-    height: 200px;
+  .flipCard {
+    width: 160px;
+    height: 160px;
   }
 
   .logoImage {
@@ -142,11 +124,10 @@
   }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
-  .profileImage {
-    width: 180px;
-    height: 180px;
+  .flipCard {
+    width: 140px;
+    height: 140px;
   }
 
   .logoImage {
@@ -155,5 +136,15 @@
 
   .subtitleContainer {
     max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipInner {
+    transition: none;
+  }
+
+  .flipCard:hover .flipInner {
+    transform: none;
   }
 }
