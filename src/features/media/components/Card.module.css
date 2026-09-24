@@ -1,12 +1,12 @@
 .cardLink,
 .cardDiv {
-position: relative;
+  position: relative;
   display: flex;
   flex-direction: row; /* پیش‌فرض افقی */
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  border-radius: 1.875rem;
+  border-radius: var(--radius-card);
   cursor: pointer;
   overflow: hidden;
   transition: all 0.5s;
@@ -27,7 +27,7 @@ position: relative;
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 1.5rem;
+  border-radius: var(--radius-card);
   border: 1px solid transparent; /* px باقی موند */
   background: linear-gradient(to bottom right, rgba(0, 68, 255, 0.2), rgba(0, 85, 119, 0.2));
   opacity: 0.4;
@@ -85,7 +85,6 @@ position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px var(--drop-shadow); /* px باقی موند */
   transition: all 0.5s;
 }
 
@@ -133,7 +132,7 @@ position: relative;
 .glowOverlay {
   position: absolute;
   inset: 0;
-  border-radius: 1.5rem;
+  border-radius: var(--radius-card);
   background-color: rgba(0, 110, 255, 0.1);
   box-shadow: 0 0 45px var(--drop-shadow); /* px باقی موند */
   pointer-events: none;
@@ -144,9 +143,8 @@ position: relative;
   width: 2.5rem;
   height: 2.5rem;
   color: white;
-  filter: drop-shadow(0 0 0.25rem rgba(0,0,0,0.5));
+  filter: drop-shadow(0 0 0.25rem rgba(0, 0, 0, 0.5));
 }
-
 
 @media (min-width: 768px) {
   .cardLink,
@@ -177,7 +175,7 @@ position: relative;
 
 /* جلوگیری از بزرگ شدن بیش از حد عنوان در موبایل */
 .title {
-  font-size: 1rem !important; 
+  font-size: 1rem !important;
   line-height: 1.2;
   margin-bottom: 0.25rem;
 }
