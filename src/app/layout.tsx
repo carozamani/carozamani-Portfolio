@@ -1,22 +1,52 @@
-// app/layout.tsx یا app/layout.jsx
-import type { Metadata } from 'next';
-import { Toaster } from 'sonner'; // ✨ وارد کردن Toaster
-import CursorGlow from '@/components/shared/CursorGlow';
+import type { Metadata, Viewport } from 'next';
+import { Inter, Outfit } from 'next/font/google';
+import { Toaster } from 'sonner';
 import GlassMenu from '@/components/shared/GlassMenu';
+import { ScrollbarReveal } from '@/components/shared/ScrollbarReveal';
 
-
-import "@/styles/typography.css";
-import "@/styles/colors.css";
-import "@/styles/shadows.css";
-import "@/styles/shapes.css";
-import "@/styles/spacing.css";
+import '@/styles/colors.css';
+import '@/styles/typography.css';
+import '@/styles/spacing.css';
+import '@/styles/shadows.css';
+import '@/styles/shapes.css';
+import '@/styles/motion.css';
 
 import './globals.css';
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const brandFont = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-brand',
+});
+
+const siteTitle = 'Caro Zamani — UX & Product Designer';
+const siteDescription =
+  'Portfolio of Caro Zamani, a UX/Product Designer crafting seamless, user-centered digital experiences.';
+
+export const viewport: Viewport = {
+  themeColor: '#000814',
+};
+
 export const metadata: Metadata = {
-  title: 'Caro Zamani — UX & Product Designer',
-  description:
-    'Portfolio of Caro Zamani, a UX/Product Designer crafting seamless, user-centered digital experiences.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteTitle,
+    description: siteDescription,
+  },
 };
 
 type RootLayoutProps = {
@@ -25,24 +55,22 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" dir="ltr">
-      <body className="relative w-full min-h-screen bg-top bg-cover bg-no-repeat">
+    <html lang="en" dir="ltr" className={`${brandFont.variable} ${inter.variable}`}>
+      <body className="relative min-h-screen w-full bg-cover bg-top bg-no-repeat">
+        <a href="#main-content" className="skipLink">
+          Skip to main content
+        </a>
 
-        {/* Fixed menu at the top */}
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+        <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2">
           <GlassMenu />
         </div>
+        <ScrollbarReveal />
 
-        {/* Full-width content */}
-        <main className="relative z-20 w-full h-full">
-          <CursorGlow />
+        <main id="main-content" className="relative z-20 h-full w-full">
           {children}
         </main>
 
-        {/* Sonner Toaster */}
-        {/* richColors + position="bottom-right" برای نمایش زیبا در پایین سمت راست */}
         <Toaster richColors position="bottom-right" />
-
       </body>
     </html>
   );
