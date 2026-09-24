@@ -6,22 +6,23 @@ import { navItems } from '@/data/navigation';
 
 export default function GlassMenu() {
   const [currentHash, setCurrentHash] = useState('#Home');
-  const [activeRect, setActiveRect] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+  const [activeRect, setActiveRect] = useState<{ left: number; width: number }>({
+    left: 0,
+    width: 0,
+  });
   const navRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isScrollingRef = useRef(false);
 
-  // اسکرول نرم روی کلیک
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const el = document.querySelector(href);
     if (!el) return;
 
     isScrollingRef.current = true;
-    const topOffset = 0;
 
     window.scrollTo({
-      top: el.getBoundingClientRect().top + window.scrollY - topOffset,
+      top: el.getBoundingClientRect().top + window.scrollY,
       behavior: 'smooth',
     });
 
@@ -33,7 +34,6 @@ export default function GlassMenu() {
     }, 600);
   };
 
-  // Intersection Observer برای تشخیص سکشن فعال
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -42,7 +42,7 @@ export default function GlassMenu() {
           if (entry.isIntersecting) setCurrentHash(`#${entry.target.id}`);
         });
       },
-      { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 },
     );
 
     navItems.forEach((item) => {
@@ -53,11 +53,10 @@ export default function GlassMenu() {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  // موقعیت Liquid Slider فعال
   useEffect(() => {
     if (!navRef.current) return;
     const activeLink = Array.from(navRef.current.querySelectorAll('a')).find(
-      (a) => a.getAttribute('href') === currentHash
+      (a) => a.getAttribute('href') === currentHash,
     );
     if (activeLink) {
       const rect = activeLink.getBoundingClientRect();
@@ -67,19 +66,21 @@ export default function GlassMenu() {
   }, [currentHash]);
 
   return (
-    <nav className="w-full flex justify-center items-center gap-6 pt-2 pb-6 text-white">
+    <nav
+      className="flex w-full items-center justify-center gap-6 px-3 pt-2 pb-6 text-white"
+      aria-label="Main navigation"
+    >
       <section
         ref={navRef}
         className={clsx(
-          'relative flex items-center gap-2 p-1 h-16 rounded-full',
-          '',
+          'relative flex h-14 items-center gap-0.5 rounded-full p-1 sm:h-16 sm:gap-2',
+          'no-scrollbar max-w-[92vw] overflow-x-auto',
           'backdrop-blur-xl',
-          'shadow-lg shadow-black/40'
+          'shadow-lg shadow-black/40',
         )}
       >
-        {/* Liquid Glass Slider */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 h-12 rounded-full transition-all duration-500 ease-out pointer-events-none"
+          className="pointer-events-none absolute top-1/2 h-11 -translate-y-1/2 rounded-full sm:h-12"
           style={{
             left: activeRect.left,
             width: activeRect.width,
@@ -87,6 +88,8 @@ export default function GlassMenu() {
             backdropFilter: 'blur(12px)',
             boxShadow: '0 0 35px rgba(0, 81, 255, 0.4)',
             border: '1px solid rgba(0, 81, 255, 0.5)',
+            transition:
+              'left var(--duration-slow) var(--ease-out), width var(--duration-slow) var(--ease-out)',
           }}
         />
 
@@ -98,8 +101,10 @@ export default function GlassMenu() {
               href={item.href}
               onClick={(e) => handleClick(e, item.href)}
               className={clsx(
-                'relative z-10 text-sm font-medium leading-none px-4 py-2 transition-colors duration-300',
-                isActive ? 'text-white' : 'text-white/70 hover:text-white/90'
+                'relative z-10 shrink-0 px-3 py-2 text-xs leading-none font-medium sm:px-4 sm:text-sm',
+                'transition-colors duration-300',
+                'focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]',
+                isActive ? 'text-white' : 'text-white/70 hover:text-white/90',
               )}
             >
               {item.label}
