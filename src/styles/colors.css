@@ -1,88 +1,140 @@
 :root {
-  /* ====================== */
-  /* Typography / Text      */
-  /* ====================== */
-  --color-text-primary: hsl(0, 0%, 100%);
-  --color-text-secondary: hsla(0, 0%, 100%, 0.6);
-  --color-text-muted: hsla(0, 0%, 100%, 0.4);
+  /* ============================= */
+  /* Display Sci-Fi Teal/Cyan      */
+  /* H: 190 (Teal/Blue-Green), S: 70%, L: 50% (Base) */
+  /* ============================= */
+  --display-pine-scale-0: #04061c;
+  --display-pine-scale-1: #070b2e;
+  --display-pine-scale-2: #0b1247;
+  --display-pine-scale-3: #006c94;
+  --display-pine-scale-4: #0092c9;
+  --display-pine-scale-5: #00aeff;
+  --display-pine-scale-6: #00bfff;
+  --display-pine-scale-7: #2fcaff;
+  --display-pine-scale-8: #5cd6ff;
+  --display-pine-scale-9: #94e4ff;
+
+  --display-pine-bgColor-emphasis: var(--display-pine-scale-4);
+  --display-pine-bgColor-muted: var(--display-pine-scale-0);
+  --display-pine-borderColor-emphasis: var(--display-pine-scale-5);
+  --display-pine-borderColor-muted: var(--display-pine-scale-1);
+  --display-pine-fgColor: var(--display-pine-scale-6);
 
   /* ====================== */
-  /* Icons                  */
+  /* Semantic Color Tokens  */
   /* ====================== */
+  --color-brand-primary: hsl(195, 100%, 50%);
+  --color-brand-secondary: hsl(196, 100%, 23%);
+  --color-brand-emphasis: hsl(184, 100%, 50%);
+
+  /* Text */
+  --color-text-primary: hsl(0, 0%, 100%);
+  --color-text-secondary: hsla(0, 0%, 100%, 0.72);
+  --color-text-muted: hsla(0, 0%, 100%, 0.55);
+  --color-text-inverse: hsl(0, 0%, 0%);
+  --color-error: hsl(350, 100%, 68%);
+  --color-success: hsl(152, 69%, 52%);
+
+  /* Icons */
   --color-icon-primary: hsl(0, 0%, 100%);
+  --color-icon-secondary: hsla(0, 0%, 100%, 0.6);
   --color-icon-progress-bg: hsla(180, 100%, 50%, 0.3);
   --color-icon-progress: hsl(180, 100%, 50%);
 
-  /* ====================== */
-  /* Card                   */
-  /* ====================== */
+  /* Surfaces */
+  --color-surface-canvas: hsl(233, 100%, 5%);
+  --color-surface-canvas-alt: hsl(235, 33%, 7%);
+  --color-surface-elevated: hsl(0, 0%, 12%);
+  --color-surface-overlay: hsla(0, 0%, 0%, 0.65);
+  --color-surface-card: hsl(240, 39%, 12%);
 
+  /* Borders */
+  --color-border-default: rgba(0, 110, 255, 0.322);
+  --color-border-emphasis: rgba(0, 81, 255, 0.5);
+  --color-border-subtle: hsla(0, 0%, 100%, 0.1);
+  --color-border-muted: hsla(0, 0%, 100%, 0.2);
 
-  /* ====================== */
-  /* Brand                  */
-  /* ====================== */
-  --color-brand-primary-hsl: hsl(195, 100%, 50%);
-  --color-brand-secondary-hsl: hsl(196, 100%, 23%);
+  /* Glass effects */
+  --color-glass-bg: rgba(15, 20, 40, 0.65);
+  --color-glass-border: rgba(0, 60, 255, 0.2);
+  --color-glass-hover: rgba(0, 81, 255, 0.35);
+
+  /* Interactive states */
+  --color-scrollbar: rgb(0, 81, 255);
+  --color-focus-ring: rgba(0, 81, 255, 0.6);
+
+  /* Gradients */
+  --gradient-card: linear-gradient(to bottom right, rgba(0, 68, 255, 0.2), rgba(0, 85, 119, 0.2));
+  --gradient-hero-bg: linear-gradient(
+    to bottom,
+    hsla(0, 0%, 0%, 0),
+    hsla(229, 100%, 50%, 0.007),
+    hsla(226, 100%, 50%, 0.137),
+    hsla(226, 100%, 50%, 0.308),
+    hsla(226, 100%, 50%, 0.137),
+    hsla(229, 100%, 50%, 0.027),
+    hsla(229, 100%, 50%, 0.027),
+    hsla(0, 0%, 0%, 0)
+  );
+  --gradient-tag: radial-gradient(circle at center, rgb(0, 110, 255), rgba(0, 68, 255, 0.774));
+
+  /* Hero ring */
+  --color-hero-ring: rgba(0, 217, 255, 0.877);
+  --hero-ring-border: 5px solid var(--color-hero-ring);
+  --hero-ring-shadow: 0 0 25px hsla(195, 100%, 50%, 0.6), inset 0 0 20px hsla(195, 100%, 50%, 0.3);
+
+  /* Card borders */
+  --card-border-image: 5px solid var(--color-hero-ring);
+  --card-border-default: 1px solid var(--color-border-default);
+
+  /* Glow */
+  --color-glow: hsla(212, 100%, 50%, 0.6);
+  --color-glow-subtle: hsla(226, 100%, 50%, 0.308);
+
+  /* Social brand colors (fixed to each platform's own brand — independent of the theme's brand tokens) */
+  --color-social-linkedin: #0a66c2;
+
+  /* Neutral gray (true gray, not tinted toward the brand hue) */
+  --color-neutral-gray: hsl(0, 0%, 60%);
+  --color-neutral-gray-soft: hsla(0, 0%, 60%, 0.1);
+
+  /* Legacy aliases (consumed by sub-components not yet migrated) */
+  --color-brand-primary-hsl: var(--color-brand-primary);
   --color-neon-primary: hsl(184, 100%, 50%);
   --color-neon-secondary: hsl(265, 100%, 50%);
+  --color-bg-canvas: var(--color-surface-canvas);
+  --color-bg-canvas-alt: var(--color-surface-canvas-alt);
+  --color-bg-elevated: var(--color-surface-elevated);
+  --color-bg-card-dark: var(--color-surface-card);
+  --image-border-color: var(--color-hero-ring);
+  --card-border-color: var(--color-border-default);
+  --card-border-xl: 5px solid var(--color-hero-ring);
+  --card-border-md: 1px solid var(--color-border-default);
+  --hero-ring-color: var(--color-hero-ring);
+  --card-bg-gradiant: linear-gradient(
+    to bottom right,
+    rgba(0, 191, 255, 0.2),
+    rgba(0, 12, 119, 0.2)
+  );
+  --tag-bg-gradiant: var(--gradient-tag);
+  --card-bg-circle-gradiant: radial-gradient(
+    circle at center,
+    hsla(234, 100%, 50%, 0.103),
+    transparent 30%
+  );
+  --hero-bg-gradient: var(--gradient-hero-bg);
+  --drop-shadow: var(--color-glow);
+  --background-glow: var(--color-glow-subtle);
+  --grid-pattern-card: var(--grid-pattern-subtle);
 
-  /* ====================== */
-  /* Background              */
-  /* ====================== */
-  --color-bg-canvas: hsl(233, 100%, 5%);
-  --color-bg-canvas-alt: hsl(235, 33%, 7%);
-  --color-bg-elevated: hsl(0, 0%, 12%);
-  --color-bg-card-dark: hsl(240, 39%, 12%);
-
-  /* ====================== */
-  /* Primary Color Palette  */
-  /* ====================== */
-/* Sci-Fi Teal/Cyan Palette */
-  /* H: 190 (Teal/Blue-Green), S: 70%, L: 50% (Base) */
-  /* ====================== */
-
-
-
-  /* ====================== */
-  /* Custom Effects */
-  /* ====================== */
-  --image-border-color: rgba(0, 217, 255, 0.877);
---card-border-color: rgba(0, 110, 255, 0.322);
---card-border-xl:5px solid var(--image-border-color);
---card-border-md:1px solid var(--card-border-color);
-
---card-bg-gradiant:linear-gradient(to bottom right, rgba(0, 191, 255, 0.2), rgba(0, 12, 119, 0.2));
---tag-bg-gradiant:radial-gradient(circle at center, rgb(0, 110, 255), rgba(0, 68, 255, 0.774));
---card-bg-circle-gradiant:radial-gradient(circle at center,hsla(234, 100%, 50%, 0.103) , transparent 30%);
---hero-bg-gradient: linear-gradient(
-  to bottom,
-  hsla(0, 0%, 0%, 0),   
-  hsla(229, 100%, 50%, 0.007),                        
-  hsla(226, 100%, 50%, 0.137),        
-  hsla(226, 100%, 50%, 0.308),           
-  hsla(226, 100%, 50%, 0.137), 
-  hsla(229, 100%, 50%, 0.027), 
-  hsla(229, 100%, 50%, 0.027),             
-  hsla(0, 0%, 0%, 0)                     
-);
-
---drop-shadow:hsla(212, 100%, 50%, 0.6);
-
---background-glow:  hsla(226, 100%, 50%, 0.308);
-
-
---grid-pattern: 
-    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-
-    --grid-pattern-card: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);;
-
-
+  /* Grid pattern */
+  --grid-pattern:
+    linear-gradient(hsla(0, 0%, 100%, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(0, 0%, 100%, 0.12) 1px, transparent 1px);
+  --grid-pattern-subtle:
+    linear-gradient(hsla(0, 0%, 100%, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(0, 0%, 100%, 0.05) 1px, transparent 1px);
+  --grid-pattern-brand:
+    linear-gradient(rgba(0, 191, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 191, 255, 0.06) 1px, transparent 1px);
 }
-
-  /* --color-card-border: hsla(195, 100%, 50%, 0.33);
-  --color-card-shadow: hsla(195, 100%, 50%, 0.2);
-  --color-card-hover-border: hsla(195, 100%, 50%, 0.8);
-  --color-card-hover-shadow: hsla(195, 100%, 50%, 0.53);
-  --color-card-glow: hsla(180, 100%, 50%, 0.1); */

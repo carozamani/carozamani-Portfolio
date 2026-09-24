@@ -1,22 +1,93 @@
+@import 'tailwindcss';
 
-@import "tailwindcss";
-
-
-:root {
-
-
-}
-
-
-/* =============================== */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  background: #000319;
-  color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-brand), var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
 
+*:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-glass-hover);
+  color: var(--color-text-primary);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+html[data-scrollbar='visible'] {
+  scrollbar-color: var(--color-scrollbar) rgba(15, 20, 40, 0.35);
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+html[data-scrollbar='visible']::-webkit-scrollbar-track {
+  background: var(--color-glass-bg);
+}
+
+html[data-scrollbar='visible']::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-border-emphasis), var(--color-scrollbar));
+  background-clip: padding-box;
+}
+
+html[data-scrollbar='visible']::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-primary);
+  background-clip: padding-box;
+}
+
+.skipLink {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-surface-canvas);
+  color: var(--color-text-primary);
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-brand-primary);
+  transition: top 0.2s ease;
+}
+
+.skipLink:focus {
+  top: 1rem;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

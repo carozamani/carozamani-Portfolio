@@ -1,77 +1,109 @@
+:root {
+  /* ====================== */
+  /* Typography Scale       */
+  /* ====================== */
+  --font-size-h1: clamp(2.5rem, 5vw, 4rem);
+  --font-size-h2: clamp(2rem, 4vw, 3rem);
+  --font-size-h3: clamp(1.5rem, 3vw, 2rem);
+  --font-size-h4: clamp(1.125rem, 2.5vw, 1.5rem);
+  --font-size-h5: clamp(1.125rem, 2vw, 1.25rem);
+  --font-size-h6: clamp(1.0625rem, 1.8vw, 1.125rem);
+  --font-size-subtitle1: clamp(1rem, 1.5vw, 1rem);
+  --font-size-subtitle2: clamp(0.875rem, 1.2vw, 0.875rem);
+  --font-size-body1: clamp(1rem, 1.5vw, 1rem);
+  --font-size-body2: clamp(0.875rem, 1.2vw, 0.875rem);
+  --font-size-caption: clamp(0.75rem, 1vw, 0.75rem);
+  --font-size-overline: clamp(0.75rem, 1vw, 0.75rem);
+  --font-size-button: clamp(0.875rem, 1.2vw, 0.875rem);
+
+  --font-weight-bold: 800;
+  --font-weight-semibold: 700;
+  --font-weight-medium: 600;
+  --font-weight-regular: 400;
+
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.33;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.57;
+  --line-height-loose: 1.71;
+}
+
 .h1 {
-  font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  line-height: 1.25;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-tight);
 }
 
 .h2 {
-  font-weight: 800;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.33;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-snug);
 }
 
 .h3 {
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-normal);
 }
 
 .h4 {
-  font-weight: 700;
-  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-normal);
 }
 
 .h5 {
-  font-weight: 700;
-  font-size: clamp(1.125rem, 2vw, 1.25rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h5);
+  line-height: var(--line-height-normal);
 }
 
 .h6 {
-  font-weight: 600;
-  font-size: clamp(1.0625rem, 1.8vw, 1.125rem);
-  line-height: 1.56;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-h6);
+  line-height: var(--line-height-relaxed);
 }
 
 .subtitle1 {
-  font-weight: 600;
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-subtitle1);
+  line-height: var(--line-height-normal);
 }
 
 .subtitle2 {
-  font-weight: 600;
-  font-size: clamp(0.875rem, 1.2vw, 0.875rem);
-  line-height: 1.57;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-subtitle2);
+  line-height: var(--line-height-relaxed);
 }
 
 .body1 {
-  font-weight: 400;
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body1);
+  line-height: var(--line-height-normal);
 }
 
 .body2 {
-  font-weight: 400;
-  font-size: clamp(0.875rem, 1.2vw, 0.875rem);
-  line-height: 1.57;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body2);
+  line-height: var(--line-height-relaxed);
 }
 
 .caption {
-  font-weight: 400;
-  font-size: clamp(0.75rem, 1vw, 0.75rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-normal);
 }
 
 .overline {
-  font-weight: 700;
-  font-size: clamp(0.75rem, 1vw, 0.75rem);
-  line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-overline);
+  line-height: var(--line-height-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .button {
-  font-weight: 700;
-  font-size: clamp(0.875rem, 1.2vw, 0.875rem);
-  line-height: 1.71;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-button);
+  line-height: var(--line-height-loose);
 }

@@ -1,7 +1,12 @@
 :root {
-  /* ===============================
-     BORDER RADII
-  =============================== */
-  --radius-full: 9999px; /* معادل rounded-full */
-  --radius-slider: 9999px; /* برای Liquid Glass Slider */
+  /* ====================== */
+  /* Border Radii           */
+  /* ====================== */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Shared corner for cards and controls */
+  --radius-card: 1.25rem;
 }
