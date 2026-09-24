@@ -1,16 +1,16 @@
 /* کانتینر اصلی */
 .blockContainer {
-  --block-radius: 1.875rem;
+  --block-radius: 1.5rem;
   --block-padding: 2rem;
-  --block-height: 18.75rem;
+  --block-height: 22rem;
   --grid-gap: 1.5rem;
   --block-backdrop-blur: 1.5rem;
-  --tag-radius: 1rem;
+  --tag-radius: 0.875rem;
   --tag-blur: 0.8rem;
-  --tag-shadow: 0 0 0.3125rem rgb(0,0,0);
+  --tag-shadow: 0 0 0.3125rem rgb(0, 0, 0);
   --offset-top: 1rem;
-  --tag-height: 4rem;           /* ارتفاع کارت‌ها کمی بیشتر شد */
-  --scroll-column-width: 50%;    /* عرض ستون‌ها نصف بخش راست */
+  --tag-height: 4rem; /* ارتفاع کارت‌ها کمی بیشتر شد */
+  --scroll-column-width: 50%; /* عرض ستون‌ها نصف بخش راست */
 
   position: relative;
   width: 100%;
@@ -62,8 +62,20 @@
   gap: 1rem;
   height: 100%;
   position: relative;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 1.5rem,
+    black calc(100% - 1.5rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 1.5rem,
+    black calc(100% - 1.5rem),
+    transparent 100%
+  );
 }
 
 @media (min-width: 768px) {
@@ -95,21 +107,21 @@
 .tagItem {
   position: relative;
   width: 100%;
-  height: var(--tag-height);  /* ارتفاع کارت بیشتر */
+  height: var(--tag-height); /* ارتفاع کارت بیشتر */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;       /* متن جمع و جورتر */
+  padding: 0.5rem 1rem; /* متن جمع و جورتر */
   border-radius: var(--tag-radius);
   border: var(--card-border-md);
   box-shadow: var(--tag-shadow);
   color: white;
-  font-weight: 500;           /* سبک‌تر */
-  font-size: 0.875rem;        /* متن کوچک‌تر */
+  font-weight: 500; /* سبک‌تر */
+  font-size: 0.875rem; /* متن کوچک‌تر */
   text-align: center;
   overflow: hidden;
-  white-space: nowrap;        /* متن یک خط */
-  text-overflow: ellipsis;    /* کوتاه کردن متن طولانی با ... */
+  white-space: nowrap; /* متن یک خط */
+  text-overflow: ellipsis; /* کوتاه کردن متن طولانی با ... */
   transition: all 0.3s;
 }
 
@@ -117,7 +129,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--block-radius);
+  border-radius: var(--tag-radius);
   border: 1px solid transparent;
   background: var(--tag-bg-gradiant);
   opacity: 0.4;
@@ -132,13 +144,21 @@
 
 /* انیمیشن اسکرول */
 @keyframes scrollDownSmooth {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-33.3333%); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-33.3333%);
+  }
 }
 
 @keyframes scrollUpSmooth {
-  0% { transform: translateY(-33.3333%); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(-33.3333%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .animateScrollDown {
@@ -155,18 +175,13 @@
 
 /* ==================== Media Queries ==================== */
 
-
 @media (max-width: 767px) {
-
   .blockContainer {
-  height: 270px;
+    height: 270px;
   }
-
 }
 
-
 @media (max-width: 600px) {
-
   /* بخش راست موبایل: کارت‌ها زیر هم قرار بگیرن */
   .rightSection {
     flex-direction: column; /* ستون‌ها عمودی */
@@ -177,14 +192,13 @@
   }
 }
 
-
 /* تبلت */
 @media (max-width: 1024px) {
   .blockContainer {
     --block-padding: 1.75rem;
-    --block-height: 16rem;
+    --block-height: 19rem;
     --grid-gap: 1.25rem;
-    --tag-height: 3.5rem;  /* ارتفاع کارت تبلت کمی بیشتر */
+    --tag-height: 3.5rem; /* ارتفاع کارت تبلت کمی بیشتر */
     --scroll-column-width: 50%;
     --tag-padding-y: 0.4rem;
     --tag-padding-x: 0.8rem;
@@ -197,7 +211,7 @@
     --block-padding: 1.25rem;
     --block-height: 14rem;
     --grid-gap: 1rem;
-    --tag-height: 3rem;    /* ارتفاع کارت موبایل کمی بیشتر */
+    --tag-height: 3rem; /* ارتفاع کارت موبایل کمی بیشتر */
     --scroll-column-width: 100%;
     --tag-padding-y: 0.3rem;
     --tag-padding-x: 0.6rem;
@@ -208,5 +222,3 @@
     grid-column: span 12;
   }
 }
-
-

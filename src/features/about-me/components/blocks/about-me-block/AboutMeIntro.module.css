@@ -1,21 +1,28 @@
 .wrapper {
   position: relative;
   overflow: hidden;
-  border-radius: 1.875rem;
+  border-radius: var(--radius-card);
   padding: 2rem;
   background: rgba(255, 255, 255, 0.05);
-  backdrop-blur: 1rem;
-  border: 1px solid 1px var(--card-border);
+  backdrop-filter: blur(1rem);
+  border: 1px solid var(--color-border-default);
   box-shadow: 0 0 15px var(--drop-shadow);
 }
 
+.hoverBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid var(--color-border-emphasis);
+  pointer-events: none;
+}
 
 .gridPattern {
   position: absolute;
   inset: 0;
   opacity: 0.6;
   pointer-events: none;
-  background-image:var(--grid-pattern-card);
+  background-image: var(--grid-pattern-card);
   background-size: 90px 90px;
 }
 
@@ -30,8 +37,6 @@
   filter: blur(100px);
   pointer-events: none;
 }
-
-            
 
 .content {
   position: relative;

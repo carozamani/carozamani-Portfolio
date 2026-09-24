@@ -1,23 +1,13 @@
 /* Wrapper اصلی */
 .wrapper {
-  --wrapper-padding: 2.5rem;
-  --wrapper-radius: 1.875rem;
-  --content-gap: 1.5rem;
-  --content-max-width: 24rem;
-  --glow-blur: 5rem; /* 80px ≈ 5rem */
+  --content-max-width: 100%;
 
   position: relative;
-  padding: var(--wrapper-padding);
-  border-radius: var(--wrapper-radius);
-  overflow: hidden;
-  animation: floatWrapper 12s ease-in-out infinite;
-}
-
-/* Glow */
-.glow {
-  position: absolute;
-  inset: 0;
-  filter: blur(var(--glow-blur));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 /* محتوای داخلی */
@@ -25,10 +15,25 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--content-gap);
+  align-items: center;
   width: 100%;
   max-width: var(--content-max-width);
   margin: 0 auto;
+}
+
+/* no border/glow until hovered (hover styles come from the shared CTA) */
+a.button {
+  width: fit-content;
+  align-self: center;
+  --button-padding-y: 0.75rem;
+  --button-padding-x: 4rem;
+  --icon-size: 2.25rem;
+  gap: 0.875rem;
+  border-color: transparent;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* ==================== Media Queries ==================== */
@@ -36,19 +41,13 @@
 /* تبلت */
 @media (max-width: 1024px) {
   .wrapper {
-    --wrapper-padding: 2rem;
-    --content-gap: 1.25rem;
-    --content-max-width: 20rem;
-    --glow-blur: 3.75rem; /* 60px ≈ 3.75rem */
+    --content-max-width: 100%;
   }
 }
 
 /* موبایل */
 @media (max-width: 640px) {
   .wrapper {
-    --wrapper-padding: 1.5rem;
-    --content-gap: 1rem;
     --content-max-width: 100%;
-    --glow-blur: 2.5rem; /* 40px ≈ 2.5rem */
   }
 }
