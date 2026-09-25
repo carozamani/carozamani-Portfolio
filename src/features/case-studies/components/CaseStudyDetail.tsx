@@ -2,10 +2,13 @@
 
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
+import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import type { CaseStudy } from '@/types/caseStudy';
 import styles from './CaseStudyDetail.module.css';
 
 export default function CaseStudyDetail({ caseStudy }: { caseStudy: CaseStudy }) {
+  const { projects } = useDictionary();
+
   return (
     <div className={styles.page}>
       <div className={styles.pageBackground} aria-hidden="true" />
@@ -24,17 +27,14 @@ export default function CaseStudyDetail({ caseStudy }: { caseStudy: CaseStudy })
         ) : (
           <div className={styles.placeholder}>
             <p className={styles.placeholderTitle}>
-              No image added yet for &ldquo;{caseStudy.title}&rdquo;
+              {format(projects.noImageTitle, { title: caseStudy.title })}
             </p>
-            <p className={styles.placeholderHint}>
-              Add the file to public/case-studies and set its path in caseStudies.ts for this
-              project.
-            </p>
+            <p className={styles.placeholderHint}>{projects.noImageHint}</p>
           </div>
         )}
 
         <div className={styles.viewOthers}>
-          <Button href="/#projects" text="View Other Projects" />
+          <Button href="/#projects" text={projects.viewOthers} />
         </div>
       </div>
     </div>
