@@ -1,4 +1,10 @@
 :root {
+  /* landing sections share one fixed height instead of following the viewport */
+  --section-min-height: 56rem;
+
+  /* vertical breathing room on each side of every non-hero section: gap between sections = 2x this */
+  --section-padding-y: 6rem;
+
   /* ====================== */
   /* 8px Fluid Spacing      */
   /* ====================== */

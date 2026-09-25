@@ -42,6 +42,7 @@
   --color-icon-progress: hsl(180, 100%, 50%);
 
   /* Surfaces */
+  --color-page-bg: hsl(0, 0%, 0%);
   --color-surface-canvas: hsl(233, 100%, 5%);
   --color-surface-canvas-alt: hsl(235, 33%, 7%);
   --color-surface-elevated: hsl(0, 0%, 12%);

@@ -1,37 +1,26 @@
 import Link from 'next/link';
 import TypographyComponent from '@/components/ui/Typography';
+import { LogoRing } from '@/components/ui/LogoRing';
+import { getDictionary } from '@/lib/i18n/server';
+import styles from './not-found.module.css';
 
-export default function NotFound() {
+export default async function NotFound() {
+  const { notFound } = await getDictionary();
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '1rem',
-        padding: '2rem',
-        textAlign: 'center',
-      }}
-    >
-      <span
-        style={{
-          fontSize: 'var(--font-size-caption)',
-          letterSpacing: '0.08em',
-          color: 'var(--color-neon-primary)',
-        }}
-      >
+    <div className={styles.page}>
+      <LogoRing size={72} />
+      <span className={styles.code} dir="ltr">
         404
       </span>
       <TypographyComponent variant="h2" color="text-primary">
-        This page drifted off-screen
+        {notFound.title}
       </TypographyComponent>
       <TypographyComponent variant="body1" color="text-secondary">
-        The page you&apos;re looking for doesn&apos;t exist or has moved.
+        {notFound.text}
       </TypographyComponent>
-      <Link href="/" style={{ color: 'var(--color-neon-primary)', fontWeight: 600 }}>
-        Back to Home
+      <Link href="/" className={styles.link}>
+        {notFound.home}
       </Link>
     </div>
   );
