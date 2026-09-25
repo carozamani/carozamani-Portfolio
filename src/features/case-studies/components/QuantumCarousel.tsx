@@ -3,21 +3,33 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { caseStudies } from '@/data/caseStudies';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+import Button from '@/components/ui/Button';
+import { PROJECTS_PREVIEW_LIMIT, caseStudies } from '@/data/caseStudies';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './QuantumCarousel.module.css';
 
-const DEFAULT_ACTIVE_SLUG = caseStudies[0]?.slug ?? null;
-
-export default function QuantumCarousel() {
-  const [activeSlug, setActiveSlug] = useState<string | null>(DEFAULT_ACTIVE_SLUG);
+export default function QuantumCarousel({ preview = false }: { preview?: boolean }) {
+  const { locale, dict } = useLocale();
+  const { projects } = dict;
+  const visibleStudies = preview ? caseStudies.slice(-PROJECTS_PREVIEW_LIMIT) : caseStudies;
+  const hasMore = preview && caseStudies.length > PROJECTS_PREVIEW_LIMIT;
+  const [activeSlug, setActiveSlug] = useState<string | null>(visibleStudies[0]?.slug ?? null);
 
   return (
     <div className={styles.carouselContainer}>
       <div className={styles.header}>
-        <h2 className={styles.sectionTitle}>Projects</h2>
-        <p className={styles.sectionDescription}>
-          A selection of case studies from my recent work.
-        </p>
+        <h2 className={styles.sectionTitle}>{projects.title}</h2>
+        <p className={styles.sectionDescription}>{projects.description}</p>
+        {hasMore && (
+          <Button
+            text={projects.viewAll}
+            variant="ghost"
+            href="/case-studies"
+            iconRight={locale === 'fa' ? <FiArrowLeft /> : <FiArrowRight />}
+            className={styles.viewAll}
+          />
+        )}
       </div>
 
       {caseStudies.length > 0 ? (
@@ -25,9 +37,13 @@ export default function QuantumCarousel() {
           <div className={styles.centerGlow} aria-hidden="true" />
 
           <ul className={styles.list}>
-            {caseStudies.map((caseStudy) => {
+            {visibleStudies.map((caseStudy) => {
               const isActive = activeSlug === caseStudy.slug;
-              const subtitle = [caseStudy.tag, caseStudy.year].filter(Boolean).join(' · ');
+              const content = projects.items[caseStudy.slug];
+              const description = content?.description ?? caseStudy.description;
+              const subtitle = [content?.tag ?? caseStudy.tag, caseStudy.year]
+                .filter(Boolean)
+                .join(' · ');
 
               return (
                 <li key={caseStudy.slug} className={styles.listItem}>
@@ -56,10 +72,23 @@ export default function QuantumCarousel() {
                     </span>
 
                     <span className={styles.rowTitleWrap}>
+                      <span className={styles.rowThumb} aria-hidden="true">
+                        {caseStudy.image ? (
+                          <Image
+                            src={caseStudy.image}
+                            alt=""
+                            fill
+                            sizes="(max-width: 900px) 100vw, 0px"
+                            className={styles.rowPreviewImage}
+                          />
+                        ) : (
+                          <span className={styles.rowPreviewPlaceholder}>
+                            {caseStudy.title.charAt(0)}
+                          </span>
+                        )}
+                      </span>
                       <span className={styles.rowTitle}>{caseStudy.title}</span>
-                      {caseStudy.description && (
-                        <span className={styles.rowSummary}>{caseStudy.description}</span>
-                      )}
+                      {description && <span className={styles.rowSummary}>{description}</span>}
                       {subtitle && <span className={styles.rowSubtitle}>{subtitle}</span>}
                     </span>
 
@@ -87,7 +116,7 @@ export default function QuantumCarousel() {
           </ul>
         </div>
       ) : (
-        <p className={styles.emptyState}>Case studies are coming soon.</p>
+        <p className={styles.emptyState}>{projects.empty}</p>
       )}
     </div>
   );
