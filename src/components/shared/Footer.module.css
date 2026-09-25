@@ -1,10 +1,5 @@
 .footer {
-  background: linear-gradient(
-    to right,
-    var(--surface-0),
-    var(--surface-2),
-    var(--surface-0)
-  );
+  background: linear-gradient(to right, var(--surface-0), var(--surface-2), var(--surface-0));
   color: var(--color-text-primary);
   padding: 2rem 1rem;
   font-family: var(--font-primary);
@@ -40,10 +35,20 @@
 }
 
 .logo {
-  height: 2rem; /* h-8 */
-  width: auto;
-  font-size: 0.75rem; /* مرجع محاسبه‌ی واحد ch برای margin-left */
-  margin-left: 2ch; /* لوگو از سومین کاراکتر POWERED BY شروع می‌شه */
+  font-size: 1.6rem;
+  margin-inline-start: 0.75rem;
+}
+
+.brandName {
+  margin-inline-start: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.brandFirst {
+  color: hsla(0, 0%, 100%, 0.45);
 }
 
 .powered {
