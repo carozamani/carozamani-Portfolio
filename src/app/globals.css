@@ -6,9 +6,32 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  background: var(--color-surface-canvas);
+  background: var(--color-page-bg);
   color: var(--color-text-primary);
   font-family: var(--font-brand), var(--font-inter), Arial, Helvetica, sans-serif;
+}
+
+html[lang='fa'] {
+  --font-brand: var(--font-vazirmatn);
+  --font-inter: var(--font-vazirmatn);
+}
+
+/* language switch: fade the page out, swap locale, fade back in */
+main#main-content {
+  transition:
+    opacity 260ms ease,
+    filter 260ms ease;
+}
+
+html.locale-switching main#main-content {
+  opacity: 0;
+  filter: blur(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main#main-content {
+    transition: none;
+  }
 }
 
 button,
@@ -64,23 +87,6 @@ html[data-scrollbar='visible']::-webkit-scrollbar-thumb {
 html[data-scrollbar='visible']::-webkit-scrollbar-thumb:hover {
   background: var(--color-brand-primary);
   background-clip: padding-box;
-}
-
-.skipLink {
-  position: absolute;
-  top: -100%;
-  left: 1rem;
-  z-index: 100;
-  padding: 0.75rem 1.25rem;
-  background: var(--color-surface-canvas);
-  color: var(--color-text-primary);
-  border-radius: 0.5rem;
-  border: 2px solid var(--color-brand-primary);
-  transition: top 0.2s ease;
-}
-
-.skipLink:focus {
-  top: 1rem;
 }
 
 .no-scrollbar {

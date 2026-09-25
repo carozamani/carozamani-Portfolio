@@ -1,0 +1,13 @@
+.wordmark {
+  display: inline-block;
+  font-family: var(--font-wordmark), var(--font-brand), sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+
+.caro {
+  color: hsla(0, 0%, 100%, 0.4);
+  text-shadow: 0 0.04em 0.06em hsla(0, 0%, 0%, 0.6);
+}

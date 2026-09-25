@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import TypographyComponent from '@/components/ui/Typography';
+import { getDictionary } from '@/lib/i18n/server';
 
-export default function CaseStudyNotFound() {
+export default async function CaseStudyNotFound() {
+  const { projects } = await getDictionary();
+
   return (
     <div
       style={{
@@ -16,13 +19,13 @@ export default function CaseStudyNotFound() {
       }}
     >
       <TypographyComponent variant="h2" color="text-primary">
-        This case study couldn&apos;t be found
+        {projects.notFoundTitle}
       </TypographyComponent>
       <TypographyComponent variant="body1" color="text-secondary">
-        The project you&apos;re looking for doesn&apos;t exist or has moved.
+        {projects.notFoundText}
       </TypographyComponent>
       <Link href="/#projects" style={{ color: 'var(--color-neon-primary)', fontWeight: 600 }}>
-        Back to Projects
+        {projects.backToProjects}
       </Link>
     </div>
   );
