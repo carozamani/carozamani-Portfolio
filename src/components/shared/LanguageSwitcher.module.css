@@ -1,0 +1,121 @@
+.root {
+  position: relative;
+  flex-shrink: 0;
+  height: 2.75rem;
+}
+
+.panel {
+  position: relative;
+  z-index: 50;
+  overflow: hidden;
+  border: 1px solid hsla(0, 0%, 100%, 0.05);
+  border-radius: 1.375rem;
+  backdrop-filter: blur(1.5rem);
+  box-shadow: var(--shadow-sm, 0 0.5rem 1rem hsla(0, 0%, 0%, 0.4));
+  transition:
+    border-color var(--transition-normal),
+    background var(--transition-normal);
+}
+
+.panel[data-open='true'] {
+  border-color: var(--color-border-subtle);
+  background: var(--color-glass-bg);
+}
+
+.trigger,
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition:
+    color var(--transition-normal),
+    background var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.trigger {
+  justify-content: center;
+  width: 100%;
+  height: calc(2.75rem - 2px);
+  padding-inline: 1.125rem;
+  border: 0;
+  background: transparent;
+}
+
+.trigger:hover,
+.trigger[aria-expanded='true'] {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-subtle);
+}
+
+.code {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+}
+
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.option {
+  justify-content: center;
+  width: 100%;
+  height: calc(2.75rem - 2px);
+  padding-inline: 1.125rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.option:hover {
+  color: var(--color-text-primary);
+  background: var(--color-neutral-gray-soft);
+}
+
+.option[aria-selected='true'] {
+  color: var(--color-text-primary);
+  background: var(--color-neutral-gray-soft);
+}
+
+.optionCode {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+}
+
+.trigger:focus-visible,
+.option:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 519px) {
+  .root {
+    height: 2.25rem;
+  }
+
+  .panel {
+    border-radius: 1.125rem;
+  }
+
+  .trigger,
+  .option {
+    height: calc(2.25rem - 2px);
+    padding-inline: 0.5rem;
+  }
+
+  .code,
+  .optionCode {
+    display: none;
+  }
+}
