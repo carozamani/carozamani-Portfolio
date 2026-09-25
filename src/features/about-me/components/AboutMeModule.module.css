@@ -4,8 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: var(--space-xl) var(--space-l);
+  padding: var(--section-padding-y) var(--space-l);
 }
 
 .wrapper {
@@ -41,6 +40,20 @@
   grid-column: 1 / -1;
 }
 
+/* resume button sits directly under the About Me card on phones */
+.block1 {
+  order: 1;
+}
+.block3 {
+  order: 2;
+}
+.block2 {
+  order: 3;
+}
+.block4 {
+  order: 4;
+}
+
 /* =========================
    📲 SM ≥ 640px
 ========================= */
@@ -52,7 +65,7 @@
 
   .block1 {
     grid-column: 1 / 6;
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
   }
   .block2 {
     grid-column: 1 / 6;
@@ -60,7 +73,7 @@
   }
   .block3 {
     grid-column: 1 / 6;
-    grid-row: 1 / 2;
+    grid-row: 2 / 3;
   }
   .block4 {
     grid-column: 1 / 6;
@@ -79,7 +92,7 @@
 
   .block1 {
     grid-column: 1 / 7;
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
   }
   .block2 {
     grid-column: 1 / 7;
@@ -87,7 +100,7 @@
   }
   .block3 {
     grid-column: 1 / 7;
-    grid-row: 1 / 2;
+    grid-row: 2 / 3;
   }
   .block4 {
     grid-column: 1 / 7;

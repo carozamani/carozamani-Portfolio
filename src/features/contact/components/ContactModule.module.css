@@ -2,8 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: var(--space-xl) var(--space-l);
+  padding: var(--section-padding-y) var(--space-l);
   background: transparent;
 }
 
@@ -280,17 +279,17 @@
   }
 
   .info {
-    text-align: center;
-    align-items: center;
+    text-align: start;
+    align-items: flex-start;
   }
 
   .meta {
-    align-items: center;
+    align-items: flex-start;
   }
 
   .metaRow {
     grid-template-columns: auto auto;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .title {
@@ -315,7 +314,7 @@
   }
 
   .metaRow {
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
 
@@ -324,4 +323,52 @@
     background-size: 50px 50px;
     opacity: 0.4;
   }
+}
+
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.pitch {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-brand);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.pitchAccent {
+  color: var(--color-brand-primary);
+}
+
+.pitchSub {
+  margin: 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.logoRing {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 3px solid var(--color-hero-ring);
+  line-height: 0;
+}
+
+:global([dir='rtl']) .sendIcon {
+  transform: scaleX(-1);
 }

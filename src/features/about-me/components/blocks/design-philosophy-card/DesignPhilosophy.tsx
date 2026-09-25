@@ -4,9 +4,11 @@ import { motion, useAnimationFrame } from 'framer-motion';
 import { useState } from 'react';
 
 import styles from './DesignPhilosophy.module.css';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import TypographyComponent from '@/components/ui/Typography';
 
 export default function DesignPhilosophyCard() {
+  const { about } = useDictionary();
   const [pos, setPos] = useState({ x: 50, y: 50 });
 
   useAnimationFrame((t) => {
@@ -34,21 +36,13 @@ export default function DesignPhilosophyCard() {
       />
 
       {/* Heading */}
-      <TypographyComponent
-        variant="h3"
-        color="text-primary"
-        className={styles.heading}
-      >
-        Design Philosophy
+      <TypographyComponent variant="h3" color="text-primary" className={styles.heading}>
+        {about.philosophyTitle}
       </TypographyComponent>
 
       {/* Paragraph */}
-      <TypographyComponent
-        variant="body1"
-        color="text-secondary"
-        className={styles.paragraph}
-      >
-        I create clean, user-focused interfaces that solve complex problems with simplicity and thoughtful interactions.
+      <TypographyComponent variant="body1" color="text-secondary" className={styles.paragraph}>
+        {about.philosophyText}
       </TypographyComponent>
     </motion.div>
   );

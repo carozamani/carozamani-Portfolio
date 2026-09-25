@@ -109,6 +109,8 @@ export default function Button({
       <a
         href={href}
         download={download}
+        target={download ? undefined : '_blank'}
+        rel={download ? undefined : 'noopener noreferrer'}
         className={classes}
         aria-label={variant === 'icon' ? text : undefined}
       >

@@ -29,6 +29,7 @@
 .gridContainer {
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
   gap: var(--grid-gap);
   position: relative;
@@ -38,6 +39,7 @@
 @media (min-width: 768px) {
   .gridContainer {
     grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: minmax(0, 1fr);
   }
 }
 
@@ -61,19 +63,20 @@
   display: flex;
   gap: 1rem;
   height: 100%;
+  min-height: 0;
   position: relative;
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    black 1.5rem,
-    black calc(100% - 1.5rem),
+    black 2.5rem,
+    black calc(100% - 2.5rem),
     transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    black 1.5rem,
-    black calc(100% - 1.5rem),
+    black 2.5rem,
+    black calc(100% - 2.5rem),
     transparent 100%
   );
 }
@@ -99,8 +102,18 @@
   gap: 1rem;
 }
 
-.scrollColumn:hover .scrollTarget {
-  animation-play-state: paused;
+.scrollColumn {
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.scrollColumn.dragging {
+  cursor: grabbing;
+}
+
+.scrollTarget {
+  will-change: transform;
 }
 
 /* کارت‌ها (Tag Items) */
@@ -142,33 +155,6 @@
   opacity: 0.6;
 }
 
-/* انیمیشن اسکرول */
-@keyframes scrollDownSmooth {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-33.3333%);
-  }
-}
-
-@keyframes scrollUpSmooth {
-  0% {
-    transform: translateY(-33.3333%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.animateScrollDown {
-  animation: scrollDownSmooth 90s linear infinite;
-}
-
-.animateScrollUp {
-  animation: scrollUpSmooth 90s linear infinite;
-}
-
 .offsetTop {
   margin-top: var(--offset-top);
 }
@@ -181,14 +167,19 @@
   }
 }
 
+/* phones: one column that carries every tag, moving in a single direction */
+.narrowOnly {
+  display: none;
+}
+
 @media (max-width: 600px) {
-  /* بخش راست موبایل: کارت‌ها زیر هم قرار بگیرن */
-  .rightSection {
-    flex-direction: column; /* ستون‌ها عمودی */
+  .wideOnly {
+    display: none;
   }
 
-  .scrollColumn {
-    width: 100%; /* هر ستون کارت‌ها تمام عرض */
+  .narrowOnly {
+    display: block;
+    width: 100%;
   }
 }
 

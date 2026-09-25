@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './AboutMeIntro.module.css';
 import TypographyComponent from '@/components/ui/Typography';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 
 type Props = {
   title?: string;
@@ -14,14 +15,16 @@ type Props = {
 };
 
 export default function BlockIntro({
-  title = 'About Me',
-  description = `Hi! I’m Caro Zamani, a front-end developer who loves turning complex ideas into sleek, interactive digital experiences.
-I specialize in building user-centered interfaces that are both intuitive and visually engaging.
-With a keen eye for detail and a passion for clean, modern design, I aim to create products that delight users and drive engagement.
-In my free time, I explore new web technologies, experiment with UI animations, and contribute to open-source projects.`,
-  highlightText = 'Caro Zamani',
+  title: titleProp,
+  description: descriptionProp,
+  highlightText: highlightProp,
   className,
 }: Props): ReactElement {
+  const { about } = useDictionary();
+  const title = titleProp ?? about.title;
+  const description = descriptionProp ?? about.description;
+  const highlightText = highlightProp ?? about.highlight;
+
   return (
     <motion.div
       className={clsx(styles.wrapper, className)}

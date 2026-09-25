@@ -18,7 +18,7 @@ const Footer = dynamic(() => import('@/components/shared/Footer'));
 
 export default function HomePage() {
   return (
-    <div className="relative w-screen overflow-x-hidden bg-black text-white">
+    <div className="relative w-screen overflow-x-hidden bg-(--color-page-bg) text-white">
       <div className="relative z-10">
         <AnimatedSection id="Home" variant="fade-up">
           <HeroModule />
@@ -29,7 +29,7 @@ export default function HomePage() {
         </AnimatedSection>
 
         <AnimatedSection id="projects" variant="fade-up" delay={0.1}>
-          <CaseStudiesModule />
+          <CaseStudiesModule preview />
         </AnimatedSection>
 
         <AnimatedSection id="testimonials" variant="fade-up" delay={0.1}>
