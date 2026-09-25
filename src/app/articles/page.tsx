@@ -1,12 +1,11 @@
+import { notFound } from 'next/navigation';
+import { MEDIA_PREVIEW_LIMIT, articleCards } from '@/data/media';
 import MediaListPage from '@/features/media/components/MediaListPage';
-import { articleCards } from '@/data/media';
 
-export default function ArticlesPage() {
-  return (
-    <MediaListPage
-      title="Articles"
-      description="Read insightful articles about UX, UI, and design systems."
-      cards={articleCards}
-    />
-  );
+export default function Page() {
+  if (articleCards.length <= MEDIA_PREVIEW_LIMIT) {
+    notFound();
+  }
+
+  return <MediaListPage kind="articles" cards={articleCards} />;
 }
