@@ -1,0 +1,9 @@
+.dock {
+  position: fixed;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  width: min(60rem, calc(100% - 2rem));
+  margin-inline: auto;
+}

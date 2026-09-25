@@ -43,7 +43,7 @@
 
 .textSection {
   flex: 1;
-  padding-right: 1.5rem;
+  padding-inline-end: 1.5rem;
   position: relative;
   z-index: 20;
 }
@@ -156,7 +156,7 @@
 
 .textSection {
   flex: 1;
-  padding-right: 0; /* حذف پدینگ اضافی */
+  padding-inline-end: 0; /* حذف پدینگ اضافی */
   min-width: 0; /* حیاتی برای کارکرد درست ellipsis در فلکس‌باکس */
 }
 

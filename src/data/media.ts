@@ -27,8 +27,13 @@ export const podcastCards: CardProps[] = [
 
 export const articleCards: CardProps[] = [
   {
-    id: 'art1',
+    id: 'ui-trends-2024',
     type: 'article',
+    href: '/articles/ui-trends-2024',
+    body: [
+      'Interfaces are getting calmer: fewer borders, softer depth and more deliberate motion.',
+      'This is placeholder content. Real articles will be added from the admin panel.',
+    ],
     title: 'UI Trends 2024',
     summary: 'An article about upcoming UI trends...',
     image: '/images/article1.jpg',
@@ -36,8 +41,13 @@ export const articleCards: CardProps[] = [
     readTime: '8 min',
   },
   {
-    id: 'art2',
+    id: 'design-systems-explained',
     type: 'article',
+    href: '/articles/design-systems-explained',
+    body: [
+      'A design system is a shared language between design and engineering.',
+      'This is placeholder content. Real articles will be added from the admin panel.',
+    ],
     title: 'Design Systems Explained',
     summary: 'Learn how to build a scalable design system...',
     image: '/images/article2.jpg',
@@ -45,3 +55,9 @@ export const articleCards: CardProps[] = [
     readTime: '12 min',
   },
 ];
+
+export const getArticleBySlug = (slug: string) =>
+  articleCards.find((article) => article.id === slug);
+
+/** The landing page shows the latest (last) N cards per section; "View more" only appears beyond this. */
+export const MEDIA_PREVIEW_LIMIT = 2;

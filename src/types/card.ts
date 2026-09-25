@@ -6,6 +6,8 @@ export interface CardProps {
   image?: string;
   audioSrc?: string;
   href?: string;
+  /** Article body paragraphs (articles only). */
+  body?: string[];
   date: string;
   listeners?: number;
   duration?: string;

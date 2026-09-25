@@ -1,43 +1,37 @@
 'use client';
 
-import { PlayerProvider } from '../hooks/usePlayer';
 import Card from './Card';
+import { usePodcastPlayer } from './PodcastPlayerProvider';
+import { localizeCard } from '../lib/localizeCard';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import type { CardProps } from '@/types/card';
-import TypographyComponent from '@/components/ui/Typography';
 import styles from './MediaListPage.module.css';
 
-export default function MediaListPage({
-  title,
-  description,
-  cards,
-}: {
-  title: string;
-  description: string;
-  cards: CardProps[];
-}) {
+type Props = { kind: 'podcasts' | 'articles'; cards: CardProps[] };
+
+export default function MediaListPage({ kind, cards }: Props) {
+  const dict = useDictionary();
+  const { title, description } = dict.media[kind];
+  const { activeId, select } = usePodcastPlayer();
+
+  const localized = cards.map((card) => localizeCard(card, dict));
+
   return (
     <div className={styles.page}>
-      <div className={styles.pageBackground} aria-hidden="true" />
-
       <div className={styles.content}>
-        <TypographyComponent variant="h1" color="text-primary">
-          {title}
-        </TypographyComponent>
-        <TypographyComponent
-          variant="body1"
-          color="text-secondary"
-          className={styles.description}
-        >
-          {description}
-        </TypographyComponent>
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.description}>{description}</p>
 
-        <PlayerProvider>
-          <div className={styles.grid}>
-            {cards.map((card) => (
-              <Card key={card.id} {...card} />
-            ))}
-          </div>
-        </PlayerProvider>
+        <div className={styles.grid}>
+          {localized.map((card) => (
+            <Card
+              key={card.id}
+              {...card}
+              active={card.id === activeId}
+              onSelect={card.type === 'podcast' ? () => select(card.id) : undefined}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
