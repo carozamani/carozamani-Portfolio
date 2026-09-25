@@ -9,9 +9,13 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 
-import TextRotator from './TextRotator';
+import { FiArrowDown } from 'react-icons/fi';
+
+import Button from '@/components/ui/Button';
 import SocialIcons from '@/components/ui/SocialIcons';
-import { titlesToRotate, heroSocialLinks, heroTagline } from '@/data/hero';
+import { heroSocialLinks } from '@/data/hero';
+import { Wordmark } from '@/components/ui/Wordmark';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import TypographyComponent from '@/components/ui/Typography';
 import styles from './HeroModule.module.css';
 
@@ -20,8 +24,13 @@ const GLOW_CENTER = 50;
 const GLOW_X_SPEED = 2500;
 const GLOW_Y_SPEED = 3000;
 
+function scrollToSection(id: string, instant: boolean | null) {
+  document.getElementById(id)?.scrollIntoView({ behavior: instant ? 'auto' : 'smooth' });
+}
+
 export function HeroModule() {
   const reduceMotion = useReducedMotion();
+  const { hero } = useDictionary();
 
   const glowX = useMotionValue(GLOW_CENTER);
   const glowY = useMotionValue(GLOW_CENTER);
@@ -65,7 +74,7 @@ export function HeroModule() {
               <div className={styles.flipFace}>
                 <Image
                   src="/image/me.png"
-                  alt="Carozamani profile picture"
+                  alt={hero.profileAlt}
                   width={190}
                   height={190}
                   priority
@@ -86,13 +95,7 @@ export function HeroModule() {
           </div>
         </div>
 
-        <Image
-          src="/image/carozamani.png"
-          alt="Carozamani logo"
-          width={250}
-          height={70}
-          className={styles.logoImage}
-        />
+        <Wordmark className={styles.logoImage} />
       </motion.div>
 
       <motion.div
@@ -102,27 +105,23 @@ export function HeroModule() {
         transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.2 }}
       >
         <TypographyComponent variant="h1" id="hero-title" color="text-primary">
-          <TextRotator texts={titlesToRotate} interval={3500} />
+          {hero.title}
         </TypographyComponent>
       </motion.div>
 
       <motion.div
-        className={styles.subtitleContainer}
+        className={styles.ctaContainer}
         initial={fadeIn?.initial ?? { opacity: 0, y: 12 }}
         animate={fadeIn?.animate ?? { opacity: 1, y: 0 }}
-        transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.4 }}
+        transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.5 }}
       >
-        <TypographyComponent variant="body1" color="text-secondary">
-          {heroTagline}
-        </TypographyComponent>
-      </motion.div>
-
-      <motion.div
-        className={styles.socialContainer}
-        initial={fadeIn?.initial ?? { opacity: 0, scale: 0.95 }}
-        animate={fadeIn?.animate ?? { opacity: 1, scale: 1 }}
-        transition={{ duration: reduceMotion ? 0 : 0.4, delay: reduceMotion ? 0 : 0.6 }}
-      >
+        <Button
+          text={hero.ctaWork}
+          variant="glass"
+          iconRight={<FiArrowDown aria-hidden="true" />}
+          className={styles.seeWork}
+          onClick={() => scrollToSection('projects', reduceMotion)}
+        />
         <SocialIcons items={heroSocialLinks} bordered />
       </motion.div>
     </section>

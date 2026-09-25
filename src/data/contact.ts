@@ -12,7 +12,6 @@ export const contactSocialLinks: SocialItem[] = [
 
 export const contactDetails = {
   email: 'carozamani@gmail.com',
-  location: 'Remote — Available Worldwide',
-  responseTime: 'Usually replies within 24 hours',
+  phone: '+989129328672',
   messageMaxLength: 500,
 };

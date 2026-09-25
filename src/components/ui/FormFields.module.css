@@ -32,6 +32,12 @@
     --notch-w var(--transition-normal);
 }
 
+:global([dir='rtl']) .shell {
+  --notch-mask:
+    linear-gradient(#000 0 0), linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0) right var(--notch-x) top 0 / var(--notch-w) 3px no-repeat;
+}
+
 /* the border is drawn as a masked ring so the floating label can cut a
    transparent notch out of it instead of covering it with a background */
 .shell::after {
@@ -124,7 +130,8 @@
 .control {
   position: relative;
   width: 100%;
-  padding: 12px 44px 12px 14px;
+  padding: 12px;
+  padding-inline: 14px 44px;
   background: #000;
   border: 1px solid transparent;
   border-radius: var(--field-radius);
@@ -146,7 +153,7 @@ textarea.control {
 
 .label {
   position: absolute;
-  left: 14px;
+  inset-inline-start: 14px;
   top: 12px;
   z-index: 3;
   color: var(--color-text-secondary);
@@ -171,7 +178,7 @@ textarea.control {
 .control:focus + .label,
 .control:not(:placeholder-shown) + .label {
   top: -9px;
-  left: 10px;
+  inset-inline-start: 10px;
   font-size: 0.7rem;
   letter-spacing: 0.04em;
   padding: 0 6px;
@@ -182,7 +189,7 @@ textarea.control {
 .check {
   position: absolute;
   top: 13px;
-  right: 14px;
+  inset-inline-end: 14px;
   width: 1.25rem;
   height: 1.25rem;
   z-index: 3;
@@ -211,7 +218,7 @@ textarea.control {
 
 .counter {
   position: absolute;
-  right: 14px;
+  inset-inline-end: 14px;
   bottom: 10px;
   z-index: 3;
   font-size: 0.7rem;
@@ -253,7 +260,7 @@ textarea.control {
   align-items: center;
   gap: 0.375rem;
   margin-top: 6px;
-  padding-left: 4px;
+  padding-inline-start: 4px;
   font-size: 0.75rem;
   color: var(--color-error);
   animation: errorIn var(--duration-normal) var(--ease-out);
@@ -279,7 +286,7 @@ textarea.control {
 
   .label {
     top: 11px;
-    left: 12px;
+    inset-inline-start: 12px;
   }
 
   .check {

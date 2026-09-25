@@ -3,6 +3,7 @@
 import { FaFilePdf } from 'react-icons/fa';
 import clsx from 'clsx';
 import styles from './CTA.module.css';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import Button from '@/components/ui/Button';
 
 type Props = {
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export default function BlockCTA({
-  text = 'Download Resume',
+  text,
   href = '/resume.pdf',
   Icon = FaFilePdf,
   fullWidth = false,
@@ -24,12 +25,13 @@ export default function BlockCTA({
   gradientTo = '#ff33335b',
   className,
 }: Props) {
+  const { about } = useDictionary();
   return (
     <div className={clsx(styles.wrapper, fullWidth && styles.fullWidth, className)}>
       {/* CTA Content */}
       <div className={styles.content}>
         <Button
-          text={text}
+          text={text ?? about.resume}
           href={href}
           download
           Icon={Icon}

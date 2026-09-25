@@ -1,5 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 interface ContactFormValues {
   name: string;
@@ -11,29 +13,33 @@ type ContactFormErrors = Partial<Record<keyof ContactFormValues, string>>;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validate(values: ContactFormValues): ContactFormErrors {
+function validate(
+  values: ContactFormValues,
+  messages: Dictionary['contact']['errors'],
+): ContactFormErrors {
   const errors: ContactFormErrors = {};
 
   if (!values.name.trim()) {
-    errors.name = 'Please enter your name.';
+    errors.name = messages.name;
   }
 
   if (!values.email.trim()) {
-    errors.email = 'Please enter your email address.';
+    errors.email = messages.emailRequired;
   } else if (!EMAIL_PATTERN.test(values.email.trim())) {
-    errors.email = 'Please enter a valid email address.';
+    errors.email = messages.emailInvalid;
   }
 
   if (!values.message.trim()) {
-    errors.message = 'Please enter a message.';
+    errors.message = messages.messageRequired;
   } else if (values.message.trim().length < 10) {
-    errors.message = 'Your message should be at least 10 characters.';
+    errors.message = messages.messageShort;
   }
 
   return errors;
 }
 
 export function useContactForm() {
+  const { contact } = useDictionary();
   const [errors, setErrors] = useState<ContactFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
@@ -48,25 +54,25 @@ export function useContactForm() {
       message: String(formData.get('message') ?? ''),
     };
 
-    const validationErrors = validate(values);
+    const validationErrors = validate(values, contact.errors);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
       const firstInvalidField = form.querySelector<HTMLElement>('[aria-invalid="true"]');
       firstInvalidField?.focus();
-      toast.error('Please fix the highlighted fields.');
+      toast.error(contact.fixFields);
       return;
     }
 
     setIsSubmitting(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1200));
-      toast.success("Message sent — I'll get back to you shortly.");
+      toast.success(contact.sentToast);
       form.reset();
       setErrors({});
       setIsSent(true);
     } catch {
-      toast.error('Something went wrong. Please try again.');
+      toast.error(contact.failedToast);
     } finally {
       setIsSubmitting(false);
     }

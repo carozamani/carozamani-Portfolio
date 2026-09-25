@@ -1,7 +1,8 @@
 'use client';
 
 import { memo, useRef, type PointerEvent } from 'react';
-import { FiSend, FiCopy, FiMail, FiMapPin } from 'react-icons/fi';
+import { FiSend, FiCopy, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { toast } from 'sonner';
 import styles from './ContactModule.module.css';
@@ -9,21 +10,23 @@ import SocialIcons from '@/components/ui/SocialIcons';
 import Button from '@/components/ui/Button';
 import FormFields from '@/components/ui/FormFields';
 import { contactSocialLinks, contactDetails } from '@/data/contact';
+import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import { useContactForm } from '../lib/useContactForm';
 
-async function copyEmail() {
-  try {
-    await navigator.clipboard.writeText(contactDetails.email);
-    toast.success('Email address copied.');
-  } catch {
-    toast.error('Could not copy — please select the address manually.');
-  }
-}
-
 function ContactModuleComponent() {
+  const { contact } = useDictionary();
   const reduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
   const { errors, isSubmitting, isSent, resetSent, handleSubmit } = useContactForm();
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contactDetails.email);
+      toast.success(contact.copied);
+    } catch {
+      toast.error(contact.copyFailed);
+    }
+  };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -49,17 +52,31 @@ function ContactModuleComponent() {
           <div className={styles.spotlight} aria-hidden="true" />
 
           <div className={styles.info}>
-            <h2 className={styles.title}>Get in Touch</h2>
-            <p className={styles.subtitle}>
-              Have a project in mind or a question? Send a message and I&apos;ll get back to you
-              shortly.
-            </p>
+            <div className={styles.brandBlock}>
+              <div className={styles.brandRow}>
+                <div className={styles.logoRing}>
+                  <Image
+                    src="/image/LogoPrimary.svg"
+                    alt=""
+                    aria-hidden="true"
+                    width={72}
+                    height={72}
+                  />
+                </div>
+                <h2 className={styles.pitch}>
+                  {contact.pitchBefore}
+                  <span className={styles.pitchAccent}>{contact.pitchAccent}</span>
+                  {contact.pitchAfter}
+                </h2>
+              </div>
+              <p className={styles.pitchSub}>{contact.pitchSub}</p>
+            </div>
 
             <dl className={styles.meta}>
               <div className={styles.metaRow}>
                 <dt className={styles.label}>
                   <FiMail aria-hidden="true" />
-                  <span className={styles.srOnly}>Email</span>
+                  <span className={styles.srOnly}>{contact.emailLabel}</span>
                 </dt>
                 <dd className={styles.value}>
                   <a href={`mailto:${contactDetails.email}`} className={styles.link}>
@@ -67,7 +84,7 @@ function ContactModuleComponent() {
                   </a>
                   <Button
                     variant="icon"
-                    text="Copy email address"
+                    text={contact.copyEmail}
                     iconLeft={<FiCopy aria-hidden="true" />}
                     onClick={copyEmail}
                     className={styles.copyButton}
@@ -76,17 +93,23 @@ function ContactModuleComponent() {
               </div>
               <div className={styles.metaRow}>
                 <dt className={styles.label}>
-                  <FiMapPin aria-hidden="true" />
-                  <span className={styles.srOnly}>Location</span>
+                  <FiPhone aria-hidden="true" />
+                  <span className={styles.srOnly}>{contact.phoneLabel}</span>
                 </dt>
-                <dd className={styles.value}>{contactDetails.location}</dd>
+                <dd className={styles.value}>
+                  <a href={`tel:${contactDetails.phone}`} className={styles.link} dir="ltr">
+                    {contactDetails.phone}
+                  </a>
+                </dd>
+              </div>
+              <div className={styles.metaRow}>
+                <dt className={styles.label}>
+                  <FiMapPin aria-hidden="true" />
+                  <span className={styles.srOnly}>{contact.locationLabel}</span>
+                </dt>
+                <dd className={styles.value}>{contact.location}</dd>
               </div>
             </dl>
-
-            <p className={styles.response}>
-              <span className={styles.pulse} aria-hidden="true" />
-              {contactDetails.responseTime}
-            </p>
 
             <SocialIcons items={contactSocialLinks} bordered={false} />
           </div>
@@ -103,18 +126,16 @@ function ContactModuleComponent() {
                   <circle cx="26" cy="26" r="24" className={styles.successRing} />
                   <path d="M15 27l8 8 14-16" className={styles.successCheck} />
                 </svg>
-                <h3 className={styles.successTitle}>Message sent</h3>
-                <p className={styles.successText}>
-                  Thanks for reaching out — I&apos;ll get back to you shortly.
-                </p>
-                <Button variant="glass" text="Send another message" onClick={resetSent} />
+                <h3 className={styles.successTitle}>{contact.sentTitle}</h3>
+                <p className={styles.successText}>{contact.sentText}</p>
+                <Button variant="glass" text={contact.sendAnother} onClick={resetSent} />
               </div>
             ) : (
               <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <FormFields
                   name="name"
                   variant="text"
-                  label="Full Name"
+                  label={contact.fullName}
                   autoComplete="name"
                   required
                   error={errors.name}
@@ -122,7 +143,7 @@ function ContactModuleComponent() {
                 <FormFields
                   name="email"
                   variant="email"
-                  label="Email Address"
+                  label={contact.emailAddress}
                   autoComplete="email"
                   required
                   error={errors.email}
@@ -130,7 +151,7 @@ function ContactModuleComponent() {
                 <FormFields
                   name="message"
                   variant="textarea"
-                  label="Your Message"
+                  label={contact.message}
                   rows={4}
                   maxLength={contactDetails.messageMaxLength}
                   required
@@ -139,13 +160,15 @@ function ContactModuleComponent() {
 
                 <Button
                   type="submit"
-                  text="Send Message"
-                  loadingText="Sending…"
-                  Icon={FiSend}
+                  text={contact.send}
+                  loadingText={contact.sending}
+                  iconLeft={
+                    isSubmitting ? undefined : (
+                      <FiSend className={styles.sendIcon} aria-hidden="true" />
+                    )
+                  }
                   loading={isSubmitting}
                   fullWidth
-                  iconGradientFrom="var(--color-brand-primary)"
-                  iconGradientTo="var(--color-brand-secondary)"
                 />
               </form>
             )}
