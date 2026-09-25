@@ -1,28 +1,23 @@
 .page {
-  position: relative;
   min-height: 100vh;
 }
 
-.pageBackground {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 6.25rem 6.25rem;
-  pointer-events: none;
+.content {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: clamp(6rem, 10vw, 8rem) var(--space-l) clamp(8rem, 12vw, 10rem);
 }
 
-.content {
-  position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: clamp(6rem, 10vw, 8rem) var(--space-l) clamp(4rem, 8vw, 6rem);
+.title {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .description {
   margin-top: 0.75rem;
   margin-bottom: 2.5rem;
+  color: var(--color-text-secondary);
 }
 
 .grid {

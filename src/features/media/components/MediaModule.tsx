@@ -2,13 +2,23 @@
 
 import { motion } from 'framer-motion';
 import MediaSection from './MediaSection';
-import { podcastCards, articleCards } from '@/data/media';
+import { MEDIA_PREVIEW_LIMIT, articleCards, podcastCards } from '@/data/media';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import { localizeCard } from '../lib/localizeCard';
 import styles from './MediaModule.module.css';
 import TypographyComponent from '@/components/ui/Typography';
 import Button from '@/components/ui/Button';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 export function MediaModule() {
+  const { locale, dict } = useLocale();
+  const { media } = dict;
+  const isRtl = locale === 'fa';
+  const podcasts = podcastCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
+  const articles = articleCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
+  const hasMorePodcasts = podcastCards.length > MEDIA_PREVIEW_LIMIT;
+  const hasMoreArticles = articleCards.length > MEDIA_PREVIEW_LIMIT;
+
   return (
     <section className={styles.section}>
       <GridBackground />
@@ -20,13 +30,14 @@ export function MediaModule() {
           layoutDirection="cardsLeft"
           content={
             <ContentBlock
-              title="Podcasts"
-              description="Episodes about design, UX, product thinking, and challenges."
-              href="/podcasts"
-              iconLeft={<FiArrowLeft />}
+              title={media.podcasts.title}
+              description={media.podcasts.description}
+              href={hasMorePodcasts ? '/podcasts' : undefined}
+              linkText={media.podcasts.viewMore}
+              iconLeft={isRtl ? <FiArrowRight /> : <FiArrowLeft />}
             />
           }
-          cards={podcastCards}
+          cards={podcasts}
         />
       </AnimatedBlock>
 
@@ -36,13 +47,14 @@ export function MediaModule() {
           layoutDirection="cardsRight"
           content={
             <ContentBlock
-              title="Articles"
-              description="Read insightful articles about UX, UI, and design systems."
-              href="/articles"
-              iconRight={<FiArrowRight />}
+              title={media.articles.title}
+              description={media.articles.description}
+              href={hasMoreArticles ? '/articles' : undefined}
+              linkText={media.articles.viewMore}
+              iconRight={isRtl ? <FiArrowLeft /> : <FiArrowRight />}
             />
           }
-          cards={articleCards}
+          cards={articles}
         />
       </AnimatedBlock>
     </section>
@@ -66,12 +78,20 @@ const AnimatedBlock = ({ children, delay }: { children: React.ReactNode; delay: 
 interface ContentBlockProps {
   title: string;
   description: string;
-  href: string;
+  href?: string;
+  linkText: string;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
 }
 
-const ContentBlock = ({ title, description, href, iconLeft, iconRight }: ContentBlockProps) => (
+const ContentBlock = ({
+  title,
+  description,
+  href,
+  linkText,
+  iconLeft,
+  iconRight,
+}: ContentBlockProps) => (
   <div className={styles.contentBlock}>
     <TypographyComponent variant="h2" color="text-primary" className={styles.title}>
       {title}
@@ -81,14 +101,16 @@ const ContentBlock = ({ title, description, href, iconLeft, iconRight }: Content
       {description}
     </TypographyComponent>
 
-    <Button
-      text="View more"
-      variant="ghost"
-      href={href}
-      iconLeft={iconLeft}
-      iconRight={iconRight}
-      className={styles.viewMore}
-    />
+    {href && (
+      <Button
+        text={linkText}
+        variant="ghost"
+        href={href}
+        iconLeft={iconLeft}
+        iconRight={iconRight}
+        className={styles.viewMore}
+      />
+    )}
   </div>
 );
 

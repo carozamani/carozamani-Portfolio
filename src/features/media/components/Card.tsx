@@ -1,114 +1,41 @@
 'use client';
 
-import { useRef, useState, useEffect, MouseEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Card.module.css';
-import { usePlayer } from '../hooks/usePlayer';
 import TypographyComponent from '@/components/ui/Typography';
+import { format, useLocale } from '@/lib/i18n/LocaleProvider';
 import type { CardProps } from '@/types/card';
 
 export default function Card({
-  id,
   type,
   title,
   summary,
   image,
-  audioSrc,
   href,
   date,
   listeners = 0,
   duration = '',
   readTime = '',
-}: CardProps) {
-  const shouldUsePlayer = type === 'podcast';
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const { currentId, play, stop } = usePlayer();
-  const isPlaying = shouldUsePlayer ? currentId === id : false;
-
-  const [currentTime, setCurrentTime] = useState(0);
-  const [totalDuration, setTotalDuration] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  const radius = 48;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset =
-    circumference * (1 - (totalDuration > 0 ? currentTime / totalDuration : 0));
-
-  const handlePlayPause = (e?: MouseEvent) => {
-    if (!shouldUsePlayer) return;
-    e?.stopPropagation();
-    e?.preventDefault();
-    isPlaying ? stop() : play(id, audioRef);
-  };
-
-  useEffect(() => {
-    if (!shouldUsePlayer) return;
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const onLoadedMetadata = () => {
-      setTotalDuration(audio.duration);
-      setIsLoaded(true);
-    };
-    const onTimeUpdate = () => {
-      if (isPlaying) setCurrentTime(audio.currentTime);
-    };
-    const onEnded = () => {
-      stop();
-      setCurrentTime(0);
-    };
-
-    audio.addEventListener('loadedmetadata', onLoadedMetadata);
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', onEnded);
-
-    return () => {
-      audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-      audio.removeEventListener('timeupdate', onTimeUpdate);
-      audio.removeEventListener('ended', onEnded);
-    };
-  }, [isPlaying, stop, shouldUsePlayer]);
+  active = false,
+  onSelect,
+}: CardProps & { active?: boolean; onSelect?: () => void }) {
+  const isPodcast = type === 'podcast';
+  const { locale, dict } = useLocale();
 
   const truncatedSummary = summary.length > 150 ? summary.slice(0, 150) + '...' : summary;
 
   const ImageBlock = image ? (
-    <div className={`${styles.imageContainer} ${type === 'podcast' ? styles.circle : styles.square} ${isPlaying ? styles.blur : ''}`}>
-      {type === 'podcast' && isPlaying && isLoaded && (
-        <svg className={styles.progressCircle} viewBox="0 0 100 100">
-          <circle
-            stroke="var(--color-icon-progress-bg, rgba(255,255,255,0.25))"
-            strokeWidth="3"
-            fill="transparent"
-            r={radius}
-            cx="50"
-            cy="50"
-          />
-          <circle
-            stroke="var(--color-icon-progress, #06b6d4)"
-            strokeWidth="4"
-            strokeDasharray={circumference}
-            strokeDashoffset={dashOffset}
-            strokeLinecap="round"
-            fill="transparent"
-            r={radius}
-            cx="50"
-            cy="50"
-          />
-        </svg>
-      )}
-
+    <div
+      className={`${styles.imageContainer} ${isPodcast ? styles.circle : styles.square} ${active ? styles.blur : ''}`}
+    >
       <Image src={image} alt={title} fill className={styles.image} />
 
-      {type === 'podcast' && (
-        <div className={styles.centerIcon}>
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </div>
+      {isPodcast && (
+        <div className={styles.centerIcon}>{active ? <PauseIcon /> : <PlayIcon />}</div>
       )}
 
       <div className={styles.imageGradient} />
-
-      {shouldUsePlayer && <audio ref={audioRef} src={audioSrc} preload="auto" />}
     </div>
   ) : null;
 
@@ -118,23 +45,29 @@ export default function Card({
         {title}
       </TypographyComponent>
 
-      <TypographyComponent variant="body1" color="text-secondary" ellipsis className={styles.summary}>
+      <TypographyComponent
+        variant="body1"
+        color="text-secondary"
+        ellipsis
+        className={styles.summary}
+      >
         {truncatedSummary}
       </TypographyComponent>
 
       <div className={styles.metadata}>
         <MetadataItem icon={<CalendarIcon />} label={date} />
 
-        {type === 'podcast' && duration && (
-          <MetadataItem icon={<ClockIcon />} label={duration} />
-        )}
-        {type === 'podcast' && listeners && listeners > 0 && (
-          <MetadataItem icon={<ListenerIcon />} label={`${listeners}K`} />
+        {isPodcast && duration && <MetadataItem icon={<ClockIcon />} label={duration} />}
+        {isPodcast && listeners && listeners > 0 && (
+          <MetadataItem
+            icon={<ListenerIcon />}
+            label={format(dict.media.listeners, {
+              n: listeners.toLocaleString(locale === 'fa' ? 'fa-IR' : 'en'),
+            })}
+          />
         )}
 
-        {type === 'article' && readTime && (
-          <MetadataItem icon={<ClockIcon />} label={readTime} />
-        )}
+        {type === 'article' && readTime && <MetadataItem icon={<ClockIcon />} label={readTime} />}
       </div>
     </div>
   );
@@ -143,17 +76,33 @@ export default function Card({
     <>
       {TextBlock}
       {ImageBlock}
-      {shouldUsePlayer && isPlaying && <div className={styles.glowOverlay} />}
+      {isPodcast && active && <div className={styles.glowOverlay} />}
       <div className={styles.beforeLayer} />
     </>
   );
 
-  return href ? (
-    <Link href={href} className={styles.cardLink} onClick={handlePlayPause}>
-      {CardInner}
-    </Link>
-  ) : (
-    <div className={styles.cardDiv} onClick={handlePlayPause}>
+  if (href) {
+    return (
+      <Link href={href} className={styles.cardLink}>
+        {CardInner}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className={styles.cardDiv}
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      aria-pressed={onSelect ? active : undefined}
+      onClick={onSelect}
+      onKeyDown={(event) => {
+        if (onSelect && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
+    >
       {CardInner}
     </div>
   );

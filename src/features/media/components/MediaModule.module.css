@@ -1,12 +1,11 @@
 .section {
   position: relative;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
-  padding: var(--space-xl) var(--space-l);
+  gap: 2rem;
+  padding: var(--section-padding-y) var(--space-l);
 
   color: white;
   overflow: visible;
@@ -20,7 +19,7 @@
 }
 
 .contentBlock {
-  text-align: left;
+  text-align: start;
 }
 
 .gridBackground {
