@@ -1,0 +1,106 @@
+.theme {
+  --color-surface-canvas: hsl(0, 0%, 5%);
+  --color-surface-canvas-alt: hsl(0, 0%, 8%);
+  --color-glass-bg: hsl(0, 0%, 9%);
+  --color-glass-hover: hsl(0, 0%, 16%);
+  --color-border-default: hsl(0, 0%, 100%, 0.12);
+  --gradient-card: hsl(0, 0%, 10%);
+  min-height: 100vh;
+  background: var(--color-page-bg);
+  color-scheme: dark;
+}
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.logoRing {
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 3px solid var(--color-hero-ring);
+  line-height: 0;
+}
+.wordmark {
+  font-size: 1.75rem;
+}
+.authPage {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-m);
+}
+.card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-l);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    45deg,
+    rgba(0, 38, 255, 0.171),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.021),
+    transparent,
+    transparent,
+    transparent
+  );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 110, 255, 0.322);
+  box-shadow: var(--shadow-glow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0 !important;
+  pointer-events: none;
+  background-image: var(--grid-pattern-subtle);
+  background-size: 90px 90px;
+  opacity: 0.6;
+}
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.hint {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+.linkBtn {
+  background: none;
+  border: 0;
+  color: var(--color-brand-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  align-self: flex-start;
+  padding: 0;
+}
+.linkBtn:hover {
+  text-decoration: underline;
+}
+.error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+.langCorner {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
+  z-index: 2;
+}

@@ -53,7 +53,13 @@
 
 @media (min-width: 768px) {
   .leftSection {
-    grid-column: span 4; /* کاهش عرض بخش محتوا */
+    grid-column: span 5;
+    min-width: 0;
+  }
+
+  .leftSection h2 {
+    font-size: clamp(1.75rem, 3.6vw, 3rem);
+    overflow-wrap: anywhere;
   }
 }
 
@@ -83,7 +89,8 @@
 
 @media (min-width: 768px) {
   .rightSection {
-    grid-column: span 8; /* افزایش عرض ستون‌ها */
+    grid-column: span 7;
+    min-width: 0;
   }
 }
 

@@ -36,6 +36,7 @@ type AnimatedSectionProps = {
   variant?: AnimationVariant;
   delay?: number;
   stagger?: number;
+  fullScreen?: boolean;
 };
 
 export function AnimatedSection({
@@ -45,6 +46,7 @@ export function AnimatedSection({
   variant = 'fade-up',
   delay = 0,
   stagger = 0,
+  fullScreen = false,
 }: AnimatedSectionProps) {
   const reduceMotion = useReducedMotion();
   const animation = reduceMotion ? REDUCED_MOTION_VARIANT : VARIANT_MAP[variant];
@@ -52,6 +54,7 @@ export function AnimatedSection({
   return (
     <motion.section
       id={id}
+      className={fullScreen ? 'flex min-h-dvh flex-col justify-center' : undefined}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: viewAmount }}

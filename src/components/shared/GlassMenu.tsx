@@ -11,7 +11,6 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 const MIN_PILL_WIDTH = 60;
 
 const SECTION_BY_PATH: Record<string, string> = {
-  '/podcasts': '#testimonials',
   '/articles': '#testimonials',
   '/case-studies': '#projects',
 };
@@ -96,7 +95,7 @@ export default function GlassMenu() {
 
   return (
     <nav
-      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 px-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:px-3 sm:w-auto sm:gap-6 sm:px-3"
+      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 px-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:px-3 sm:w-auto sm:gap-3 sm:px-3"
       aria-label={dict.nav.aria}
     >
       <section

@@ -1,0 +1,137 @@
+/* Typography for rich-text article bodies; shared by the admin editor and the public article page. */
+.rich-content {
+  display: flow-root;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.rich-content > * + * {
+  margin-block-start: 1rem;
+}
+
+.rich-content h2,
+.rich-content h3,
+.rich-content h4 {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold, 700);
+  line-height: 1.25;
+  margin-block-start: 2rem;
+}
+
+.rich-content h2 {
+  font-size: 1.75rem;
+}
+
+.rich-content h3 {
+  font-size: 1.4rem;
+}
+
+.rich-content h4 {
+  font-size: 1.15rem;
+}
+
+.rich-content strong {
+  color: var(--color-text-primary);
+}
+
+.rich-content a {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rich-content a:hover {
+  color: var(--color-brand-emphasis);
+}
+
+.rich-content mark {
+  background: hsla(195, 100%, 50%, 0.28);
+  color: var(--color-text-primary);
+  border-radius: 0.25rem;
+  padding-inline: 0.15em;
+}
+
+.rich-content ul,
+.rich-content ol {
+  padding-inline-start: 1.5rem;
+}
+
+.rich-content ul {
+  list-style: disc;
+}
+
+.rich-content ol {
+  list-style: decimal;
+}
+
+.rich-content li + li {
+  margin-block-start: 0.35rem;
+}
+
+.rich-content li > p {
+  margin: 0;
+}
+
+.rich-content blockquote {
+  padding-inline-start: 1rem;
+  border-inline-start: 3px solid var(--color-brand-primary);
+  color: var(--color-text-primary);
+  font-style: italic;
+}
+
+.rich-content code {
+  padding: 0.1em 0.4em;
+  border-radius: 0.375rem;
+  background: hsla(0, 0%, 100%, 0.08);
+  color: var(--color-text-primary);
+  font-size: 0.9em;
+}
+
+.rich-content pre {
+  padding: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0.75rem;
+  background: hsla(0, 0%, 0%, 0.5);
+  color: var(--color-text-primary);
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+.rich-content pre code {
+  padding: 0;
+  background: none;
+}
+
+.rich-content hr {
+  border: 0;
+  border-block-start: 1px solid var(--color-border-muted);
+  margin-block: 2rem;
+}
+
+.rich-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+
+.rich-content img.ProseMirror-selectednode {
+  outline: 2px solid var(--color-brand-emphasis);
+  outline-offset: 2px;
+}
+
+/* editor-only */
+.rich-content.ProseMirror {
+  outline: none;
+  min-height: 24rem;
+}
+
+.rich-content .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: inline-start;
+  height: 0;
+  pointer-events: none;
+  color: var(--color-text-muted);
+}

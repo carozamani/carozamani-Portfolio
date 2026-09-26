@@ -8,7 +8,7 @@ import styles from './LanguageSwitcher.module.css';
 
 const OPTIONS: Record<Locale, { code: string; flag: ReactNode }> = {
   en: { code: 'EN', flag: <UkFlag className="h-4 w-8 rounded-[2px]" /> },
-  fa: { code: 'FA', flag: <IranFlag className="h-4 w-6 rounded-[2px]" /> },
+  fa: { code: 'FA', flag: <IranFlag className="h-4 w-8 rounded-[2px]" /> },
 };
 
 export function LanguageSwitcher() {

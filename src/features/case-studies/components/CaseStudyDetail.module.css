@@ -20,16 +20,18 @@
   padding: clamp(6rem, 10vw, 8rem) var(--space-l) clamp(4rem, 8vw, 6rem);
 }
 
-.caseStudyImageWrapper {
-  position: relative;
+.imageStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
   width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--radius-lg, 1rem);
-  overflow: hidden;
 }
 
-.caseStudyImage {
-  object-fit: cover;
+.stackImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg, 1rem);
 }
 
 .placeholder {

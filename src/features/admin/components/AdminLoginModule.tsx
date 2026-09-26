@@ -4,37 +4,34 @@ import { useState, type FormEvent } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { adminEmailMasked } from '@/data/admin';
+import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { Wordmark } from '@/components/ui/Wordmark';
 import Button from '@/components/ui/Button';
 import FormFields from '@/components/ui/FormFields';
-import styles from './Admin.module.css';
+import { adminEmailMasked } from '@/data/admin';
+import { localeDirection } from '@/lib/i18n/config';
+import { format, useLocale } from '@/lib/i18n/LocaleProvider';
+import styles from './AdminLogin.module.css';
 
 type Step = 'login' | 'forgot' | 'code' | 'reset';
 
-const COPY: Record<Step, { title: string; hint: string; action: string }> = {
-  login: { title: 'Admin Login', hint: 'Sign in with your email and password.', action: 'Sign in' },
-  forgot: {
-    title: 'Forgot password',
-    hint: `A 6-digit code will be sent to your admin email (${adminEmailMasked}).`,
-    action: 'Send code to my email',
-  },
-  code: {
-    title: 'Enter code',
-    hint: 'Check your inbox. The code expires in 10 minutes.',
-    action: 'Verify',
-  },
-  reset: {
-    title: 'New password',
-    hint: 'Choose a new password to finish signing in.',
-    action: 'Save & sign in',
-  },
-};
-
 export function AdminLoginModule() {
+  const { locale, dict } = useLocale();
+  const t = dict.admin.login;
   const router = useRouter();
   const [step, setStep] = useState<Step>('login');
   const [error, setError] = useState('');
+
+  const COPY: Record<Step, { title: string; hint: string; action: string }> = {
+    login: { title: t.loginTitle, hint: t.loginHint, action: t.loginAction },
+    forgot: {
+      title: t.forgotTitle,
+      hint: format(t.forgotHint, { email: adminEmailMasked }),
+      action: t.forgotAction,
+    },
+    code: { title: t.codeTitle, hint: t.codeHint, action: t.codeAction },
+    reset: { title: t.resetTitle, hint: t.resetHint, action: t.resetAction },
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,14 +41,14 @@ export function AdminLoginModule() {
     if (step === 'login') {
       router.push('/admin');
     } else if (step === 'forgot') {
-      toast.success('Code sent to your admin email.');
+      toast.success(t.codeSent);
       setStep('code');
     } else if (step === 'code') {
-      if (String(data.get('code')).length !== 6) return setError('Enter the 6-digit code.');
+      if (String(data.get('code')).length !== 6) return setError(t.codeInvalid);
       setStep('reset');
     } else {
-      if (data.get('password') !== data.get('confirm')) return setError('Passwords do not match.');
-      toast.success('Password updated.');
+      if (data.get('password') !== data.get('confirm')) return setError(t.mismatch);
+      toast.success(t.updated);
       router.push('/admin');
     }
   };
@@ -59,7 +56,10 @@ export function AdminLoginModule() {
   const { title, hint, action } = COPY[step];
 
   return (
-    <div className={`${styles.theme} ${styles.authPage}`} dir="ltr">
+    <div className={`${styles.theme} ${styles.authPage}`} dir={localeDirection[locale]}>
+      <div className={styles.langCorner}>
+        <LanguageSwitcher />
+      </div>
       <div className={styles.card}>
         <div className={styles.gridPattern} aria-hidden="true" />
         <div className={styles.brandBlock}>
@@ -84,17 +84,17 @@ export function AdminLoginModule() {
           </>
         )}
         <form className={styles.form} onSubmit={handleSubmit} key={step}>
-          {step === 'login' && <FormFields variant="email" label="Email" name="email" required />}
+          {step === 'login' && <FormFields variant="email" label={t.email} name="email" required />}
           {step === 'login' && (
-            <FormFields variant="password" label="Password" name="password" required />
+            <FormFields variant="password" label={t.password} name="password" required />
           )}
           {step === 'code' && (
-            <FormFields variant="text" label="6-digit code" name="code" maxLength={6} required />
+            <FormFields variant="text" label={t.code} name="code" maxLength={6} required />
           )}
           {step === 'reset' && (
             <>
-              <FormFields variant="password" label="New password" name="password" required />
-              <FormFields variant="password" label="Confirm password" name="confirm" required />
+              <FormFields variant="password" label={t.newPassword} name="password" required />
+              <FormFields variant="password" label={t.confirmPassword} name="confirm" required />
             </>
           )}
           {error && (
@@ -106,11 +106,11 @@ export function AdminLoginModule() {
         </form>
         {step === 'login' ? (
           <button type="button" className={styles.linkBtn} onClick={() => setStep('forgot')}>
-            Forgot password?
+            {t.forgotLink}
           </button>
         ) : (
           <button type="button" className={styles.linkBtn} onClick={() => setStep('login')}>
-            Back to login
+            {t.backLink}
           </button>
         )}
       </div>

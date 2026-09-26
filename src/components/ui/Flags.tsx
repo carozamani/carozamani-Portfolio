@@ -2,10 +2,10 @@ type FlagProps = { className?: string };
 
 export function IranFlag({ className }: FlagProps) {
   return (
-    <svg className={className} viewBox="0 0 60 40" aria-hidden="true" focusable="false">
-      <rect width="60" height="40" fill="#fff" />
-      <rect width="60" height="13.33" fill="#239f40" />
-      <rect y="26.67" width="60" height="13.33" fill="#da0000" />
+    <svg className={className} viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+      <rect width="60" height="30" fill="#fff" />
+      <rect width="60" height="10" fill="#239f40" />
+      <rect y="20" width="60" height="10" fill="#da0000" />
     </svg>
   );
 }

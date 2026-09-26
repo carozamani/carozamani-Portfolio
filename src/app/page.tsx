@@ -24,19 +24,19 @@ export default function HomePage() {
           <HeroModule />
         </AnimatedSection>
 
-        <AnimatedSection id="about" variant="fade-up" delay={0.1}>
+        <AnimatedSection id="about" fullScreen variant="fade-up" delay={0.1}>
           <AboutMeModule />
         </AnimatedSection>
 
-        <AnimatedSection id="projects" variant="fade-up" delay={0.1}>
+        <AnimatedSection id="projects" fullScreen variant="fade-up" delay={0.1}>
           <CaseStudiesModule preview />
         </AnimatedSection>
 
-        <AnimatedSection id="testimonials" variant="fade-up" delay={0.1}>
+        <AnimatedSection id="testimonials" fullScreen variant="fade-up" delay={0.1}>
           <MediaModule />
         </AnimatedSection>
 
-        <AnimatedSection id="contact" viewAmount={0.4} variant="scale-in">
+        <AnimatedSection id="contact" fullScreen viewAmount={0.4} variant="scale-in">
           <ContactModule />
         </AnimatedSection>
 
