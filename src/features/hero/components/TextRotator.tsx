@@ -35,18 +35,15 @@ export default function TextRotator({
   return (
     <span
       aria-live="polite"
-      className={clsx(
-        'inline-block relative overflow-hidden w-screen max-w-full',
-        className
-      )}
+      className={clsx('relative inline-block w-screen max-w-full overflow-hidden', className)}
       style={{ height: '1.2em', minWidth: '150px' }}
     >
       {texts.map((text, index) => (
         <span
           key={index}
           className={clsx(
-            'block absolute top-0 left-0 w-full transition-transform transition-opacity duration-700 ease-in-out',
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
+            'absolute top-0 left-0 block w-full transition-opacity transition-transform duration-700 ease-in-out',
+            index === currentIndex ? 'opacity-100' : 'opacity-0',
           )}
           style={{
             transform: `translateY(${(index - currentIndex) * 100}%)`,

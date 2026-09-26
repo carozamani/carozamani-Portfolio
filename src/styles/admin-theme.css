@@ -1,0 +1,138 @@
+/*
+ * Admin panel theme: shadcn/ui (Radix) is the engine, the site's design tokens are the skin.
+ * Kept on :root because Radix portals render outside the admin wrapper.
+ */
+:root {
+  --background: var(--color-page-bg);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-glass-bg);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-surface-canvas-alt);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-brand-primary);
+  --primary-foreground: var(--color-text-inverse);
+  --secondary: hsla(226, 100%, 50%, 0.16);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: hsla(226, 100%, 50%, 0.1);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: hsla(226, 100%, 50%, 0.28);
+  --accent-foreground: var(--color-text-primary);
+  --destructive: var(--color-error);
+  --border: var(--color-border-subtle);
+  --input: var(--color-border-default);
+  --ring: var(--color-brand-emphasis);
+  --sidebar: hsl(228, 100%, 4%);
+  --sidebar-foreground: var(--color-text-secondary);
+  --sidebar-primary: var(--color-brand-primary);
+  --sidebar-primary-foreground: var(--color-text-inverse);
+  --sidebar-accent: hsla(0, 0%, 100%, 0.07);
+  --sidebar-accent-foreground: var(--color-text-primary);
+  --sidebar-border: var(--color-border-subtle);
+  --sidebar-ring: var(--color-brand-emphasis);
+
+  --admin-radius: 0.75rem;
+
+  --admin-glass-gradient: linear-gradient(
+    45deg,
+    rgba(0, 38, 255, 0.171),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.021),
+    transparent,
+    transparent,
+    transparent
+  );
+}
+
+/* page backdrop: the site's black canvas with a soft blue glow from the top */
+.admin-canvas {
+  background-color: var(--color-page-bg);
+  background-image: radial-gradient(
+    ellipse 80% 45% at 50% -8%,
+    hsla(226, 100%, 50%, 0.2),
+    transparent 70%
+  );
+  background-attachment: fixed;
+  color: var(--color-text-primary);
+}
+
+/* content cards: flat, transparent over the black canvas, hairline neutral border */
+.admin-glass {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--admin-radius);
+}
+
+/* dialogs and the sidebar need a denser surface than cards */
+.admin-panel {
+  background: var(--admin-glass-gradient), var(--color-surface-canvas-alt);
+  backdrop-filter: blur(20px);
+  border: var(--card-border-default);
+  border-radius: var(--admin-radius);
+}
+
+/* menus, selects, command list, tooltips */
+.admin-popover {
+  background: var(--color-surface-canvas-alt);
+  border: var(--card-border-default);
+  border-radius: var(--admin-radius);
+  box-shadow: var(--shadow-glow-sm);
+  color: var(--color-text-primary);
+}
+
+.admin-sidebar {
+  background: var(--sidebar);
+}
+
+/* inputs, textareas, select triggers */
+.admin-field {
+  background: hsla(0, 0%, 0%, 0.35);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--admin-radius);
+  box-shadow: none;
+  transition:
+    border-color var(--transition-normal, 0.3s ease),
+    box-shadow var(--transition-normal, 0.3s ease);
+}
+
+.admin-field:hover:not(:disabled) {
+  border-color: var(--color-border-emphasis);
+}
+
+.admin-field:focus-visible {
+  border-color: var(--color-brand-emphasis);
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+
+.admin-field[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.admin-check {
+  background: hsla(0, 0%, 0%, 0.35);
+  border: 1px solid var(--color-border-muted);
+  border-radius: 0.3rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.admin-check:hover {
+  border-color: var(--color-brand-emphasis);
+}
+
+.admin-check[data-state='checked'] {
+  background: var(--gradient-tag);
+  border-color: var(--color-hero-ring);
+  box-shadow: var(--shadow-glow-sm);
+  color: white;
+}
+
+/* Tailwind 4 defaults borders to currentcolor; shadcn parts should use the themed border */
+@layer base {
+  [data-slot] {
+    border-color: var(--border);
+  }
+}

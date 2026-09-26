@@ -1,3 +1,4 @@
+import { adminFa } from './admin.fa';
 import type { Dictionary } from './en';
 
 export const fa: Dictionary = {
@@ -72,7 +73,7 @@ export const fa: Dictionary = {
     podcasts: {
       title: 'پادکست‌ها',
       description: 'اپیزودهایی درباره‌ی طراحی، تجربه کاربری، تفکر محصولی و چالش‌ها.',
-      viewMore: 'مشاهده‌ی همه‌ی پادکست‌ها',
+      viewMore: 'همه‌ی اپیزودها در {platform}',
     },
     articles: {
       title: 'مقالات',
@@ -160,6 +161,7 @@ export const fa: Dictionary = {
       messageShort: 'پیام شما باید حداقل ۱۰ کاراکتر باشد.',
     },
   },
+  admin: adminFa,
   footer: { poweredBy: 'طراحی و توسعه توسط', brandFirst: 'کارو', brandLast: 'زمانی' },
   notFound: {
     title: 'این صفحه از دید خارج شد',

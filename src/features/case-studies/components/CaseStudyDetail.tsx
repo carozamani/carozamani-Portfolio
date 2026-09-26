@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import type { CaseStudy } from '@/types/caseStudy';
@@ -8,21 +7,30 @@ import styles from './CaseStudyDetail.module.css';
 
 export default function CaseStudyDetail({ caseStudy }: { caseStudy: CaseStudy }) {
   const { projects } = useDictionary();
+  const images = caseStudy.caseImages?.length
+    ? caseStudy.caseImages
+    : caseStudy.image
+      ? [caseStudy.image]
+      : [];
 
   return (
     <div className={styles.page}>
       <div className={styles.pageBackground} aria-hidden="true" />
 
       <div className={styles.content}>
-        {caseStudy.image ? (
-          <div className={styles.caseStudyImageWrapper}>
-            <Image
-              src={caseStudy.image}
-              alt={caseStudy.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 1200px"
-              className={styles.caseStudyImage}
-            />
+        {images.length > 0 ? (
+          <div className={styles.imageStack}>
+            {images.map((src, index) => (
+              // Plain img: the stack keeps each image's own proportions, whatever the source.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={index}
+                src={src}
+                alt={index === 0 ? caseStudy.title : ''}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                className={styles.stackImage}
+              />
+            ))}
           </div>
         ) : (
           <div className={styles.placeholder}>

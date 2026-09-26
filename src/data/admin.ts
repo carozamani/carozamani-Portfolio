@@ -5,14 +5,26 @@ export type AdminMessage = {
   message: string;
   date: string;
   read: boolean;
+  archived?: boolean;
 };
 
 export const adminNav = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/messages', label: 'Messages' },
-  { href: '/admin/case-studies', label: 'Case Studies' },
-  { href: '/admin/settings', label: 'Settings' },
+  { href: '/admin', key: 'dashboard' },
+  { href: '/admin/messages', key: 'messages' },
+  { href: '/admin/case-studies', key: 'caseStudies' },
+  { href: '/admin/articles', key: 'articles' },
+  { href: '/admin/podcasts', key: 'podcasts' },
+  { href: '/admin/settings', key: 'settings' },
 ] as const;
+
+/** 60 days of daily visits, oldest first; the last 30 are the "current" period. */
+export const adminVisitsDaily = [
+  38, 41, 35, 44, 52, 47, 39, 42, 46, 51, 49, 43, 40, 45, 53, 58, 50, 44, 47, 55, 61, 57, 48, 46,
+  52, 59, 63, 54, 49, 51, 56, 62, 58, 47, 44, 53, 60, 67, 72, 65, 55, 50, 58, 66, 71, 64, 57, 52,
+  61, 69, 75, 82, 74, 63, 59, 68, 77, 85, 79, 70,
+];
+
+export const adminVisitsEnd = '2026-09-25';
 
 export const adminMessages: AdminMessage[] = [
   {
@@ -43,11 +55,11 @@ export const adminMessages: AdminMessage[] = [
 ];
 
 export const adminStats = [
-  { label: 'Total messages', value: '24' },
-  { label: 'Unread', value: '2' },
-  { label: 'Case studies', value: '3' },
-  { label: 'Visits (30d)', value: '1,284' },
-];
+  { key: 'messages', value: 24 },
+  { key: 'unread', value: 2 },
+  { key: 'caseStudies', value: 3 },
+  { key: 'visits', value: 1284 },
+] as const;
 
 // Placeholder until the real admin email is configured on the backend.
 export const adminEmailMasked = 'c***@gmail.com';

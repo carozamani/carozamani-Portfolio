@@ -1,3 +1,5 @@
+import { adminEn } from './admin.en';
+
 export const en = {
   meta: {
     title: 'Caro Zamani — UX & Product Designer',
@@ -70,7 +72,7 @@ In my free time, I explore new web technologies, experiment with UI animations, 
     podcasts: {
       title: 'Podcasts',
       description: 'Episodes about design, UX, product thinking, and challenges.',
-      viewMore: 'View all podcasts',
+      viewMore: 'All episodes on {platform}',
     },
     articles: {
       title: 'Articles',
@@ -168,6 +170,7 @@ In my free time, I explore new web technologies, experiment with UI animations, 
       messageShort: 'Your message should be at least 10 characters.',
     },
   },
+  admin: adminEn,
   footer: { poweredBy: 'POWERED BY', brandFirst: '', brandLast: '' },
   notFound: {
     title: 'This page drifted off-screen',
