@@ -51,6 +51,27 @@ export const fa: Dictionary = {
     notFoundTitle: 'این مطالعه‌ی موردی پیدا نشد',
     notFoundText: 'پروژه‌ای که دنبالش هستید وجود ندارد یا جابه‌جا شده است.',
     backToProjects: 'بازگشت به پروژه‌ها',
+    detail: {
+      client: 'کارفرما',
+      role: 'نقش',
+      duration: 'مدت زمان',
+      date: 'تاریخ',
+      overview: 'مرور کلی',
+      problem: 'مسئله',
+      processTitle: 'فرآیند طراحی',
+      techStack: 'استک فنی',
+      architecture: 'معماری و بک‌اند',
+      tools: 'ابزارها',
+      results: 'نتایج',
+      scopeLabels: {
+        'ui-ux': 'طراحی UI/UX',
+        'ui-ux-frontend': 'UI/UX + فرانت‌اند',
+        'full-stack': 'فول‌استک',
+      },
+      prevProject: 'قبلی',
+      nextProject: 'بعدی',
+      allProjects: 'همه‌ی پروژه‌ها',
+    },
     items: {
       'project-one': {
         description:

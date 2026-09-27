@@ -14,6 +14,7 @@ import {
 } from '@/components/admin-ui/select';
 import { Textarea } from '@/components/admin-ui/textarea';
 import type { AdminCaseStudy } from '@/types/admin';
+import type { ProjectScope } from '@/types/caseStudy';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { caseStudyStore, useCaseStudies } from '../lib/caseStudyStore';
 import { useHydrated } from '../lib/entityStore';
@@ -24,9 +25,13 @@ import { EmptyState } from './EmptyState';
 import { FormField } from './FormField';
 import { GalleryUpload } from './GalleryUpload';
 import { ImageUpload } from './ImageUpload';
+import { MetricsInput } from './MetricsInput';
+import { ProcessStepsInput } from './ProcessStepsInput';
 import { TagInput } from './TagInput';
 
 const LIST_HREF = '/admin/case-studies';
+
+const SCOPES: ProjectScope[] = ['ui-ux', 'ui-ux-frontend', 'full-stack'];
 
 const blank = (): AdminCaseStudy => ({
   slug: '',
@@ -36,7 +41,18 @@ const blank = (): AdminCaseStudy => ({
   description: '',
   tags: [],
   year: String(new Date().getFullYear()),
+  companyName: '',
+  companyLogo: '',
+  role: '',
+  duration: '',
+  tools: [],
   overview: '',
+  problem: '',
+  process: [],
+  results: [],
+  scope: 'ui-ux',
+  techStack: [],
+  architectureNotes: '',
   status: 'draft',
 });
 
@@ -151,6 +167,54 @@ function CaseStudyForm({ initial }: FormProps) {
         />
       </FormField>
 
+      <FormField label={t.caseStudies.scope} htmlFor="cs-scope" hint={t.caseStudies.scopeHint}>
+        <Select
+          value={draft.scope ?? 'ui-ux'}
+          onValueChange={(value) => set('scope', value as ProjectScope)}
+        >
+          <SelectTrigger id="cs-scope" className="w-full sm:w-72">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SCOPES.map((scope) => (
+              <SelectItem key={scope} value={scope}>
+                {t.caseStudies.scopeLabels[scope]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FormField>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <FormField label={t.caseStudies.companyName} htmlFor="cs-company">
+          <Input
+            id="cs-company"
+            value={draft.companyName ?? ''}
+            onChange={(e) => set('companyName', e.target.value)}
+          />
+        </FormField>
+        <FormField label={t.caseStudies.role} htmlFor="cs-role">
+          <Input
+            id="cs-role"
+            value={draft.role ?? ''}
+            onChange={(e) => set('role', e.target.value)}
+          />
+        </FormField>
+        <FormField label={t.caseStudies.duration} htmlFor="cs-duration">
+          <Input
+            id="cs-duration"
+            value={draft.duration ?? ''}
+            onChange={(e) => set('duration', e.target.value)}
+          />
+        </FormField>
+        <FormField label={t.caseStudies.companyLogo}>
+          <ImageUpload
+            value={draft.companyLogo ?? ''}
+            onChange={(url) => set('companyLogo', url)}
+          />
+        </FormField>
+      </div>
+
       <FormField label={t.caseStudies.overview} htmlFor="cs-overview">
         <Textarea
           id="cs-overview"
@@ -158,6 +222,63 @@ function CaseStudyForm({ initial }: FormProps) {
           value={draft.overview ?? ''}
           onChange={(e) => set('overview', e.target.value)}
         />
+      </FormField>
+
+      <FormField label={t.caseStudies.problem} htmlFor="cs-problem">
+        <Textarea
+          id="cs-problem"
+          rows={5}
+          value={draft.problem ?? ''}
+          onChange={(e) => set('problem', e.target.value)}
+        />
+      </FormField>
+
+      <FormField label={t.caseStudies.processTitle} hint={t.caseStudies.processHint}>
+        <ProcessStepsInput
+          value={draft.process ?? []}
+          onChange={(steps) => set('process', steps)}
+        />
+      </FormField>
+
+      {draft.scope !== 'ui-ux' && (
+        <FormField
+          label={t.caseStudies.techStack}
+          htmlFor="cs-tech"
+          hint={t.caseStudies.techStackHint}
+        >
+          <TagInput
+            id="cs-tech"
+            value={draft.techStack ?? []}
+            onChange={(tools) => set('techStack', tools)}
+          />
+        </FormField>
+      )}
+
+      {draft.scope === 'full-stack' && (
+        <FormField
+          label={t.caseStudies.architectureNotes}
+          htmlFor="cs-architecture"
+          hint={t.caseStudies.architectureHint}
+        >
+          <Textarea
+            id="cs-architecture"
+            rows={6}
+            value={draft.architectureNotes ?? ''}
+            onChange={(e) => set('architectureNotes', e.target.value)}
+          />
+        </FormField>
+      )}
+
+      <FormField label={t.caseStudies.tools} htmlFor="cs-tools" hint={t.caseStudies.toolsHint}>
+        <TagInput
+          id="cs-tools"
+          value={draft.tools ?? []}
+          onChange={(tools) => set('tools', tools)}
+        />
+      </FormField>
+
+      <FormField label={t.caseStudies.resultsTitle} hint={t.caseStudies.resultsHint}>
+        <MetricsInput value={draft.results ?? []} onChange={(results) => set('results', results)} />
       </FormField>
 
       <FormField label={common.coverImage} hint={t.caseStudies.coverHint}>

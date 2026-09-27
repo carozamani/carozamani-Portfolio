@@ -30,6 +30,7 @@ export const caseStudies: CaseStudy[] = [
       { value: '4 screens', label: 'down from 9 in the original flow' },
       { value: '2.1x', label: 'faster time-to-first-value in testing' },
     ],
+    scope: 'ui-ux',
   },
   {
     slug: 'project-two',
@@ -60,6 +61,8 @@ export const caseStudies: CaseStudy[] = [
       { value: '48px+', label: 'minimum touch target size across all interactive elements' },
       { value: '3 taps', label: 'to complete a booking, down from 7 in the audited baseline' },
     ],
+    scope: 'ui-ux-frontend',
+    techStack: ['Next.js', 'React', 'Framer Motion'],
   },
   {
     slug: 'project-three',
@@ -90,6 +93,7 @@ export const caseStudies: CaseStudy[] = [
       { value: '40+', label: 'documented component states across the library' },
       { value: '3 screens', label: 'rebuilt end-to-end as a real-world stress test' },
     ],
+    scope: 'ui-ux',
   },
 ];
 
