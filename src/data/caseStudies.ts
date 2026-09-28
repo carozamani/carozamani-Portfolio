@@ -95,6 +95,99 @@ export const caseStudies: CaseStudy[] = [
     ],
     scope: 'ui-ux',
   },
+  {
+    slug: 'portfolio-design-system',
+    title: 'Portfolio Design System',
+    image: '',
+    description:
+      'Designing and building the token-based design system behind this portfolio itself — the same product you are looking at right now.',
+    tags: ['Design System', 'Frontend'],
+    year: '2025',
+    companyName: 'Personal Portfolio',
+    companyLogo: '',
+    role: 'Product Designer & Frontend Developer (solo)',
+    duration: 'Ongoing',
+    tools: ['Figma', 'VS Code', 'Next.js', 'CSS Custom Properties'],
+    overview:
+      'Before writing a single section of this portfolio, I built the design system it now runs on: a set of CSS custom-property tokens for color, typography, spacing, shadow and shape, shared UI atoms, and layout rules that every feature (hero, about, case studies, media, contact) has to consume rather than reinvent.',
+    problem:
+      'Early drafts of individual sections each picked their own font sizes, spacing values and glass/glow effects, which made the site feel like several disconnected demos instead of one product. I needed a single source of truth before the surface area grew past the point where fixing it would mean a full rewrite.',
+    process: [
+      'Defined a token layer in `src/styles/` — colors, typography, spacing, shadows and shapes — as CSS custom properties, so every visual decision traces back to one file instead of being hard-coded per component.',
+      'Built a small set of reusable UI atoms (Typography, GlassButton, CTA, AnimatedGradientText, form fields) on top of those tokens, plus shared composition components (GlassMenu, CursorGlow, Footer, AnimatedSection) for cross-feature layout.',
+      'Adopted a feature-sliced structure (features/ isolated from each other, everything shared living in components/ui and components/shared) so new sections could only reuse the system, never fork it.',
+      'Established a glass/glow visual language (surface, border, glow tokens) and fluid typography with `clamp()` so the same tokens hold up from mobile to desktop without section-specific overrides.',
+      'Extended the token-driven approach into an admin panel for editing content (case studies, media) so the design system also governs the tooling used to maintain the site, not just the public pages.',
+    ],
+    results: [
+      {
+        value: '5 token files',
+        label: 'covering color, type, spacing, shadow and shape for the whole site',
+      },
+      {
+        value: '1 component set',
+        label: 'atoms and shared composition components reused across every feature',
+      },
+      {
+        value: '0 one-off styles',
+        label: 'per-feature CSS Modules read from tokens instead of hard-coded values',
+      },
+    ],
+    scope: 'ui-ux-frontend',
+    techStack: ['Next.js', 'React', 'CSS Modules', 'CSS Custom Properties', 'Framer Motion'],
+  },
+  {
+    slug: 'karvita',
+    title: 'Karvita',
+    image: '',
+    description:
+      'Designing and building the product design system and frontend for Karvita, a Persian/RTL educational-administration platform for internships, approvals and course offerings.',
+    tags: ['Design System', 'Frontend', 'Product Design'],
+    year: '2025',
+    companyName: 'Karvita',
+    companyLogo: '',
+    role: 'Product Designer & Frontend Developer',
+    duration: '4+ months',
+    tools: ['Figma', 'Next.js', 'shadcn/ui', 'Tailwind CSS', 'Radix UI'],
+    overview:
+      'Karvita is a Persian, right-to-left educational-administration platform that manages internships, daily approvals, capacities, onboarding and course offerings for a university-style program. I owned both the product design and the frontend implementation: designing the interface and information architecture, then building it as a governed, token-based design system on top of Next.js and shadcn/ui.',
+    problem:
+      'The product needed a full RTL, Persian-first interface with a real admin surface (dashboards, tables, multi-step approval flows, CMS) before the backend was ready — and without a design system in place, every screen risked reinventing its own buttons, forms and tables, especially with logical (start/end) CSS properties instead of the left/right assumptions most UI kits ship with.',
+    process: [
+      'Designed the core flows in Figma first — auth (login, register, forgot password), the admin dashboard, internship and capacity management, daily approvals and the landing CMS — with RTL layout as a first-class constraint, not an afterthought.',
+      'Built a two-tier component architecture: raw shadcn/ui + Radix primitives at the base, and a "Kv-" prefixed design-system layer (KvButton, KvCard, KvTable, KvInput, KvDialog and 40+ others) that every feature consumes instead of touching primitives directly.',
+      'Defined a semantic design-token layer in `globals.css` (kv-surface, kv-text, kv-border, kv-brand/success/warning/danger/info) on top of a raw HSL brand scale, covering light and dark themes, so color decisions live in one place.',
+      'Set up custom lint rules to enforce the system at the code level — banning hardcoded colors outside the token file, banning raw shadcn imports outside the Kv layer, and banning physical (left/right) Tailwind utilities in favor of RTL-safe logical properties.',
+      'Built the UI against a local mock-mode API simulator before the NestJS backend existed, so design and frontend delivery were never blocked on backend readiness, then swapped to the real API through a single facade layer once it shipped.',
+    ],
+    results: [
+      {
+        value: '40+',
+        label: 'reusable "Kv-" design-system components built on shadcn/ui and Radix',
+      },
+      {
+        value: '3 lint rules',
+        label: 'enforcing token-only color, RTL-safe layout and design-system-only imports',
+      },
+      {
+        value: '2 API modes',
+        label: 'mock and real, so the frontend shipped ahead of the backend',
+      },
+    ],
+    scope: 'full-stack',
+    techStack: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'shadcn/ui',
+      'Radix UI',
+      'TanStack Query',
+      'Zustand',
+    ],
+    architectureNotes:
+      'The frontend never talks to HTTP directly — all data access goes through a services/ facade layer, with a single api-client.ts as the only place that knows about HTTP, and paginated lists standardized on TanStack Query. A dedicated mock mode (localStorage + a fixed OTP simulator) let the entire UI and design system be built and validated before the NestJS backend was available, with production builds refusing to run in mock mode. An internal Next.js API route proxies to the NestJS service (BFF-style) for auth token handling and file uploads, keeping backend URLs and secrets out of client code.',
+  },
 ];
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {

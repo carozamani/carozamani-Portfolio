@@ -58,6 +58,18 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Caro Zamani',
+  jobTitle: 'UX & Product Designer',
+  description:
+    'Caro Zamani is a UX/Product Designer crafting seamless, user-centered digital experiences.',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  sameAs: ['https://linkedin.com/in/carozamani', 'https://github.com/carozamani'],
+  knowsAbout: ['UX Design', 'Product Design', 'UI Design', 'Design Systems'],
+};
+
 type RootLayoutProps = {
   children: React.ReactNode;
 };
@@ -73,6 +85,10 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
       className={`${brandFont.variable} ${inter.variable} ${persianFont.variable} ${wordmarkFont.variable}`}
     >
       <body className="relative min-h-screen w-full bg-cover bg-top bg-no-repeat">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <LocaleProvider locale={locale} dict={dict}>
           <PodcastPlayerProvider>
             <a

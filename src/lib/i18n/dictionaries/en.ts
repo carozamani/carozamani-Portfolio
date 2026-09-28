@@ -1,5 +1,19 @@
 import { adminEn } from './admin.en';
 
+export type ProjectItemContent = {
+  title?: string;
+  description?: string;
+  tag?: string;
+  tags?: string[];
+  companyName?: string;
+  role?: string;
+  duration?: string;
+  overview?: string;
+  problem?: string;
+  process?: string[];
+  architectureNotes?: string;
+};
+
 export const en = {
   meta: {
     title: 'Caro Zamani — UX & Product Designer',
@@ -87,7 +101,7 @@ In my free time, I explore new web technologies, experiment with UI animations, 
           'Building a componentized design system to replace inconsistent, one-off UI patterns across a multi-team SaaS product.',
         tag: 'Design System',
       },
-    } as Record<string, { description: string; tag: string }>,
+    } as Record<string, ProjectItemContent>,
   },
   media: {
     podcasts: {

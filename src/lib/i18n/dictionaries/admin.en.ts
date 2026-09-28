@@ -191,7 +191,10 @@ export const adminEn = {
     saveChanges: 'Save changes',
     savedDemo: 'Settings saved (demo).',
     resumeTitle: 'Resume',
-    resumeHint: 'This file is used by the “Download Resume” button in the About section.',
+    resumeHint:
+      'These files are used by the “Download Resume” button in the About section — the English PDF is served when the site is in English, and the Persian PDF when it’s in Persian.',
+    resumeTitleEn: 'English resume',
+    resumeTitleFa: 'Persian resume',
     resumeNone: 'No resume uploaded yet.',
     resumeChoose: 'Upload PDF',
     resumeReplace: 'Replace PDF',
