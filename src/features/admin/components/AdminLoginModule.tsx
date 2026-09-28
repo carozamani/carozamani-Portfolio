@@ -9,6 +9,7 @@ import { Wordmark } from '@/components/ui/Wordmark';
 import Button from '@/components/ui/Button';
 import FormFields from '@/components/ui/FormFields';
 import { adminEmailMasked } from '@/data/admin';
+import { login, setToken } from '@/lib/api';
 import { localeDirection } from '@/lib/i18n/config';
 import { format, useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './AdminLogin.module.css';
@@ -21,6 +22,7 @@ export function AdminLoginModule() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('login');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const COPY: Record<Step, { title: string; hint: string; action: string }> = {
     login: { title: t.loginTitle, hint: t.loginHint, action: t.loginAction },
@@ -33,13 +35,22 @@ export function AdminLoginModule() {
     reset: { title: t.resetTitle, hint: t.resetHint, action: t.resetAction },
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setError('');
 
     if (step === 'login') {
-      router.push('/admin');
+      setIsSubmitting(true);
+      try {
+        const { token } = await login(String(data.get('email')), String(data.get('password')));
+        setToken(token);
+        router.push('/admin');
+      } catch {
+        setError(t.loginError);
+      } finally {
+        setIsSubmitting(false);
+      }
     } else if (step === 'forgot') {
       toast.success(t.codeSent);
       setStep('code');
@@ -102,7 +113,7 @@ export function AdminLoginModule() {
               {error}
             </p>
           )}
-          <Button type="submit" fullWidth text={action} />
+          <Button type="submit" fullWidth text={action} disabled={isSubmitting} />
         </form>
         {step === 'login' ? (
           <button type="button" className={styles.linkBtn} onClick={() => setStep('forgot')}>

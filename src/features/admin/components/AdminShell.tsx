@@ -1,9 +1,9 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   FileText,
   FolderKanban,
@@ -40,6 +40,7 @@ import {
   SidebarTrigger,
 } from '@/components/admin-ui/sidebar';
 import { adminNav } from '@/data/admin';
+import { clearToken, getToken } from '@/lib/api';
 import { localeDirection } from '@/lib/i18n/config';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { CommandPalette } from './CommandPalette';
@@ -61,9 +62,19 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const t = dict.admin;
   const dir = localeDirection[locale];
   const pathname = usePathname();
+  const router = useRouter();
   const isActive = (href: string) =>
     href === '/admin' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
   const current = adminNav.find((n) => isActive(n.href));
+
+  useEffect(() => {
+    if (!getToken()) router.replace('/admin/login');
+  }, [router]);
+
+  const handleLogout = () => {
+    clearToken();
+    router.push('/admin/login');
+  };
 
   return (
     <SidebarProvider className="admin-canvas" dir={dir}>
@@ -131,14 +142,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    asChild
                     variant="destructive"
                     className="gap-3 py-2.5 text-base"
+                    onSelect={handleLogout}
                   >
-                    <Link href="/admin/login">
-                      <LogOut className="size-5" />
-                      {t.logout}
-                    </Link>
+                    <LogOut className="size-5" />
+                    {t.logout}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
