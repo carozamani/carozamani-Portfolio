@@ -8,9 +8,15 @@
     white-space: nowrap;
   }
 
-  &.text-primary { color: var(--color-text-primary); }
+  &.text-primary {
+    color: var(--color-text-primary);
+  }
 
-  &.text-secondary { color: var(--color-text-secondary); }
+  &.text-secondary {
+    color: var(--color-text-secondary);
+  }
 
-  &.text-disabled { color: var(--color-text-muted); }
+  &.text-disabled {
+    color: var(--color-text-muted);
+  }
 }
