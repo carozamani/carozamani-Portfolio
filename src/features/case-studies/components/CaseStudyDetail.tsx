@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
 import Typography from '@/components/ui/Typography';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
@@ -21,6 +21,22 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
   const { projects } = useDictionary();
   const { detail } = projects;
 
+  const content = projects.items[caseStudy.slug];
+
+  const title = content?.title ?? caseStudy.title;
+  const description = content?.description ?? caseStudy.description;
+  const companyName = content?.companyName ?? caseStudy.companyName;
+  const role = content?.role ?? caseStudy.role;
+  const duration = content?.duration ?? caseStudy.duration;
+  const overview = content?.overview ?? caseStudy.overview;
+  const problem = content?.problem ?? caseStudy.problem;
+  const process = content?.process ?? caseStudy.process;
+  const architectureNotes = content?.architectureNotes ?? caseStudy.architectureNotes;
+  const tags =
+    content?.tags ??
+    (content?.tag ? [content.tag] : undefined) ??
+    (caseStudy.tags?.length ? caseStudy.tags : caseStudy.tag ? [caseStudy.tag] : []);
+
   const cover = caseStudy.image || caseStudy.caseImages?.[0] || '';
   const gallery = (
     caseStudy.caseImages?.length ? caseStudy.caseImages : caseStudy.image ? [caseStudy.image] : []
@@ -28,28 +44,30 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
 
   const scope = caseStudy.scope ?? 'ui-ux';
   const scopeLabel = detail.scopeLabels[scope];
-  const tags = caseStudy.tags?.length ? caseStudy.tags : caseStudy.tag ? [caseStudy.tag] : [];
 
   const meta = [
-    caseStudy.companyName && { label: detail.client, value: caseStudy.companyName },
-    caseStudy.role && { label: detail.role, value: caseStudy.role },
-    caseStudy.duration && { label: detail.duration, value: caseStudy.duration },
+    companyName && { label: detail.client, value: companyName },
+    role && { label: detail.role, value: role },
+    duration && { label: detail.duration, value: duration },
     caseStudy.year && { label: detail.date, value: caseStudy.year },
   ].filter(Boolean) as { label: string; value: string }[];
 
   const sections: SectionIndexItem[] = [
-    caseStudy.overview && { id: 'case-overview', label: detail.overview },
-    caseStudy.problem && { id: 'case-problem', label: detail.problem },
-    caseStudy.process?.length && { id: 'case-process', label: detail.processTitle },
+    overview && { id: 'case-overview', label: detail.overview },
+    problem && { id: 'case-problem', label: detail.problem },
+    process?.length && { id: 'case-process', label: detail.processTitle },
     scope !== 'ui-ux' &&
       caseStudy.techStack?.length && { id: 'case-tech', label: detail.techStack },
     scope === 'full-stack' &&
-      caseStudy.architectureNotes && { id: 'case-architecture', label: detail.architecture },
+      architectureNotes && { id: 'case-architecture', label: detail.architecture },
     caseStudy.tools?.length && { id: 'case-tools', label: detail.tools },
   ].filter(Boolean) as SectionIndexItem[];
 
   const numberOf = (id: string) =>
     String(sections.findIndex((section) => section.id === id) + 1).padStart(2, '0');
+
+  const prevTitle = prevStudy && (projects.items[prevStudy.slug]?.title ?? prevStudy.title);
+  const nextTitle = nextStudy && (projects.items[nextStudy.slug]?.title ?? nextStudy.title);
 
   return (
     <div className={styles.page}>
@@ -57,8 +75,8 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
 
       <CaseStudyHero
         cover={cover}
-        title={caseStudy.title}
-        description={caseStudy.description}
+        title={title}
+        description={description}
         tags={tags}
         scopeLabel={scopeLabel}
       />
@@ -78,7 +96,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
         )}
 
         <div className={styles.body}>
-          {caseStudy.overview && (
+          {overview && (
             <AnimatedSection id="case-overview">
               <div className={styles.section}>
                 <Typography variant="h3" className={styles.sectionTitle}>
@@ -86,25 +104,25 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
                   {detail.overview}
                 </Typography>
                 <Typography variant="body1" color="text-secondary" className={styles.sectionText}>
-                  {caseStudy.overview}
+                  {overview}
                 </Typography>
               </div>
             </AnimatedSection>
           )}
 
-          {caseStudy.problem && (
+          {problem && (
             <AnimatedSection id="case-problem">
               <div className={styles.section}>
                 <Typography variant="h3" className={styles.sectionTitle}>
                   <span className={styles.sectionNumber}>{numberOf('case-problem')}</span>
                   {detail.problem}
                 </Typography>
-                <blockquote className={styles.pullQuote}>{caseStudy.problem}</blockquote>
+                <blockquote className={styles.pullQuote}>{problem}</blockquote>
               </div>
             </AnimatedSection>
           )}
 
-          {caseStudy.process && caseStudy.process.length > 0 && (
+          {process && process.length > 0 && (
             <AnimatedSection id="case-process">
               <div className={styles.section}>
                 <Typography variant="h3" className={styles.sectionTitle}>
@@ -112,7 +130,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
                   {detail.processTitle}
                 </Typography>
                 <ol className={styles.processList}>
-                  {caseStudy.process.map((step, index) => (
+                  {process.map((step, index) => (
                     <li key={index} className={styles.processStep}>
                       <span className={styles.processIndex}>{index + 1}</span>
                       <Typography variant="body1" color="text-secondary">
@@ -143,7 +161,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
             </AnimatedSection>
           )}
 
-          {scope === 'full-stack' && caseStudy.architectureNotes && (
+          {scope === 'full-stack' && architectureNotes && (
             <AnimatedSection id="case-architecture">
               <div className={styles.section}>
                 <Typography variant="h3" className={styles.sectionTitle}>
@@ -151,7 +169,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
                   {detail.architecture}
                 </Typography>
                 <Typography variant="body1" color="text-secondary" className={styles.sectionText}>
-                  {caseStudy.architectureNotes}
+                  {architectureNotes}
                 </Typography>
               </div>
             </AnimatedSection>
@@ -187,9 +205,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
           </AnimatedSection>
         ) : !cover ? (
           <div className={styles.placeholder}>
-            <p className={styles.placeholderTitle}>
-              {format(projects.noImageTitle, { title: caseStudy.title })}
-            </p>
+            <p className={styles.placeholderTitle}>{format(projects.noImageTitle, { title })}</p>
             <p className={styles.placeholderHint}>{projects.noImageHint}</p>
           </div>
         ) : null}
@@ -199,7 +215,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
             <div className={styles.pagerItem}>
               <span className={styles.pagerLabel}>{detail.prevProject}</span>
               <Button
-                text={prevStudy.title}
+                text={prevTitle ?? ''}
                 href={`/case-studies/${prevStudy.slug}`}
                 iconLeft={<FiArrowLeft aria-hidden="true" />}
                 fullWidth
@@ -212,7 +228,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
             <div className={clsx(styles.pagerItem, styles.pagerItemEnd)}>
               <span className={styles.pagerLabel}>{detail.nextProject}</span>
               <Button
-                text={nextStudy.title}
+                text={nextTitle ?? ''}
                 href={`/case-studies/${nextStudy.slug}`}
                 iconRight={<FiArrowRight aria-hidden="true" />}
                 fullWidth
@@ -222,14 +238,6 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
             <span />
           )}
         </nav>
-
-        <div className={styles.viewOthers}>
-          <Button
-            href="/#projects"
-            text={projects.viewOthers}
-            iconRight={<FiArrowUpRight aria-hidden="true" />}
-          />
-        </div>
       </div>
     </div>
   );

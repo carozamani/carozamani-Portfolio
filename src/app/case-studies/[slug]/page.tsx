@@ -1,10 +1,6 @@
 import { notFound } from 'next/navigation';
-import { caseStudies } from '@/data/caseStudies';
+import { getCaseStudies } from '@/lib/api';
 import CaseStudyDetail from '@/features/case-studies/components/CaseStudyDetail';
-
-export function generateStaticParams() {
-  return caseStudies.map((caseStudy) => ({ slug: caseStudy.slug }));
-}
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -12,6 +8,7 @@ type PageProps = {
 
 export default async function CaseStudyPage({ params }: PageProps) {
   const { slug } = await params;
+  const caseStudies = await getCaseStudies();
   const index = caseStudies.findIndex((study) => study.slug === slug);
   const caseStudy = index === -1 ? undefined : caseStudies[index];
 
