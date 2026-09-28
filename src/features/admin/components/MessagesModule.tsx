@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/admin-ui/badge';
@@ -9,7 +9,8 @@ import { Card } from '@/components/admin-ui/card';
 import { Checkbox } from '@/components/admin-ui/checkbox';
 import { Input } from '@/components/admin-ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/admin-ui/toggle-group';
-import { adminMessages, type AdminMessage } from '@/data/admin';
+import type { AdminMessage } from '@/data/admin';
+import { deleteAdminMessage, getAdminMessages, getToken, updateAdminMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { useSelection } from '../hooks/useSelection';
@@ -31,11 +32,20 @@ export function MessagesModule() {
     unread: m18n.filterUnread,
     archived: m18n.filterArchived,
   };
-  const [messages, setMessages] = useState(adminMessages);
+  const [messages, setMessages] = useState<AdminMessage[]>([]);
   const [filter, setFilter] = useState<Filter>('all');
   const [openId, setOpenId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string[] | null>(null);
   const selection = useSelection();
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) return;
+    getAdminMessages(token)
+      .then(setMessages)
+      .catch(() => toast.error(m18n.loadError));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const scoped = messages.filter((m) =>
     filter === 'archived' ? m.archived : !m.archived && (filter === 'all' || !m.read),
@@ -44,8 +54,14 @@ export function MessagesModule() {
   const pageIds = table.pageItems.map((m) => m.id);
   const unreadCount = messages.filter((m) => !m.read && !m.archived).length;
 
-  const patch = (ids: string[], change: Partial<AdminMessage>) =>
+  const patch = (ids: string[], change: Partial<Pick<AdminMessage, 'read' | 'archived'>>) => {
     setMessages((prev) => prev.map((m) => (ids.includes(m.id) ? { ...m, ...change } : m)));
+    const token = getToken();
+    if (!token) return;
+    ids.forEach((id) =>
+      updateAdminMessage(id, change, token).catch(() => toast.error(m18n.loadError)),
+    );
+  };
 
   const open = (id: string) => {
     setOpenId(id);
@@ -58,6 +74,12 @@ export function MessagesModule() {
     if (openId && pendingDelete.includes(openId)) setOpenId(null);
     selection.clear();
     toast.success(format(t.common.deletedCount, { count: pendingDelete.length }));
+    const token = getToken();
+    if (token) {
+      pendingDelete.forEach((id) =>
+        deleteAdminMessage(id, token).catch(() => toast.error(m18n.loadError)),
+      );
+    }
     setPendingDelete(null);
   };
 
