@@ -1,14 +1,27 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/admin-ui/card';
-import { adminMessages, adminStats } from '@/data/admin';
+import { adminStats, type AdminMessage } from '@/data/admin';
+import { getAdminMessages, getToken } from '@/lib/api';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { VisitsChart } from './VisitsChart';
+
+const RECENT_MESSAGES_LIMIT = 5;
 
 export function DashboardModule() {
   const { locale, dict } = useLocale();
   const t = dict.admin;
   const number = new Intl.NumberFormat(locale);
+  const [recentMessages, setRecentMessages] = useState<AdminMessage[]>([]);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) return;
+    getAdminMessages(token)
+      .then((messages) => setRecentMessages(messages.slice(0, RECENT_MESSAGES_LIMIT)))
+      .catch(() => setRecentMessages([]));
+  }, []);
 
   return (
     <>
@@ -38,7 +51,7 @@ export function DashboardModule() {
           <CardTitle className="text-base">{t.dashboard.recent}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {adminMessages.map((m) => (
+          {recentMessages.map((m) => (
             <div
               key={m.id}
               className="border-border flex items-start justify-between gap-4 border-b px-6 py-3 last:border-b-0"

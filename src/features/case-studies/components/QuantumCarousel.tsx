@@ -1,20 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
-import { PROJECTS_PREVIEW_LIMIT, caseStudies } from '@/data/caseStudies';
+import { PROJECTS_PREVIEW_LIMIT } from '@/data/caseStudies';
+import type { CaseStudy } from '@/types/caseStudy';
+import { getCaseStudies } from '@/lib/api';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './QuantumCarousel.module.css';
 
 export default function QuantumCarousel({ preview = false }: { preview?: boolean }) {
   const { locale, dict } = useLocale();
   const { projects } = dict;
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    getCaseStudies()
+      .then((data) => {
+        setCaseStudies(data);
+        const visible = preview ? data.slice(-PROJECTS_PREVIEW_LIMIT) : data;
+        setActiveSlug(visible[0]?.slug ?? null);
+      })
+      .catch(() => setCaseStudies([]));
+  }, [preview]);
+
   const visibleStudies = preview ? caseStudies.slice(-PROJECTS_PREVIEW_LIMIT) : caseStudies;
   const hasMore = preview && caseStudies.length > PROJECTS_PREVIEW_LIMIT;
-  const [activeSlug, setActiveSlug] = useState<string | null>(visibleStudies[0]?.slug ?? null);
 
   return (
     <div className={styles.carouselContainer}>
@@ -40,8 +54,12 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
             {visibleStudies.map((caseStudy) => {
               const isActive = activeSlug === caseStudy.slug;
               const content = projects.items[caseStudy.slug];
+              const title = content?.title ?? caseStudy.title;
               const description = content?.description ?? caseStudy.description;
-              const subtitle = [content?.tag ?? caseStudy.tag, caseStudy.year]
+              const subtitle = [
+                content?.tags?.[0] ?? content?.tag ?? caseStudy.tags?.[0] ?? caseStudy.tag,
+                caseStudy.year,
+              ]
                 .filter(Boolean)
                 .join(' · ');
 
@@ -65,7 +83,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
                           />
                         ) : (
                           <span className={styles.rowLogoGlyph}>
-                            {(caseStudy.companyName ?? caseStudy.title).charAt(0)}
+                            {(caseStudy.companyName ?? title).charAt(0)}
                           </span>
                         )}
                       </span>
@@ -82,12 +100,10 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
                             className={styles.rowPreviewImage}
                           />
                         ) : (
-                          <span className={styles.rowPreviewPlaceholder}>
-                            {caseStudy.title.charAt(0)}
-                          </span>
+                          <span className={styles.rowPreviewPlaceholder}>{title.charAt(0)}</span>
                         )}
                       </span>
-                      <span className={styles.rowTitle}>{caseStudy.title}</span>
+                      <span className={styles.rowTitle}>{title}</span>
                       {description && <span className={styles.rowSummary}>{description}</span>}
                       {subtitle && <span className={styles.rowSubtitle}>{subtitle}</span>}
                     </span>
@@ -104,7 +120,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
                           />
                         ) : (
                           <div className={styles.rowPreviewPlaceholder}>
-                            <span>{caseStudy.title.charAt(0)}</span>
+                            <span>{title.charAt(0)}</span>
                           </div>
                         )}
                       </span>

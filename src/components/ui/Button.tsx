@@ -38,7 +38,10 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
   icon: styles.iconButton,
 };
 
-const isInternal = (href: string) => href.startsWith('/') || href.startsWith('#');
+// A static file (e.g. /resume.pdf) isn't an app route, even though it starts with "/" — it should
+// open like an external link (new tab), not be pushed through Next's client-side router.
+const isInternal = (href: string) =>
+  (href.startsWith('/') || href.startsWith('#')) && !/\.[a-z0-9]+$/i.test(href);
 
 export default function Button({
   text,

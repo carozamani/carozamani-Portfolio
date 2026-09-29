@@ -1,5 +1,19 @@
 import { adminEn } from './admin.en';
 
+export type ProjectItemContent = {
+  title?: string;
+  description?: string;
+  tag?: string;
+  tags?: string[];
+  companyName?: string;
+  role?: string;
+  duration?: string;
+  overview?: string;
+  problem?: string;
+  process?: string[];
+  architectureNotes?: string;
+};
+
 export const en = {
   meta: {
     title: 'Caro Zamani — UX & Product Designer',
@@ -50,6 +64,27 @@ In my free time, I explore new web technologies, experiment with UI animations, 
     notFoundTitle: 'This case study couldn’t be found',
     notFoundText: 'The project you’re looking for doesn’t exist or has moved.',
     backToProjects: 'Back to Projects',
+    detail: {
+      client: 'Client',
+      role: 'Role',
+      duration: 'Duration',
+      date: 'Date',
+      overview: 'Overview',
+      problem: 'The problem',
+      processTitle: 'Design process',
+      techStack: 'Tech stack',
+      architecture: 'Architecture & backend',
+      tools: 'Tools',
+      results: 'Results',
+      scopeLabels: {
+        'ui-ux': 'UI/UX Design',
+        'ui-ux-frontend': 'UI/UX + Frontend',
+        'full-stack': 'Full-Stack',
+      },
+      prevProject: 'Previous',
+      nextProject: 'Next',
+      allProjects: 'All projects',
+    },
     items: {
       'project-one': {
         description:
@@ -66,7 +101,7 @@ In my free time, I explore new web technologies, experiment with UI animations, 
           'Building a componentized design system to replace inconsistent, one-off UI patterns across a multi-team SaaS product.',
         tag: 'Design System',
       },
-    } as Record<string, { description: string; tag: string }>,
+    } as Record<string, ProjectItemContent>,
   },
   media: {
     podcasts: {

@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import MediaSection from './MediaSection';
-import { MEDIA_PREVIEW_LIMIT, articleCards, podcastCards } from '@/data/media';
+import { MEDIA_PREVIEW_LIMIT } from '@/data/media';
 import { podcastHub } from '@/data/podcastHub';
+import type { CardProps } from '@/types/card';
+import { getMedia } from '@/lib/api';
 import { format, useLocale } from '@/lib/i18n/LocaleProvider';
 import { localizeCard } from '../lib/localizeCard';
 import styles from './MediaModule.module.css';
@@ -15,6 +18,18 @@ export function MediaModule() {
   const { locale, dict } = useLocale();
   const { media } = dict;
   const isRtl = locale === 'fa';
+  const [podcastCards, setPodcastCards] = useState<CardProps[]>([]);
+  const [articleCards, setArticleCards] = useState<CardProps[]>([]);
+
+  useEffect(() => {
+    getMedia('podcast')
+      .then(setPodcastCards)
+      .catch(() => setPodcastCards([]));
+    getMedia('article')
+      .then(setArticleCards)
+      .catch(() => setArticleCards([]));
+  }, []);
+
   const podcasts = podcastCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
   const articles = articleCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
   const hasMoreArticles = articleCards.length > MEDIA_PREVIEW_LIMIT;

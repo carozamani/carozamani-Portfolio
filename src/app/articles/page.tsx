@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
-import { MEDIA_PREVIEW_LIMIT, articleCards } from '@/data/media';
+import { getMedia } from '@/lib/api';
+import { MEDIA_PREVIEW_LIMIT } from '@/data/media';
 import MediaListPage from '@/features/media/components/MediaListPage';
 
-export default function Page() {
+export default async function Page() {
+  const articleCards = await getMedia('article');
+
   if (articleCards.length <= MEDIA_PREVIEW_LIMIT) {
     notFound();
   }

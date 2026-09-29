@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
+import { submitContactMessage } from '@/lib/api';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
@@ -66,7 +67,7 @@ export function useContactForm() {
 
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      await submitContactMessage(values);
       toast.success(contact.sentToast);
       form.reset();
       setErrors({});

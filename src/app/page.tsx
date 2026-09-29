@@ -2,6 +2,8 @@ import dynamic from 'next/dynamic';
 import { HeroModule } from '@/features/hero/components/HeroModule';
 import { AboutMeModule } from '@/features/about-me/components/AboutMeModule';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
+import { dictionaries } from '@/lib/i18n/dictionaries';
+import { getLocale } from '@/lib/i18n/server';
 
 const CaseStudiesModule = dynamic(() =>
   import('@/features/case-studies/components/CaseStudiesModule').then(
@@ -16,13 +18,18 @@ const ContactModule = dynamic(() =>
 );
 const Footer = dynamic(() => import('@/components/shared/Footer'));
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { about } = dictionaries[await getLocale()];
+
   return (
     <div className="relative w-screen overflow-x-hidden bg-(--color-page-bg) text-white">
       <div className="relative z-10">
         <AnimatedSection id="Home" variant="fade-up">
           <HeroModule />
         </AnimatedSection>
+
+        {/* Server-rendered for crawlers/AI engines; AboutMeModule below renders this visually client-side. */}
+        <p className="sr-only">{about.description}</p>
 
         <AnimatedSection id="about" fullScreen variant="fade-up" delay={0.1}>
           <AboutMeModule />

@@ -55,6 +55,7 @@ src/
 ## Design Tokens
 
 All design tokens are CSS custom properties defined in `src/styles/`:
+
 - `colors.css` — color palette
 - `typography.css` — font sizes, weights, line-heights (fluid with `clamp()`)
 - `spacing.css` — 8px-based fluid spacing scale
