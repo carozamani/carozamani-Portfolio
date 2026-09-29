@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { HeroModule } from '@/features/hero/components/HeroModule';
 import { AboutMeModule } from '@/features/about-me/components/AboutMeModule';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
+import { ContentGate } from '@/components/shared/ContentGate';
 import { dictionaries } from '@/lib/i18n/dictionaries';
 import { getLocale } from '@/lib/i18n/server';
 
@@ -35,13 +36,17 @@ export default async function HomePage() {
           <AboutMeModule />
         </AnimatedSection>
 
-        <AnimatedSection id="projects" fullScreen variant="fade-up" delay={0.1}>
-          <CaseStudiesModule preview />
-        </AnimatedSection>
+        <ContentGate section="projects">
+          <AnimatedSection id="projects" fullScreen variant="fade-up" delay={0.1}>
+            <CaseStudiesModule preview />
+          </AnimatedSection>
+        </ContentGate>
 
-        <AnimatedSection id="testimonials" fullScreen variant="fade-up" delay={0.1}>
-          <MediaModule />
-        </AnimatedSection>
+        <ContentGate section="media">
+          <AnimatedSection id="testimonials" fullScreen variant="fade-up" delay={0.1}>
+            <MediaModule />
+          </AnimatedSection>
+        </ContentGate>
 
         <AnimatedSection id="contact" fullScreen viewAmount={0.4} variant="scale-in">
           <ContactModule />

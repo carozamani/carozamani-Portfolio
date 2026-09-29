@@ -1,33 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
 import { PROJECTS_PREVIEW_LIMIT } from '@/data/caseStudies';
-import type { CaseStudy } from '@/types/caseStudy';
-import { getCaseStudies } from '@/lib/api';
+import { useContent } from '@/lib/ContentProvider';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './QuantumCarousel.module.css';
 
 export default function QuantumCarousel({ preview = false }: { preview?: boolean }) {
   const { locale, dict } = useLocale();
   const { projects } = dict;
-  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
-  const [activeSlug, setActiveSlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    getCaseStudies()
-      .then((data) => {
-        setCaseStudies(data);
-        const visible = preview ? data.slice(-PROJECTS_PREVIEW_LIMIT) : data;
-        setActiveSlug(visible[0]?.slug ?? null);
-      })
-      .catch(() => setCaseStudies([]));
-  }, [preview]);
-
+  const { caseStudies } = useContent();
   const visibleStudies = preview ? caseStudies.slice(-PROJECTS_PREVIEW_LIMIT) : caseStudies;
+  const [hoveredSlug, setActiveSlug] = useState<string | null>(null);
+  const activeSlug = hoveredSlug ?? visibleStudies[0]?.slug ?? null;
   const hasMore = preview && caseStudies.length > PROJECTS_PREVIEW_LIMIT;
 
   return (

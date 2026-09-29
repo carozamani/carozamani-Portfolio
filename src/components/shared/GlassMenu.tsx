@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { navItems } from '@/data/navigation';
+import { useHasSection } from '@/lib/ContentProvider';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
@@ -19,6 +20,11 @@ export default function GlassMenu() {
   const pathname = usePathname();
   const dict = useDictionary();
   const isHome = pathname === '/';
+  const hasProjects = useHasSection('projects');
+  const hasMedia = useHasSection('media');
+  const visibleNavItems = navItems.filter(
+    (item) => (item.key !== 'projects' || hasProjects) && (item.key !== 'media' || hasMedia),
+  );
   const [currentHash, setCurrentHash] = useState('#Home');
   const [activeRect, setActiveRect] = useState<{ left: number; width: number }>({
     left: 0,
@@ -65,13 +71,14 @@ export default function GlassMenu() {
       { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 },
     );
 
-    navItems.forEach((item) => {
+    visibleNavItems.forEach((item) => {
       const el = document.querySelector(item.href);
       if (el) observerRef.current?.observe(el);
     });
 
     return () => observerRef.current?.disconnect();
-  }, [isHome]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the item count, the array is rebuilt each render
+  }, [isHome, visibleNavItems.length]);
 
   useEffect(() => {
     const nav = navRef.current;
@@ -91,7 +98,7 @@ export default function GlassMenu() {
     const observer = new ResizeObserver(measure);
     observer.observe(nav);
     return () => observer.disconnect();
-  }, [activeHash, dict]);
+  }, [activeHash, dict, visibleNavItems.length]);
 
   return (
     <nav
@@ -121,7 +128,7 @@ export default function GlassMenu() {
           }}
         />
 
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive = activeHash === item.href;
           const LinkComponent = isHome ? 'a' : Link;
           return (

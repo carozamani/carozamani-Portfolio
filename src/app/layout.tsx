@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Outfit, Vazirmatn } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Toaster } from 'sonner';
+import { LazyToaster } from '@/components/shared/LazyToaster';
+import { MotionProvider } from '@/components/shared/MotionProvider';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
+import { ContentProvider } from '@/lib/ContentProvider';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { localeDirection } from '@/lib/i18n/config';
 import { dictionaries } from '@/lib/i18n/dictionaries';
@@ -90,22 +92,26 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <LocaleProvider locale={locale} dict={dict}>
-          <PodcastPlayerProvider>
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border-2 focus:border-(--color-brand-primary) focus:bg-(--color-surface-canvas) focus:px-5 focus:py-3 focus:text-(--color-text-primary)"
-            >
-              {dict.skipLink}
-            </a>
+          <ContentProvider>
+            <PodcastPlayerProvider>
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border-2 focus:border-(--color-brand-primary) focus:bg-(--color-surface-canvas) focus:px-5 focus:py-3 focus:text-(--color-text-primary)"
+              >
+                {dict.skipLink}
+              </a>
 
-            <SiteChrome />
+              <SiteChrome />
 
-            <main id="main-content" className="relative z-20 h-full w-full">
-              {children}
-            </main>
+              <MotionProvider>
+                <main id="main-content" className="relative z-20 h-full w-full">
+                  {children}
+                </main>
+              </MotionProvider>
 
-            <Toaster richColors position="bottom-right" />
-          </PodcastPlayerProvider>
+              <LazyToaster />
+            </PodcastPlayerProvider>
+          </ContentProvider>
         </LocaleProvider>
       </body>
     </html>
