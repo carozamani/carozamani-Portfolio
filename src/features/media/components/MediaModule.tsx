@@ -1,6 +1,6 @@
 'use client';
 
-import { m } from 'framer-motion';
+import { Reveal } from '@/components/shared/Reveal';
 import MediaSection from './MediaSection';
 import { MEDIA_PREVIEW_LIMIT } from '@/data/media';
 import { podcastHub } from '@/data/podcastHub';
@@ -71,15 +71,9 @@ export function MediaModule() {
 /* ----------------- Helper Components ----------------- */
 
 const AnimatedBlock = ({ children, delay }: { children: React.ReactNode; delay: number }) => (
-  <m.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay }}
-    viewport={{ once: true }}
-    className={styles.animatedBlock}
-  >
+  <Reveal distance={20} duration={0.6} delay={delay} className={styles.animatedBlock}>
     {children}
-  </m.div>
+  </Reveal>
 );
 
 interface ContentBlockProps {

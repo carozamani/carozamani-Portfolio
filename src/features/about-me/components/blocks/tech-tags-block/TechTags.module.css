@@ -1,6 +1,6 @@
 /* کانتینر اصلی */
 .blockContainer {
-  --block-radius: 1.5rem;
+  --block-radius: var(--radius-card);
   --block-padding: 2rem;
   --block-height: 22rem;
   --grid-gap: 1.5rem;
@@ -58,7 +58,7 @@
   }
 
   .leftSection h2 {
-    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    font-size: clamp(1.75rem, 3.6vw, 3rem);
     text-wrap: balance;
     overflow-wrap: break-word;
   }
@@ -172,6 +172,16 @@
 @media (max-width: 767px) {
   .blockContainer {
     height: 270px;
+  }
+}
+
+/* in the two-column About grid the card stretches to its row; size containment
+   keeps the looping tag list from inflating that row */
+@media (min-width: 56rem) {
+  .blockContainer {
+    height: auto;
+    min-height: var(--block-height);
+    contain: size;
   }
 }
 

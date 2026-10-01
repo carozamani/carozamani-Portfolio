@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { m, useReducedMotion, useScroll, useTransform, type Variants } from 'framer-motion';
 import Typography from '@/components/ui/Typography';
+import { MotionProvider } from '@/components/shared/MotionProvider';
 import styles from './CaseStudyDetail.module.css';
 
 const WORD_MASK: Variants = {
@@ -33,7 +34,7 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
   const words = title.split(' ');
 
   return (
-    <>
+    <MotionProvider>
       <section ref={heroRef} className={styles.hero}>
         {cover ? (
           <m.img
@@ -99,6 +100,6 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
           )}
         </m.div>
       </div>
-    </>
+    </MotionProvider>
   );
 }

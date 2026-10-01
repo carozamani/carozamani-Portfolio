@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
-import { MotionProvider } from '@/components/shared/MotionProvider';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
 import { ContentProvider } from '@/lib/ContentProvider';
@@ -33,6 +32,8 @@ const persianFont = localFont({
   weight: '100 900',
   display: 'swap',
   variable: '--font-vazirmatn',
+  // only Persian pages render Arabic-script glyphs; preloading would cost English visitors ~45KB
+  preload: false,
   declarations: [
     { prop: 'unicode-range', value: 'U+0600-06FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFC' },
   ],
@@ -103,11 +104,9 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
 
               <SiteChrome />
 
-              <MotionProvider>
-                <main id="main-content" className="relative z-20 h-full w-full">
-                  {children}
-                </main>
-              </MotionProvider>
+              <main id="main-content" className="relative z-20 h-full w-full">
+                {children}
+              </main>
 
               <LazyToaster />
             </PodcastPlayerProvider>

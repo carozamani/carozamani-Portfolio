@@ -1,7 +1,7 @@
 'use client';
 
-import { m, useReducedMotion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { Reveal } from '@/components/shared/Reveal';
 import styles from './AboutMeModule.module.css';
 
 const BlockIntro = dynamic(() => import('./blocks/about-me-block/AboutMeIntro'), { ssr: false });
@@ -13,8 +13,6 @@ const DesignPhilosophyCard = dynamic(
 );
 
 export function AboutMeModule() {
-  const reduceMotion = useReducedMotion();
-
   const blocks = [
     { id: 1, component: <BlockIntro />, className: styles.block1 },
     { id: 2, component: <BlockTechTags />, className: styles.block2 },
@@ -26,20 +24,16 @@ export function AboutMeModule() {
     <section className={styles.sectionWrapper}>
       <div className={styles.wrapper}>
         {blocks.map((block, index) => (
-          <m.div
+          <Reveal
             key={block.id}
             className={block.className}
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
-            whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.4,
-              delay: reduceMotion ? 0 : index * 0.1,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            viewport={{ once: true, amount: 0.2 }}
+            amount={0.2}
+            distance={20}
+            duration={0.4}
+            delay={index * 0.1}
           >
             {block.component}
-          </m.div>
+          </Reveal>
         ))}
       </div>
     </section>

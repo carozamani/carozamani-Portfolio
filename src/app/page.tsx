@@ -23,11 +23,11 @@ export default async function HomePage() {
   const { about } = dictionaries[await getLocale()];
 
   return (
-    <div className="relative w-screen overflow-x-hidden bg-(--color-page-bg) text-white">
+    <div className="relative w-full overflow-x-hidden bg-(--color-page-bg) text-white">
       <div className="relative z-10">
-        <AnimatedSection id="Home" variant="fade-up">
+        <section id="Home">
           <HeroModule />
-        </AnimatedSection>
+        </section>
 
         {/* Server-rendered for crawlers/AI engines; AboutMeModule below renders this visually client-side. */}
         <p className="sr-only">{about.description}</p>

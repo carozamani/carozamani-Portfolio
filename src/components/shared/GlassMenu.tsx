@@ -102,14 +102,16 @@ export default function GlassMenu() {
 
   return (
     <nav
-      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 px-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:px-3 sm:w-auto sm:gap-3 sm:px-3"
+      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 ps-0 pe-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:pe-3 sm:w-auto sm:gap-3 sm:px-3"
       aria-label={dict.nav.aria}
     >
       <section
         ref={navRef}
         className={clsx(
-          'relative flex h-14 min-w-0 flex-1 items-center gap-0.5 rounded-full px-1.5 py-1 min-[520px]:h-16 min-[520px]:gap-1.5 min-[520px]:px-2 sm:h-16 sm:flex-none sm:shrink-0 sm:gap-1 sm:px-2',
+          // phones: the bar slides in from the start edge, so that side is flush and square
+          'relative flex h-14 min-w-0 flex-1 items-center gap-0.5 rounded-e-full py-1 ps-3 pe-1.5 min-[520px]:h-16 min-[520px]:gap-1.5 min-[520px]:ps-4 min-[520px]:pe-2 sm:h-16 sm:flex-none sm:shrink-0 sm:gap-1 sm:rounded-full sm:px-2',
           'no-scrollbar max-w-full overflow-x-auto sm:max-w-[92vw]',
+          'border border-s-0 border-white/5 sm:border-s',
           'backdrop-blur-xl',
           'shadow-lg shadow-black/40',
         )}

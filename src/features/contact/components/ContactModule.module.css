@@ -16,9 +16,9 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 60px;
-  padding: 60px;
-  border-radius: var(--radius-lg);
+  gap: 64px;
+  padding: 64px;
+  border-radius: var(--radius-card);
   background: linear-gradient(
     45deg,
     rgba(0, 38, 255, 0.171),
@@ -69,9 +69,11 @@
   z-index: 1;
 }
 
+/* spread to the form's height so the social row and the submit button share a bottom edge */
 .info {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 24px;
 }
 
@@ -189,6 +191,22 @@
   gap: 28px;
 }
 
+/* same box as the inputs above it: 12px block padding around a 24px line */
+.form .submit {
+  padding-block: 12px;
+}
+
+.form .submit > span {
+  line-height: 1.5rem;
+}
+
+/* FormFields tightens its inputs to 11px on phones; keep the button in step */
+@media (max-width: 480px) {
+  .form .submit {
+    padding-block: 11px;
+  }
+}
+
 .success {
   display: flex;
   flex-direction: column;
@@ -274,7 +292,7 @@
 @media (max-width: 850px) {
   .card {
     grid-template-columns: 1fr;
-    gap: 50px;
+    gap: 48px;
     padding: 40px 24px;
   }
 
@@ -299,8 +317,7 @@
 
 @media (max-width: 480px) {
   .card {
-    padding: 30px 16px;
-    border-radius: var(--radius-md);
+    padding: 32px 16px;
   }
 
   .title {
