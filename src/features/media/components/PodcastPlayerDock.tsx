@@ -1,7 +1,7 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { PodcastPlayer } from './PodcastPlayer';
 import type { CardProps } from '@/types/card';
 import styles from './PodcastPlayerDock.module.css';
@@ -15,7 +15,7 @@ export function PodcastPlayerDock({ card, onClose }: Props) {
   return createPortal(
     <AnimatePresence>
       {card?.audioSrc && (
-        <motion.div
+        <m.div
           key={card.id}
           className={styles.dock}
           initial={{ opacity: 0, y: 12 }}
@@ -24,7 +24,7 @@ export function PodcastPlayerDock({ card, onClose }: Props) {
           transition={{ duration: 0.3 }}
         >
           <PodcastPlayer title={card.title} src={card.audioSrc} onClose={onClose} />
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body,

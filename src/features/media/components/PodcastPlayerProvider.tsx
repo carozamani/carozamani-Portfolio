@@ -1,11 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { CardProps } from '@/types/card';
 import { getMedia } from '@/lib/api';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import { localizeCard } from '../lib/localizeCard';
-import { PodcastPlayerDock } from './PodcastPlayerDock';
+
+const PodcastPlayerDock = dynamic(() =>
+  import('./PodcastPlayerDock').then((mod) => mod.PodcastPlayerDock),
+);
 
 type PodcastPlayerContextValue = {
   activeId: string | null;
@@ -19,16 +23,25 @@ const PodcastPlayerContext = createContext<PodcastPlayerContextValue | null>(nul
 export function PodcastPlayerProvider({ children }: { children: ReactNode }) {
   const dict = useDictionary();
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [dockMounted, setDockMounted] = useState(false);
   const [podcastCards, setPodcastCards] = useState<CardProps[]>([]);
 
   useEffect(() => {
+    if (!activeId || podcastCards.length > 0) return;
     getMedia('podcast')
       .then(setPodcastCards)
       .catch(() => setPodcastCards([]));
-  }, []);
+  }, [activeId, podcastCards.length]);
 
   const value = useMemo<PodcastPlayerContextValue>(
-    () => ({ activeId, select: setActiveId, close: () => setActiveId(null) }),
+    () => ({
+      activeId,
+      select: (id: string) => {
+        setDockMounted(true);
+        setActiveId(id);
+      },
+      close: () => setActiveId(null),
+    }),
     [activeId],
   );
 
@@ -37,10 +50,12 @@ export function PodcastPlayerProvider({ children }: { children: ReactNode }) {
   return (
     <PodcastPlayerContext.Provider value={value}>
       {children}
-      <PodcastPlayerDock
-        card={activeCard && localizeCard(activeCard, dict)}
-        onClose={value.close}
-      />
+      {dockMounted && (
+        <PodcastPlayerDock
+          card={activeCard && localizeCard(activeCard, dict)}
+          onClose={value.close}
+        />
+      )}
     </PodcastPlayerContext.Provider>
   );
 }

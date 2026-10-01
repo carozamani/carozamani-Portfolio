@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useAnimationFrame } from 'framer-motion';
+import { m, useAnimationFrame } from 'framer-motion';
 import { useState } from 'react';
 
 import styles from './DesignPhilosophy.module.css';
@@ -19,7 +19,7 @@ export default function DesignPhilosophyCard() {
   });
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 25 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -44,6 +44,6 @@ export default function DesignPhilosophyCard() {
       <TypographyComponent variant="body1" color="text-secondary" className={styles.paragraph}>
         {about.philosophyText}
       </TypographyComponent>
-    </motion.div>
+    </m.div>
   );
 }

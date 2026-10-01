@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from 'framer-motion';
+import { m, useReducedMotion, useScroll, useTransform, type Variants } from 'framer-motion';
 import Typography from '@/components/ui/Typography';
 import styles from './CaseStudyDetail.module.css';
 
@@ -36,7 +36,7 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
     <>
       <section ref={heroRef} className={styles.hero}>
         {cover ? (
-          <motion.img
+          <m.img
             src={cover}
             alt=""
             className={styles.heroImage}
@@ -50,7 +50,7 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
       </section>
 
       <div className={styles.heroInner}>
-        <motion.div
+        <m.div
           className={styles.heroContent}
           initial={reduceMotion ? undefined : 'hidden'}
           animate={reduceMotion ? undefined : 'visible'}
@@ -59,7 +59,7 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
             visible: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
           }}
         >
-          <motion.div
+          <m.div
             className={styles.heroTopRow}
             variants={FADE_UP}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -72,32 +72,32 @@ export function CaseStudyHero({ cover, title, description, tags, scopeLabel }: C
               ))}
             </div>
             <span className={styles.scopeBadge}>{scopeLabel}</span>
-          </motion.div>
+          </m.div>
 
           <Typography variant="h1" className={styles.title}>
             <span className={styles.titleWords}>
               {words.map((word, index) => (
                 <span key={index} className={styles.titleWordMask}>
-                  <motion.span
+                  <m.span
                     className={styles.titleWord}
                     variants={WORD_MASK}
                     transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {word}
-                  </motion.span>
+                  </m.span>
                 </span>
               ))}
             </span>
           </Typography>
 
           {description && (
-            <motion.div variants={FADE_UP} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+            <m.div variants={FADE_UP} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
               <Typography variant="subtitle1" color="text-secondary" className={styles.description}>
                 {description}
               </Typography>
-            </motion.div>
+            </m.div>
           )}
-        </motion.div>
+        </m.div>
       </div>
     </>
   );

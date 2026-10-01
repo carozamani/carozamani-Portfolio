@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Outfit, Vazirmatn } from 'next/font/google';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
 import { MotionProvider } from '@/components/shared/MotionProvider';
@@ -20,22 +19,23 @@ import '@/styles/motion.css';
 
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
+// Self-hosted rather than next/font/google: the build machine can't reach Google Fonts,
+// which silently degraded every page to Arial.
+const brandFont = localFont({
+  src: '../assets/fonts/outfit-latin-variable.woff2',
+  weight: '100 900',
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-outfit',
 });
 
-const brandFont = Outfit({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-brand',
-});
-
-const persianFont = Vazirmatn({
-  subsets: ['arabic', 'latin'],
+const persianFont = localFont({
+  src: '../assets/fonts/vazirmatn-arabic-variable.woff2',
+  weight: '100 900',
   display: 'swap',
   variable: '--font-vazirmatn',
+  declarations: [
+    { prop: 'unicode-range', value: 'U+0600-06FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFC' },
+  ],
 });
 
 const wordmarkFont = localFont({
@@ -84,7 +84,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
     <html
       lang={locale}
       dir={localeDirection[locale]}
-      className={`${brandFont.variable} ${inter.variable} ${persianFont.variable} ${wordmarkFont.variable}`}
+      className={`${brandFont.variable} ${persianFont.variable} ${wordmarkFont.variable}`}
     >
       <body className="relative min-h-screen w-full bg-cover bg-top bg-no-repeat">
         <script

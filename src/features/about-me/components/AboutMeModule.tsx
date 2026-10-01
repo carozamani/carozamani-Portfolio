@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import styles from './AboutMeModule.module.css';
 
@@ -26,7 +26,7 @@ export function AboutMeModule() {
     <section className={styles.sectionWrapper}>
       <div className={styles.wrapper}>
         {blocks.map((block, index) => (
-          <motion.div
+          <m.div
             key={block.id}
             className={block.className}
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
@@ -39,7 +39,7 @@ export function AboutMeModule() {
             viewport={{ once: true, amount: 0.2 }}
           >
             {block.component}
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </section>

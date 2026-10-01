@@ -3,7 +3,7 @@
 import { memo, useRef, type PointerEvent } from 'react';
 import { FiSend, FiCopy, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import Image from 'next/image';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import { toast } from 'sonner';
 import styles from './ContactModule.module.css';
 import SocialIcons from '@/components/ui/SocialIcons';
@@ -39,7 +39,7 @@ function ContactModuleComponent() {
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
-        <motion.div
+        <m.div
           ref={cardRef}
           className={styles.card}
           onPointerMove={handlePointerMove}
@@ -173,7 +173,7 @@ function ContactModuleComponent() {
               </form>
             )}
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

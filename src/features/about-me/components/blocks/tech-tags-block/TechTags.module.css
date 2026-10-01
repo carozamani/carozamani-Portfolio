@@ -58,8 +58,9 @@
   }
 
   .leftSection h2 {
-    font-size: clamp(1.75rem, 3.6vw, 3rem);
-    overflow-wrap: anywhere;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    text-wrap: balance;
+    overflow-wrap: break-word;
   }
 }
 
@@ -140,8 +141,8 @@
   font-size: 0.875rem; /* متن کوچک‌تر */
   text-align: center;
   overflow: hidden;
-  white-space: nowrap; /* متن یک خط */
-  text-overflow: ellipsis; /* کوتاه کردن متن طولانی با ... */
+  line-height: 1.25;
+  text-wrap: balance;
   transition: all 0.3s;
 }
 

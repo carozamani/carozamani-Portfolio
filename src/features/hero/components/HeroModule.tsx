@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import {
-  motion,
+  m,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
@@ -53,7 +53,7 @@ export function HeroModule() {
 
   return (
     <section className={styles.heroSection} aria-labelledby="hero-title">
-      <motion.div
+      <m.div
         className={styles.gridOverlay}
         aria-hidden="true"
         style={{
@@ -62,7 +62,7 @@ export function HeroModule() {
         }}
       />
 
-      <motion.div
+      <m.div
         className={styles.profileWrapper}
         initial={fadeIn?.initial ?? { opacity: 0, y: -24 }}
         animate={fadeIn?.animate ?? { opacity: 1, y: 0 }}
@@ -96,9 +96,9 @@ export function HeroModule() {
         </div>
 
         <Wordmark className={styles.logoImage} />
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         className={styles.titleContainer}
         initial={fadeIn?.initial ?? { opacity: 0, y: 16 }}
         animate={fadeIn?.animate ?? { opacity: 1, y: 0 }}
@@ -107,9 +107,9 @@ export function HeroModule() {
         <TypographyComponent variant="h1" id="hero-title" color="text-primary">
           {hero.title}
         </TypographyComponent>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         className={styles.ctaContainer}
         initial={fadeIn?.initial ?? { opacity: 0, y: 12 }}
         animate={fadeIn?.animate ?? { opacity: 1, y: 0 }}
@@ -123,7 +123,7 @@ export function HeroModule() {
           onClick={() => scrollToSection('projects', reduceMotion)}
         />
         <SocialIcons items={heroSocialLinks} bordered />
-      </motion.div>
+      </m.div>
     </section>
   );
 }

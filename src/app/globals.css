@@ -42,12 +42,16 @@ body {
   overflow-x: hidden;
   background: var(--color-page-bg);
   color: var(--color-text-primary);
-  font-family: var(--font-brand), var(--font-inter), Arial, Helvetica, sans-serif;
+  font-family: var(--font-brand), system-ui, sans-serif;
 }
 
+html {
+  --font-brand: var(--font-outfit);
+}
+
+/* Vazirmatn ships Arabic-script glyphs only, so Latin words inside Persian copy fall through to Outfit */
 html[lang='fa'] {
-  --font-brand: var(--font-vazirmatn);
-  --font-inter: var(--font-vazirmatn);
+  --font-brand: var(--font-vazirmatn), var(--font-outfit);
 }
 
 /* language switch: fade the page out, swap locale, fade back in */

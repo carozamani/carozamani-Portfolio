@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion, type Variant } from 'framer-motion';
+import { m, useReducedMotion, type Variant } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 type AnimationVariant = 'fade-up' | 'fade-left' | 'fade-right' | 'scale-in';
@@ -52,7 +52,7 @@ export function AnimatedSection({
   const animation = reduceMotion ? REDUCED_MOTION_VARIANT : VARIANT_MAP[variant];
 
   return (
-    <motion.section
+    <m.section
       id={id}
       className={fullScreen ? 'flex min-h-dvh flex-col justify-center' : undefined}
       initial="hidden"
@@ -72,6 +72,6 @@ export function AnimatedSection({
       }}
     >
       {children}
-    </motion.section>
+    </m.section>
   );
 }
