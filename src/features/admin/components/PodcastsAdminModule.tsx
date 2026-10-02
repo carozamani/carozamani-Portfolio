@@ -2,24 +2,24 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { podcastCards } from '@/data/media';
 import { podcastHub } from '@/data/podcastHub';
 import type { AdminCard } from '@/types/admin';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
+import { podcastStore, usePodcasts } from '../lib/podcastStore';
+import { reportFailure } from '../lib/reportFailure';
 import { useSelection } from '../hooks/useSelection';
 import { useTableState } from '../hooks/useTableState';
+import { CollectionState } from './CollectionState';
 import { ConfirmDialog } from './ConfirmDialog';
 import { ContentList } from './ContentList';
 import { PodcastEditor } from './PodcastEditor';
 
 const searchKeys: (keyof AdminCard)[] = ['title', 'summary', 'date'];
 
-const seed: AdminCard[] = podcastCards.map((c) => ({ ...c, status: 'published' }));
-
 export function PodcastsAdminModule() {
   const t = useDictionary().admin;
   const copy = t.podcasts;
-  const [items, setItems] = useState(seed);
+  const { items, status } = usePodcasts();
   const [editing, setEditing] = useState<AdminCard | 'new' | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string[] | null>(null);
   const table = useTableState(items, { searchKeys });
@@ -27,32 +27,32 @@ export function PodcastsAdminModule() {
 
   const sortDir = (key: keyof AdminCard) => (table.sort?.key === key ? table.sort.dir : null);
 
+  const onFailure = reportFailure(t.common.requestFailed);
+
   const save = (item: AdminCard) => {
     const original = editing !== 'new' ? editing?.id : undefined;
-    setItems((prev) =>
-      original ? prev.map((c) => (c.id === original ? item : c)) : [...prev, item],
-    );
-    toast.success(original ? t.common.saved : t.common.created);
-    setEditing(null);
+    podcastStore
+      .upsert(item, original)
+      .then(() => {
+        toast.success(original ? t.common.saved : t.common.created);
+        setEditing(null);
+      })
+      .catch(onFailure);
   };
 
   const confirmDelete = () => {
     if (!pendingDelete) return;
-    setItems((prev) => prev.filter((c) => !pendingDelete.includes(c.id)));
-    selection.clear();
-    toast.success(format(t.common.deletedCount, { count: pendingDelete.length }));
+    const ids = pendingDelete;
     setPendingDelete(null);
+    podcastStore
+      .remove(ids)
+      .then(() => toast.success(format(t.common.deletedCount, { count: ids.length })))
+      .catch(onFailure)
+      .finally(selection.clear);
   };
 
-  const toggleStatus = (id: string) =>
-    setItems((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, status: c.status === 'draft' ? 'published' : 'draft' } : c,
-      ),
-    );
-
   return (
-    <>
+    <CollectionState status={status} onRetry={podcastStore.retry}>
       <ContentList
         heading={copy.title}
         note={format(copy.siteNote, { platform: podcastHub.name })}
@@ -83,7 +83,7 @@ export function PodcastsAdminModule() {
         onDeleteSelected={() => setPendingDelete([...selection.selected])}
         onEdit={(id) => setEditing(items.find((c) => c.id === id) ?? null)}
         onDelete={(id) => setPendingDelete([id])}
-        onToggleStatus={toggleStatus}
+        onToggleStatus={(id) => podcastStore.toggleStatus(id).catch(onFailure)}
         page={table.page}
         pageCount={table.pageCount}
         total={table.total}
@@ -105,6 +105,6 @@ export function PodcastsAdminModule() {
         onConfirm={confirmDelete}
         onCancel={() => setPendingDelete(null)}
       />
-    </>
+    </CollectionState>
   );
 }

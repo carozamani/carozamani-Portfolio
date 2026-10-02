@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { navItems } from '@/data/navigation';
+import { useHasSection } from '@/lib/ContentProvider';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
@@ -19,6 +20,11 @@ export default function GlassMenu() {
   const pathname = usePathname();
   const dict = useDictionary();
   const isHome = pathname === '/';
+  const hasProjects = useHasSection('projects');
+  const hasMedia = useHasSection('media');
+  const visibleNavItems = navItems.filter(
+    (item) => (item.key !== 'projects' || hasProjects) && (item.key !== 'media' || hasMedia),
+  );
   const [currentHash, setCurrentHash] = useState('#Home');
   const [activeRect, setActiveRect] = useState<{ left: number; width: number }>({
     left: 0,
@@ -65,13 +71,14 @@ export default function GlassMenu() {
       { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 },
     );
 
-    navItems.forEach((item) => {
+    visibleNavItems.forEach((item) => {
       const el = document.querySelector(item.href);
       if (el) observerRef.current?.observe(el);
     });
 
     return () => observerRef.current?.disconnect();
-  }, [isHome]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the item count, the array is rebuilt each render
+  }, [isHome, visibleNavItems.length]);
 
   useEffect(() => {
     const nav = navRef.current;
@@ -91,18 +98,20 @@ export default function GlassMenu() {
     const observer = new ResizeObserver(measure);
     observer.observe(nav);
     return () => observer.disconnect();
-  }, [activeHash, dict]);
+  }, [activeHash, dict, visibleNavItems.length]);
 
   return (
     <nav
-      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 px-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:px-3 sm:w-auto sm:gap-3 sm:px-3"
+      className="pointer-events-auto flex w-full items-center justify-center gap-1.5 ps-0 pe-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:pe-3 sm:w-auto sm:gap-3 sm:px-3"
       aria-label={dict.nav.aria}
     >
       <section
         ref={navRef}
         className={clsx(
-          'relative flex h-14 min-w-0 flex-1 items-center gap-0.5 rounded-full px-1.5 py-1 min-[520px]:h-16 min-[520px]:gap-1.5 min-[520px]:px-2 sm:h-16 sm:flex-none sm:shrink-0 sm:gap-1 sm:px-2',
+          // phones: the bar slides in from the start edge, so that side is flush and square
+          'relative flex h-14 min-w-0 flex-1 items-center gap-0.5 rounded-e-full py-1 ps-3 pe-1.5 min-[520px]:h-16 min-[520px]:gap-1.5 min-[520px]:ps-4 min-[520px]:pe-2 sm:h-16 sm:flex-none sm:shrink-0 sm:gap-1 sm:rounded-full sm:px-2',
           'no-scrollbar max-w-full overflow-x-auto sm:max-w-[92vw]',
+          'border border-s-0 border-white/5 sm:border-s',
           'backdrop-blur-xl',
           'shadow-lg shadow-black/40',
         )}
@@ -121,7 +130,7 @@ export default function GlassMenu() {
           }}
         />
 
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive = activeHash === item.href;
           const LinkComponent = isHome ? 'a' : Link;
           return (

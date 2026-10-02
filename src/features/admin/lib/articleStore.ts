@@ -1,19 +1,10 @@
-import { articleCards } from '@/data/media';
-import { paragraphsToDoc } from '@/lib/rich-text/doc';
-import type { AdminCard } from '@/types/admin';
-import { createEntityStore } from './entityStore';
+import { mediaApi } from './adminApi';
+import { createRemoteCollection } from './remoteCollection';
 
-const seed: AdminCard[] = articleCards.map((card) => ({
-  ...card,
-  status: 'published',
-  content: card.content ?? paragraphsToDoc(card.body ?? []),
-}));
-
-const { store, useItems } = createEntityStore<AdminCard>({
-  key: 'admin.articles.v1',
-  seed,
+const { store, useCollection } = createRemoteCollection({
   getId: (article) => article.id,
+  source: mediaApi('article'),
 });
 
 export const articleStore = store;
-export const useArticles = useItems;
+export const useArticles = useCollection;

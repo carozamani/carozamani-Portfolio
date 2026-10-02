@@ -9,7 +9,7 @@ export function SiteChrome() {
 
   return (
     <>
-      <div className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center">
+      <div className="pointer-events-none fixed inset-x-0 top-2 z-50 flex justify-center">
         <GlassMenu />
       </div>
     </>

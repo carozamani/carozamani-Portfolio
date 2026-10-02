@@ -15,6 +15,7 @@
   border-radius: inherit;
   border: 1px solid var(--color-border-emphasis);
   pointer-events: none;
+  opacity: 0;
 }
 
 .gridPattern {
@@ -36,6 +37,19 @@
   border-radius: 9999px;
   filter: blur(100px);
   pointer-events: none;
+  animation: glow-drift 6s ease-in-out infinite;
+}
+
+@keyframes glow-drift {
+  50% {
+    transform: translate(20px, -20px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    animation: none;
+  }
 }
 
 .content {

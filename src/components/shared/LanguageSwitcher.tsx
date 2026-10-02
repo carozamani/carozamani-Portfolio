@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { IranFlag, UkFlag } from '@/components/ui/Flags';
+import { useEffect, useId, useRef, useState } from 'react';
 import { locales, type Locale } from '@/lib/i18n/config';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './LanguageSwitcher.module.css';
 
-const OPTIONS: Record<Locale, { code: string; flag: ReactNode }> = {
-  en: { code: 'EN', flag: <UkFlag className="h-4 w-8 rounded-[2px]" /> },
-  fa: { code: 'FA', flag: <IranFlag className="h-4 w-8 rounded-[2px]" /> },
+const OPTIONS: Record<Locale, { code: string }> = {
+  en: { code: 'EN' },
+  fa: { code: 'FA' },
 };
 
 export function LanguageSwitcher() {
@@ -54,7 +53,6 @@ export function LanguageSwitcher() {
           dir="ltr"
         >
           <span className={styles.code}>{OPTIONS[locale].code}</span>
-          {OPTIONS[locale].flag}
         </button>
 
         <ul
@@ -78,7 +76,6 @@ export function LanguageSwitcher() {
                   dir="ltr"
                 >
                   <span className={styles.optionCode}>{OPTIONS[code].code}</span>
-                  {OPTIONS[code].flag}
                 </button>
               </li>
             ))}

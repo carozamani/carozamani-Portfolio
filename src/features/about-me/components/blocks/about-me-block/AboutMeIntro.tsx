@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactElement } from 'react';
-import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './AboutMeIntro.module.css';
 import TypographyComponent from '@/components/ui/Typography';
@@ -26,20 +25,12 @@ export default function BlockIntro({
   const highlightText = highlightProp ?? about.highlight;
 
   return (
-    <motion.div
-      className={clsx(styles.wrapper, className)}
-      // حذف scale روی هاور
-      transition={{ type: 'spring', stiffness: 100, damping: 12 }}
-    >
+    <div className={clsx(styles.wrapper, className)}>
       {/* Grid Pattern */}
       <div className={styles.gridPattern} />
 
       {/* Neon Glow */}
-      <motion.div
-        className={styles.glow}
-        animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      <div className={styles.glow} />
 
       {/* محتوا */}
       <div className={styles.content}>
@@ -66,12 +57,7 @@ export default function BlockIntro({
       </div>
 
       {/* Hover Border */}
-      <motion.div
-        className={styles.hoverBorder}
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      />
-    </motion.div>
+      <div className={styles.hoverBorder} />
+    </div>
   );
 }

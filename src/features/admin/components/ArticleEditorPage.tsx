@@ -17,9 +17,10 @@ import type { AdminCard } from '@/types/admin';
 import { countWords, excerpt, hasContent, readingMinutes } from '@/lib/rich-text/doc';
 import { format, useDictionary, useLocale } from '@/lib/i18n/LocaleProvider';
 import { articleStore, useArticles } from '../lib/articleStore';
-import { useHydrated } from '../lib/entityStore';
+import { reportFailure } from '../lib/reportFailure';
 import { uniqueSlug } from '../lib/slug';
 import { BackButton } from './BackButton';
+import { CollectionState } from './CollectionState';
 import { ConfirmDialog } from './ConfirmDialog';
 import { EmptyState } from './EmptyState';
 import { FormField } from './FormField';
@@ -51,6 +52,7 @@ function ArticleForm({ initial, existingIds }: FormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [dirty, setDirty] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const number = useMemo(() => new Intl.NumberFormat(locale), [locale]);
   const doc = draft.content ?? emptyDoc;
@@ -80,21 +82,26 @@ function ArticleForm({ initial, existingIds }: FormProps) {
 
     // the link stays stable after the first save; date, summary and reading time are derived
     const id = initial?.id ?? uniqueSlug(draft.title, existingIds);
-    const stored = articleStore.upsert(
-      {
-        ...draft,
-        id,
-        href: `/articles/${id}`,
-        summary: excerpt(doc),
-        readTime: `${minutes} min`,
-        body: undefined,
-      },
-      initial?.id,
-    );
-    toast.success(initial ? common.saved : common.created);
-    if (!stored) toast.warning(t.editor.saveFailedStorage);
-    setDirty(false);
-    if (!initial) router.replace(`/admin/articles/${id}`);
+    setSaving(true);
+    articleStore
+      .upsert(
+        {
+          ...draft,
+          id,
+          href: `/articles/${id}`,
+          summary: excerpt(doc),
+          readTime: `${minutes} min`,
+          body: undefined,
+        },
+        initial?.id,
+      )
+      .then(() => {
+        toast.success(initial ? common.saved : common.created);
+        setDirty(false);
+        if (!initial) router.replace(`/admin/articles/${id}`);
+      })
+      .catch(reportFailure(common.requestFailed))
+      .finally(() => setSaving(false));
   };
 
   return (
@@ -119,7 +126,7 @@ function ArticleForm({ initial, existingIds }: FormProps) {
               <SelectItem value="published">{common.published}</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={save} disabled={Boolean(initial) && !dirty}>
+          <Button onClick={save} disabled={saving || (Boolean(initial) && !dirty)}>
             {common.save}
           </Button>
         </div>
@@ -163,16 +170,14 @@ function ArticleForm({ initial, existingIds }: FormProps) {
 
 export function ArticleEditorPage({ id }: { id?: string }) {
   const { editor } = useDictionary().admin;
-  const hydrated = useHydrated();
-  const articles = useArticles();
+  const { items: articles, status } = useArticles();
   const existing = id ? articles.find((a) => a.id === id) : undefined;
 
-  if (!hydrated) {
+  if (status !== 'ready') {
     return (
-      <div className="mx-auto grid w-full max-w-4xl gap-4" aria-busy="true">
-        <div className="bg-muted h-9 w-48 animate-pulse rounded-xl" />
-        <div className="bg-muted h-96 animate-pulse rounded-xl" />
-      </div>
+      <CollectionState status={status} onRetry={articleStore.retry}>
+        {null}
+      </CollectionState>
     );
   }
 

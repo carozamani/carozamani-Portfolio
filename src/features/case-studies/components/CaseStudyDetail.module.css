@@ -3,358 +3,41 @@
   min-height: 100vh;
 }
 
-/* ============================= */
-/* Hero                          */
-/* ============================= */
-
-.hero {
-  position: relative;
-  margin-top: clamp(2.5rem, 6vw, 4rem);
-  min-height: clamp(24rem, 48vh, 34rem);
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
   overflow: hidden;
-  background: var(--color-surface-canvas);
-  background-image: var(--grid-pattern-subtle);
-  background-size: 6.25rem 6.25rem;
-}
-
-.heroImage {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.heroPlaceholder {
-  position: absolute;
-  inset: 0;
-  background: var(--gradient-hero-bg);
-}
-
-/* Darkens the strip the floating nav sits over, so its labels stay legible
-   no matter how bright the cover image is underneath. */
-.heroTopScrim {
-  position: absolute;
-  inset: 0;
-  height: clamp(5rem, 12vh, 7rem);
-  background: linear-gradient(to bottom, hsla(0, 0%, 0%, 0.65) 0%, hsla(0, 0%, 0%, 0) 100%);
-}
-
-/* Fades the bottom of the hero into the page's own background so the
-   handoff into .heroInner below reads as one continuous surface. */
-/* Reaches fully opaque black by the halfway mark so the fixed -10rem pull
-   on .heroInner below always lands on solid color — at the shortest hero
-   height (mobile), -10rem is ~42% of the box, so 50% opaque-black leaves
-   margin. This is also why .heroInner needs no background of its own: same
-   opaque black shows on both sides of its (narrower) box, so there's no
-   seam at its edges. */
-.heroScrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    hsl(0, 0%, 0%) 0%,
-    hsl(0, 0%, 0%) 50%,
-    hsla(0, 0%, 0%, 0) 85%
-  );
-}
-
-/* Shares the exact max-width + inline padding of .content below, so the
-   hero's badge/title/description line up with the page's content column
-   instead of spanning full viewport width. */
-.heroInner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 1100px;
-  /* Pulls the content up into the hero's already fully-black fade zone
-     (see .heroScrim) — grows the hero visually without pushing the title
-     down with it. */
-  margin: -10rem auto 0;
-  padding-inline: var(--space-l);
-}
-
-.scopeBadge {
-  padding: 0.4rem 0.9rem;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--color-border-emphasis);
-  background: var(--color-glass-bg);
-  backdrop-filter: blur(12px);
-  color: var(--color-text-primary);
-  font-size: 0.8rem;
-  font-weight: 600;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
+  border: 0;
 }
-
-.heroContent {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-s);
-  max-width: 56rem;
-  padding-top: clamp(0.5rem, 1.5vw, 0.75rem);
-  padding-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-.heroTopRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-s);
-  width: 100%;
-}
-
-.heroTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.heroTag {
-  padding: 0.3rem 0.75rem;
-  border-radius: var(--radius-full);
-  background: var(--gradient-tag);
-  color: var(--color-text-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.title {
-  text-shadow: 0 2px 24px hsla(0, 0%, 0%, 0.5);
-}
-
-.titleWords {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.titleWordMask {
-  display: inline-block;
-  overflow: hidden;
-  margin-inline-end: 0.28em;
-  padding-bottom: 0.08em;
-}
-
-.titleWord {
-  display: inline-block;
-}
-
-.description {
-  max-width: 42rem;
-  line-height: 1.6;
-}
-
-/* ============================= */
-/* Content                       */
-/* ============================= */
 
 .content {
   position: relative;
   max-width: 1100px;
   margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 4rem) var(--space-l) clamp(4rem, 8vw, 6rem);
+  padding: clamp(5rem, 9vw, 7rem) var(--space-l) clamp(4rem, 8vw, 6rem);
 }
 
-/* Same editorial-table language as the project list on the landing page
-   (QuantumCarousel): a real grid with hairline dividers, not a card. */
-.metaGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin: 0 0 clamp(3rem, 7vw, 4.5rem);
-  border-block: 1px solid var(--color-neutral-gray-soft);
-}
-
-.metaItem {
-  position: relative;
+/* The images read as one continuous page: no gaps, a single rounded outline. */
+.stack {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.35rem;
-  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem);
-}
-
-/* Extends past the grid's own top/bottom edge so the vertical divider
-   visibly crosses the horizontal frame, like a real table intersection. */
-.metaItem:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: -1.5rem;
-  bottom: -1.5rem;
-  inset-inline-end: -1px;
-  width: 1px;
-  background: var(--color-neutral-gray-soft);
-}
-
-@media (max-width: 640px) {
-  .metaGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .metaItem:not(:last-child)::after {
-    top: auto;
-    bottom: 0;
-    inset-inline: -1.5rem;
-    width: auto;
-    height: 1px;
-  }
-}
-
-.metaLabel {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.metaValue {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  max-width: 44rem;
-  margin: 0 auto;
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-s);
-  margin-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-.sectionTitle {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  font-weight: 700;
-  position: relative;
-  padding-inline-start: var(--space-s);
-  border-inline-start: 3px solid var(--color-brand-emphasis);
-}
-
-.sectionNumber {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.sectionText {
-  line-height: 1.7;
-  white-space: pre-line;
-}
-
-.pullQuote {
-  position: relative;
-  margin: 0;
-  padding-inline-start: 1.75rem;
-  font-size: clamp(1.3rem, 2.4vw, 1.65rem);
-  font-weight: 600;
-  line-height: 1.55;
-  color: var(--color-text-primary);
-  font-style: normal;
-}
-
-.pullQuote::before {
-  content: '\201C';
-  position: absolute;
-  inset-inline-start: -0.35rem;
-  top: -0.75rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--color-brand-emphasis);
-  opacity: 0.5;
-}
-
-.processList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-m);
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.processStep {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-s);
-  padding-bottom: var(--space-m);
-}
-
-.processStep:not(:last-child)::before {
-  content: '';
-  position: absolute;
-  top: 2rem;
-  inset-inline-start: 0.9375rem;
-  width: 1px;
-  height: calc(100% - 1.5rem);
-  background: var(--color-border-muted);
-}
-
-.processIndex {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-emphasis);
-  color: var(--color-text-primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.chipList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.chip {
-  padding: 0.4rem 0.9rem;
-  border-radius: var(--radius-full);
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-subtle);
-  color: var(--color-text-primary);
-  font-size: 0.85rem;
-}
-
-/* ============================= */
-/* Gallery                       */
-/* ============================= */
-
-.gallery {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-l);
   width: 100%;
   margin-bottom: clamp(3rem, 7vw, 5rem);
-}
-
-.galleryImage {
-  display: block;
-  width: 100%;
-  height: auto;
+  overflow: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-lg);
+}
+
+.stackImage {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .placeholder {
@@ -362,7 +45,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
   min-height: 40vh;
   padding: 2rem 1.5rem;
   text-align: center;
@@ -373,16 +55,6 @@
   font-weight: 700;
   color: var(--color-text-primary);
 }
-
-.placeholderHint {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  max-width: 32rem;
-}
-
-/* ============================= */
-/* Pager & footer                */
-/* ============================= */
 
 .pager {
   display: grid;
@@ -408,19 +80,4 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.viewOthers {
-  display: flex;
-  justify-content: center;
-}
-
-@media (max-width: 640px) {
-  .pager {
-    grid-template-columns: 1fr;
-  }
-
-  .pagerItemEnd {
-    align-items: flex-start;
-  }
 }

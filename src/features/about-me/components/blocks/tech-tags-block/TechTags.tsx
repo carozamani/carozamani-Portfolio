@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import styles from './TechTags.module.css';
 import TypographyComponent from '@/components/ui/Typography';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
@@ -17,7 +17,7 @@ const FRICTION = 0.94;
 
 function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrollColumnProps) {
   const infiniteTags = useMemo(() => [...tags, ...tags, ...tags], [tags]);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const targetRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -82,7 +82,7 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
   };
 
   return (
-    <motion.div
+    <div
       className={`${styles.scrollColumn} ${isDragging ? styles.dragging : ''} ${offsetClass}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -99,7 +99,7 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }
 

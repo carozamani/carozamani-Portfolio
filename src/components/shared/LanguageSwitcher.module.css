@@ -1,25 +1,15 @@
 .root {
   position: relative;
   flex-shrink: 0;
-  height: 2.75rem;
+  height: 2.25rem;
+  width: 3rem;
 }
 
 .panel {
   position: relative;
   z-index: 50;
   overflow: hidden;
-  border: 1px solid hsla(0, 0%, 100%, 0.05);
   border-radius: 1.375rem;
-  backdrop-filter: blur(1.5rem);
-  box-shadow: var(--shadow-sm, 0 0.5rem 1rem hsla(0, 0%, 0%, 0.4));
-  transition:
-    border-color var(--transition-normal),
-    background var(--transition-normal);
-}
-
-.panel[data-open='true'] {
-  border-color: var(--color-border-subtle);
-  background: var(--color-glass-bg);
 }
 
 .trigger,
@@ -39,8 +29,8 @@
 .trigger {
   justify-content: center;
   width: 100%;
-  height: calc(2.75rem - 2px);
-  padding-inline: 1.125rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
   border: 0;
   background: transparent;
 }
@@ -48,7 +38,6 @@
 .trigger:hover,
 .trigger[aria-expanded='true'] {
   color: var(--color-text-primary);
-  border-color: var(--color-border-subtle);
 }
 
 .code {
@@ -70,8 +59,8 @@
 .option {
   justify-content: center;
   width: 100%;
-  height: calc(2.75rem - 2px);
-  padding-inline: 1.125rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -99,23 +88,23 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 519px) {
-  .root {
-    height: 2.25rem;
-  }
-
+/* From the width where the nav becomes a floating capsule, the switcher gets its own matching
+   capsule: same height, hairline border, blur and shadow as the nav bar beside it */
+@media (min-width: 40rem) {
   .panel {
-    border-radius: 1.125rem;
+    backdrop-filter: blur(24px);
+    box-shadow:
+      0 10px 15px -3px hsla(0, 0%, 0%, 0.4),
+      0 4px 6px -4px hsla(0, 0%, 0%, 0.4);
   }
 
-  .trigger,
-  .option {
-    height: calc(2.25rem - 2px);
-    padding-inline: 0.5rem;
-  }
-
-  .code,
-  .optionCode {
-    display: none;
+  /* drawn as an overlay so the hairline never changes the box height at fractional pixel ratios */
+  .panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid hsla(0, 0%, 100%, 0.05);
+    border-radius: inherit;
+    pointer-events: none;
   }
 }

@@ -5,13 +5,8 @@ export type ProjectItemContent = {
   description?: string;
   tag?: string;
   tags?: string[];
-  companyName?: string;
-  role?: string;
-  duration?: string;
-  overview?: string;
-  problem?: string;
-  process?: string[];
-  architectureNotes?: string;
+  image?: string;
+  caseImages?: string[];
 };
 
 export const en = {
@@ -59,49 +54,15 @@ In my free time, I explore new web technologies, experiment with UI animations, 
     viewAll: 'View all projects',
     viewOthers: 'View Other Projects',
     noImageTitle: 'No image added yet for “{title}”',
-    noImageHint:
-      'Add the file to public/case-studies and set its path in caseStudies.ts for this project.',
     notFoundTitle: 'This case study couldn’t be found',
     notFoundText: 'The project you’re looking for doesn’t exist or has moved.',
     backToProjects: 'Back to Projects',
     detail: {
-      client: 'Client',
-      role: 'Role',
-      duration: 'Duration',
-      date: 'Date',
-      overview: 'Overview',
-      problem: 'The problem',
-      processTitle: 'Design process',
-      techStack: 'Tech stack',
-      architecture: 'Architecture & backend',
-      tools: 'Tools',
-      results: 'Results',
-      scopeLabels: {
-        'ui-ux': 'UI/UX Design',
-        'ui-ux-frontend': 'UI/UX + Frontend',
-        'full-stack': 'Full-Stack',
-      },
       prevProject: 'Previous',
       nextProject: 'Next',
       allProjects: 'All projects',
     },
-    items: {
-      'project-one': {
-        description:
-          'Redesigning a personal finance app’s onboarding flow to cut drop-off and get first-time users to their "aha moment" faster.',
-        tag: 'Product Design',
-      },
-      'project-two': {
-        description:
-          'Designing a mobile booking experience for a telehealth service, with accessibility for older adults as the primary constraint.',
-        tag: 'Mobile App',
-      },
-      'project-three': {
-        description:
-          'Building a componentized design system to replace inconsistent, one-off UI patterns across a multi-team SaaS product.',
-        tag: 'Design System',
-      },
-    } as Record<string, ProjectItemContent>,
+    items: {} as Record<string, ProjectItemContent>,
   },
   media: {
     podcasts: {

@@ -84,7 +84,7 @@
   visibility: hidden;
   pointer-events: none;
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.04em;
   padding: 0 6px;
 }
@@ -179,7 +179,7 @@ textarea.control {
 .control:not(:placeholder-shown) + .label {
   top: -9px;
   inset-inline-start: 10px;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.04em;
   padding: 0 6px;
   color: var(--color-brand-primary);
@@ -221,7 +221,7 @@ textarea.control {
   inset-inline-end: 14px;
   bottom: 10px;
   z-index: 3;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
   pointer-events: none;
@@ -296,7 +296,6 @@ textarea.control {
   .control:focus + .label,
   .control:not(:placeholder-shown) + .label {
     top: -8px;
-    font-size: 0.65rem;
   }
 }
 

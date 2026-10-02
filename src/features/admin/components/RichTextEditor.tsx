@@ -5,6 +5,7 @@ import { EditorContent, useEditor, type Editor, type JSONContent } from '@tiptap
 import { Placeholder } from '@tiptap/extensions';
 import { richTextExtensions } from '@/lib/rich-text/extensions';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
+import { IMAGE_TYPES, uploadImage } from '../lib/adminApi';
 import { ImageDialog, LinkDialog, type LinkValues } from './EditorDialogs';
 import { EditorToolbar } from './EditorToolbar';
 import '@/styles/rich-content.css';
@@ -15,13 +16,6 @@ type Props = {
 };
 
 type Dialog = 'link' | 'image' | null;
-
-const readFile = (file: File) =>
-  new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.readAsDataURL(file);
-  });
 
 export function RichTextEditor({ initialContent, onChange }: Props) {
   const { editor: t } = useDictionary().admin;
@@ -34,7 +28,7 @@ export function RichTextEditor({ initialContent, onChange }: Props) {
     onUpdate: ({ editor: e }) => onChange(e.getJSON(), e),
     editorProps: {
       attributes: { class: 'rich-content ProseMirror', 'aria-label': t.contentLabel },
-      // pasted or dropped image files become image nodes (stored inline until uploads exist)
+      // pasted or dropped image files are uploaded, then inserted as image nodes
       handlePaste: (view, event) =>
         insertImages(event.clipboardData?.files, () => view.state.selection.from),
       handleDrop: (view, event) =>
@@ -46,11 +40,12 @@ export function RichTextEditor({ initialContent, onChange }: Props) {
   });
 
   function insertImages(files: FileList | null | undefined, position: () => number | undefined) {
-    const images = [...(files ?? [])].filter((file) => file.type.startsWith('image/'));
+    const images = [...(files ?? [])].filter((file) => IMAGE_TYPES.includes(file.type));
     if (images.length === 0 || !editor) return false;
     const at = position();
     images.forEach(async (file) => {
-      const src = await readFile(file);
+      const src = await uploadImage(file).catch(() => null);
+      if (!src) return;
       const chain = editor.chain().focus();
       (at === undefined ? chain : chain.setTextSelection(at)).setImage({ src }).run();
     });
