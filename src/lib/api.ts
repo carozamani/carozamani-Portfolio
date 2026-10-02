@@ -5,19 +5,20 @@ import type { AdminMessage } from '@/data/admin';
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api';
 const TOKEN_KEY = 'admin_token';
 
-type CaseStudyDoc = CaseStudy & { _id: string };
-type MediaDoc = Omit<CardProps, 'id'> & { _id: string; slug: string };
+type ServerFields = { _id: string; order?: number; createdAt?: string; updatedAt?: string };
+export type CaseStudyDoc = CaseStudy & ServerFields;
+export type MediaDoc = Omit<CardProps, 'id'> & ServerFields & { slug: string };
 type MessageDoc = Omit<AdminMessage, 'id' | 'date'> & { _id: string; createdAt: string };
 
-function mapCaseStudy(doc: CaseStudyDoc): CaseStudy {
-  const { _id, ...rest } = doc;
-  void _id;
+export function mapCaseStudy(doc: CaseStudyDoc): CaseStudy {
+  const { _id, order, createdAt, updatedAt, ...rest } = doc;
+  void [_id, order, createdAt, updatedAt];
   return rest;
 }
 
-function mapMedia(doc: MediaDoc): CardProps {
-  const { _id, slug, ...rest } = doc;
-  void _id;
+export function mapMedia(doc: MediaDoc): CardProps {
+  const { _id, order, createdAt, updatedAt, slug, ...rest } = doc;
+  void [_id, order, createdAt, updatedAt];
   return { id: slug, ...rest };
 }
 
@@ -27,25 +28,41 @@ function mapMessage(doc: MessageDoc): AdminMessage {
 }
 
 const PUBLIC_REVALIDATE_SECONDS = 300;
-const publicCache: RequestInit = { next: { revalidate: PUBLIC_REVALIDATE_SECONDS } };
+/** Tags every public content fetch so an admin save can refresh the site immediately. */
+export const CONTENT_TAG = 'content';
+const publicCache: RequestInit = {
+  next: { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [CONTENT_TAG] },
+};
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+  }
+}
+
+export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  // the browser sets the multipart boundary itself for FormData bodies
+  const json: Record<string, string> =
+    options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
   const res = await fetch(`${API_URL}${path}`, {
     cache: options.next ? undefined : 'no-store',
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers: { ...json, ...options.headers },
   });
 
   if (!res.ok) {
     const body = await res.json().catch(() => null);
-    throw new Error(body?.error ?? `Request failed with status ${res.status}`);
+    throw new ApiError(body?.error ?? `Request failed with status ${res.status}`, res.status);
   }
 
   if (res.status === 204) return undefined as T;
   return res.json();
 }
 
-function authHeaders(token: string) {
+export function authHeaders(token: string) {
   return { Authorization: `Bearer ${token}` };
 }
 

@@ -29,6 +29,10 @@ export const adminEn = {
     published: 'Published',
     draft: 'Draft',
     status: 'Status',
+    requestFailed: 'Something went wrong: {error}',
+    loadFailed: 'Could not load content from the server.',
+    retry: 'Try again',
+    uploading: 'Uploading…',
     title: 'Title',
     slug: 'Slug',
     year: 'Year',
@@ -218,8 +222,6 @@ export const adminEn = {
     publishing: 'Publishing',
     notFound: 'Article not found',
     notFoundHint: 'It may have been deleted.',
-    saveFailedStorage:
-      'Saved, but the browser storage is full. Large images will be lost on reload.',
     toolbar: {
       label: 'Formatting',
       undo: 'Undo',

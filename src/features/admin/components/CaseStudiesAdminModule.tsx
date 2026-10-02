@@ -6,8 +6,10 @@ import { toast } from 'sonner';
 import type { AdminCaseStudy } from '@/types/admin';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { caseStudyStore, useCaseStudies } from '../lib/caseStudyStore';
+import { reportFailure } from '../lib/reportFailure';
 import { useSelection } from '../hooks/useSelection';
 import { useTableState } from '../hooks/useTableState';
+import { CollectionState } from './CollectionState';
 import { ConfirmDialog } from './ConfirmDialog';
 import { ContentList } from './ContentList';
 
@@ -17,7 +19,7 @@ export function CaseStudiesAdminModule() {
   const t = useDictionary().admin;
   const cs = t.caseStudies;
   const router = useRouter();
-  const items = useCaseStudies();
+  const { items, status } = useCaseStudies();
   const [pendingDelete, setPendingDelete] = useState<string[] | null>(null);
   const table = useTableState(items, { searchKeys });
   const selection = useSelection();
@@ -25,16 +27,21 @@ export function CaseStudiesAdminModule() {
   const canReorder = table.query === '' && table.sort === null;
   const sortDir = (key: keyof AdminCaseStudy) => (table.sort?.key === key ? table.sort.dir : null);
 
+  const onFailure = reportFailure(t.common.requestFailed);
+
   const confirmDelete = () => {
     if (!pendingDelete) return;
-    caseStudyStore.remove(pendingDelete);
-    selection.clear();
-    toast.success(format(t.common.deletedCount, { count: pendingDelete.length }));
+    const slugs = pendingDelete;
     setPendingDelete(null);
+    caseStudyStore
+      .remove(slugs)
+      .then(() => toast.success(format(t.common.deletedCount, { count: slugs.length })))
+      .catch(onFailure)
+      .finally(selection.clear);
   };
 
   return (
-    <>
+    <CollectionState status={status} onRetry={caseStudyStore.retry}>
       <ContentList
         heading={cs.title}
         newLabel={cs.new}
@@ -64,8 +71,10 @@ export function CaseStudiesAdminModule() {
         onDeleteSelected={() => setPendingDelete([...selection.selected])}
         onEdit={(slug) => router.push(`/admin/case-studies/${slug}`)}
         onDelete={(slug) => setPendingDelete([slug])}
-        onToggleStatus={caseStudyStore.toggleStatus}
-        onReorder={canReorder ? caseStudyStore.reorder : undefined}
+        onToggleStatus={(slug) => caseStudyStore.toggleStatus(slug).catch(onFailure)}
+        onReorder={
+          canReorder ? (from, to) => caseStudyStore.reorder(from, to).catch(onFailure) : undefined
+        }
         page={table.page}
         pageCount={table.pageCount}
         total={table.total}
@@ -78,6 +87,6 @@ export function CaseStudiesAdminModule() {
         onConfirm={confirmDelete}
         onCancel={() => setPendingDelete(null)}
       />
-    </>
+    </CollectionState>
   );
 }

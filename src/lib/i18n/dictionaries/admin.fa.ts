@@ -31,6 +31,10 @@ export const adminFa: typeof adminEn = {
     published: 'منتشرشده',
     draft: 'پیش‌نویس',
     status: 'وضعیت',
+    requestFailed: 'خطایی رخ داد: {error}',
+    loadFailed: 'دریافت محتوا از سرور ممکن نشد.',
+    retry: 'تلاش دوباره',
+    uploading: 'در حال آپلود…',
     title: 'عنوان',
     slug: 'نامک (Slug)',
     year: 'سال',
@@ -218,8 +222,6 @@ export const adminFa: typeof adminEn = {
     publishing: 'انتشار',
     notFound: 'مقاله پیدا نشد',
     notFoundHint: 'ممکن است حذف شده باشد.',
-    saveFailedStorage:
-      'ذخیره شد، ولی حافظه‌ی مرورگر پر است. تصاویر حجیم با بازخوانی صفحه از بین می‌روند.',
     toolbar: {
       label: 'قالب‌بندی',
       undo: 'بازگردانی',

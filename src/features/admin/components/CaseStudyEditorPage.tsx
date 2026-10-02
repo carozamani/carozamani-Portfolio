@@ -17,9 +17,10 @@ import type { AdminCaseStudy } from '@/types/admin';
 import type { ProjectScope } from '@/types/caseStudy';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { caseStudyStore, useCaseStudies } from '../lib/caseStudyStore';
-import { useHydrated } from '../lib/entityStore';
+import { reportFailure } from '../lib/reportFailure';
 import { uniqueSlug } from '../lib/slug';
 import { BackButton } from './BackButton';
+import { CollectionState } from './CollectionState';
 import { ConfirmDialog } from './ConfirmDialog';
 import { EmptyState } from './EmptyState';
 import { FormField } from './FormField';
@@ -68,7 +69,8 @@ function CaseStudyForm({ initial }: FormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [dirty, setDirty] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
-  const existingSlugs = useCaseStudies().map((study) => study.slug);
+  const [saving, setSaving] = useState(false);
+  const existingSlugs = useCaseStudies().items.map((study) => study.slug);
 
   useEffect(() => {
     if (!dirty) return;
@@ -97,14 +99,16 @@ function CaseStudyForm({ initial }: FormProps) {
     const tags = draft.tags ?? [];
     // the link stays stable after the first save
     const slug = initial?.slug ?? uniqueSlug(draft.title, existingSlugs);
-    const stored = caseStudyStore.upsert(
-      { ...draft, slug, tags, tag: tags.join(' · ') },
-      initial?.slug,
-    );
-    toast.success(initial ? common.saved : common.created);
-    if (!stored) toast.warning(t.editor.saveFailedStorage);
-    setDirty(false);
-    if (!initial) router.replace(`${LIST_HREF}/${slug}`);
+    setSaving(true);
+    caseStudyStore
+      .upsert({ ...draft, slug, tags, tag: tags.join(' · ') }, initial?.slug)
+      .then(() => {
+        toast.success(initial ? common.saved : common.created);
+        setDirty(false);
+        if (!initial) router.replace(`${LIST_HREF}/${slug}`);
+      })
+      .catch(reportFailure(common.requestFailed))
+      .finally(() => setSaving(false));
   };
 
   return (
@@ -129,7 +133,7 @@ function CaseStudyForm({ initial }: FormProps) {
               <SelectItem value="published">{common.published}</SelectItem>
             </SelectContent>
           </Select>
-          <Button type="submit" disabled={Boolean(initial) && !dirty}>
+          <Button type="submit" disabled={saving || (Boolean(initial) && !dirty)}>
             {common.save}
           </Button>
         </div>
@@ -308,16 +312,14 @@ function CaseStudyForm({ initial }: FormProps) {
 
 export function CaseStudyEditorPage({ slug }: { slug?: string }) {
   const { caseStudies } = useDictionary().admin;
-  const hydrated = useHydrated();
-  const studies = useCaseStudies();
+  const { items: studies, status } = useCaseStudies();
   const existing = slug ? studies.find((study) => study.slug === slug) : undefined;
 
-  if (!hydrated) {
+  if (status !== 'ready') {
     return (
-      <div className="mx-auto grid w-full max-w-4xl gap-4" aria-busy="true">
-        <div className="bg-muted h-9 w-48 animate-pulse rounded-xl" />
-        <div className="bg-muted h-96 animate-pulse rounded-xl" />
-      </div>
+      <CollectionState status={status} onRetry={caseStudyStore.retry}>
+        {null}
+      </CollectionState>
     );
   }
 

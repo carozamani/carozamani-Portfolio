@@ -5,17 +5,9 @@ import { ArrowDown, ArrowUp, ImagePlus, X } from 'lucide-react';
 import { Button } from '@/components/admin-ui/button';
 import { cn } from '@/lib/utils';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
+import { IMAGE_TYPES, MAX_IMAGE_BYTES, uploadImage } from '../lib/adminApi';
 
 type Props = { value: string[]; onChange: (images: string[]) => void };
-
-const MAX_BYTES = 5 * 1024 * 1024;
-
-const readAsDataUrl = (file: File) =>
-  new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.readAsDataURL(file);
-  });
 
 /** A stack of images kept in the order they are shown on the page, like a Behance project. */
 export function GalleryUpload({ value, onChange }: Props) {
@@ -26,13 +18,17 @@ export function GalleryUpload({ value, onChange }: Props) {
 
   const addFiles = async (files: FileList | File[]) => {
     const list = [...files];
-    const images = list.filter((file) => file.type.startsWith('image/'));
+    const images = list.filter((file) => IMAGE_TYPES.includes(file.type));
     if (images.length < list.length) setError(common.errImageType);
     else setError('');
-    const fit = images.filter((file) => file.size <= MAX_BYTES);
+    const fit = images.filter((file) => file.size <= MAX_IMAGE_BYTES);
     if (fit.length < images.length) setError(common.errImageSize);
     if (fit.length === 0) return;
-    onChange([...value, ...(await Promise.all(fit.map(readAsDataUrl)))]);
+    try {
+      onChange([...value, ...(await Promise.all(fit.map(uploadImage)))]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
   };
 
   const onDrop = (event: DragEvent) => {
@@ -111,7 +107,7 @@ export function GalleryUpload({ value, onChange }: Props) {
         <input
           ref={input}
           type="file"
-          accept="image/*"
+          accept={IMAGE_TYPES.join(',')}
           multiple
           hidden
           onChange={(e) => {

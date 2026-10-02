@@ -2,9 +2,9 @@ import { mediaApi } from './adminApi';
 import { createRemoteCollection } from './remoteCollection';
 
 const { store, useCollection } = createRemoteCollection({
-  getId: (article) => article.id,
-  source: mediaApi('article'),
+  getId: (podcast) => podcast.id,
+  source: mediaApi('podcast'),
 });
 
-export const articleStore = store;
-export const useArticles = useCollection;
+export const podcastStore = store;
+export const usePodcasts = useCollection;
