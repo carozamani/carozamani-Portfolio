@@ -1,9 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import type { CardProps } from '@/types/card';
-import { getMedia } from '@/lib/api';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { useContent } from '@/lib/ContentProvider';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import { localizeCard } from '../lib/localizeCard';
 
@@ -24,14 +23,7 @@ export function PodcastPlayerProvider({ children }: { children: ReactNode }) {
   const dict = useDictionary();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [dockMounted, setDockMounted] = useState(false);
-  const [podcastCards, setPodcastCards] = useState<CardProps[]>([]);
-
-  useEffect(() => {
-    if (!activeId || podcastCards.length > 0) return;
-    getMedia('podcast')
-      .then(setPodcastCards)
-      .catch(() => setPodcastCards([]));
-  }, [activeId, podcastCards.length]);
+  const { podcasts: podcastCards } = useContent();
 
   const value = useMemo<PodcastPlayerContextValue>(
     () => ({

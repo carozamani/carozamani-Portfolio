@@ -5,6 +5,7 @@ import { PageScrollbar } from '@/components/shared/PageScrollbar';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
 import { ContentProvider } from '@/lib/ContentProvider';
+import { getSiteContent } from '@/lib/content';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { localeDirection } from '@/lib/i18n/config';
 import { dictionaries } from '@/lib/i18n/dictionaries';
@@ -81,6 +82,7 @@ type RootLayoutProps = {
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
   const locale = await getLocale();
   const dict = dictionaries[locale];
+  const content = await getSiteContent();
 
   return (
     <html
@@ -94,7 +96,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <LocaleProvider locale={locale} dict={dict}>
-          <ContentProvider>
+          <ContentProvider content={content}>
             <PodcastPlayerProvider>
               <a
                 href="#main-content"

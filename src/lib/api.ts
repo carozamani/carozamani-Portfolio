@@ -26,11 +26,14 @@ function mapMessage(doc: MessageDoc): AdminMessage {
   return { id: _id, date: createdAt.slice(0, 10), ...rest };
 }
 
+const PUBLIC_REVALIDATE_SECONDS = 300;
+const publicCache: RequestInit = { next: { revalidate: PUBLIC_REVALIDATE_SECONDS } };
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
+    cache: options.next ? undefined : 'no-store',
     ...options,
     headers: { 'Content-Type': 'application/json', ...options.headers },
-    cache: 'no-store',
   });
 
   if (!res.ok) {
@@ -67,13 +70,13 @@ export async function login(email: string, password: string) {
 }
 
 export async function getCaseStudies(): Promise<CaseStudy[]> {
-  const docs = await request<CaseStudyDoc[]>('/case-studies');
+  const docs = await request<CaseStudyDoc[]>('/case-studies', publicCache);
   return docs.map(mapCaseStudy);
 }
 
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   try {
-    const doc = await request<CaseStudyDoc>(`/case-studies/${slug}`);
+    const doc = await request<CaseStudyDoc>(`/case-studies/${slug}`, publicCache);
     return mapCaseStudy(doc);
   } catch {
     return null;
@@ -82,13 +85,13 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
 
 export async function getMedia(type?: 'podcast' | 'article'): Promise<CardProps[]> {
   const query = type ? `?type=${type}` : '';
-  const docs = await request<MediaDoc[]>(`/media${query}`);
+  const docs = await request<MediaDoc[]>(`/media${query}`, publicCache);
   return docs.map(mapMedia);
 }
 
 export async function getMediaBySlug(slug: string): Promise<CardProps | null> {
   try {
-    const doc = await request<MediaDoc>(`/media/${slug}`);
+    const doc = await request<MediaDoc>(`/media/${slug}`, publicCache);
     return mapMedia(doc);
   } catch {
     return null;
