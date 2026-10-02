@@ -45,6 +45,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
               const content = projects.items[caseStudy.slug];
               const title = content?.title ?? caseStudy.title;
               const description = content?.description ?? caseStudy.description;
+              const image = content?.image ?? caseStudy.image;
               const subtitle = [
                 content?.tags?.[0] ?? content?.tag ?? caseStudy.tags?.[0] ?? caseStudy.tag,
                 caseStudy.year,
@@ -80,9 +81,9 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
 
                     <span className={styles.rowTitleWrap}>
                       <span className={styles.rowThumb} aria-hidden="true">
-                        {caseStudy.image ? (
+                        {image ? (
                           <Image
-                            src={caseStudy.image}
+                            src={image}
                             alt=""
                             fill
                             sizes="(max-width: 900px) 100vw, 0px"
@@ -99,9 +100,9 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
 
                     <span className={styles.rowPreviewCell} aria-hidden="true">
                       <span className={styles.rowPreview}>
-                        {caseStudy.image ? (
+                        {image ? (
                           <Image
-                            src={caseStudy.image}
+                            src={image}
                             alt=""
                             fill
                             sizes="384px"
