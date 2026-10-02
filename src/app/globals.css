@@ -89,11 +89,11 @@ select {
   color: var(--color-text-primary);
 }
 
-/* Scrollbars are always present but muted (almost disabled); hovering lights the thumb up in the brand colour. */
+/* Scrollbars keep one muted colour in every state */
 :root {
   --scrollbar-thumb: hsl(222, 28%, 22%);
-  --scrollbar-thumb-hover: var(--color-brand-primary);
-  --scrollbar-track: hsla(0, 0%, 100%, 0.03);
+  --scrollbar-thumb-hover: var(--scrollbar-thumb);
+  --scrollbar-track: transparent;
 }
 
 /* Chromium and Safari: pseudo-elements allow a real hover state */
@@ -124,6 +124,18 @@ select {
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+}
+
+/* With a mouse the page scrollbar is drawn by <PageScrollbar /> as an overlay, so the
+   content runs underneath it; touch devices keep their native floating one */
+@media (pointer: fine) {
+  html {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
   }
 }
 

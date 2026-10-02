@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
+import { PageScrollbar } from '@/components/shared/PageScrollbar';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
 import { ContentProvider } from '@/lib/ContentProvider';
@@ -109,6 +110,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
               </main>
 
               <LazyToaster />
+              <PageScrollbar />
             </PodcastPlayerProvider>
           </ContentProvider>
         </LocaleProvider>
