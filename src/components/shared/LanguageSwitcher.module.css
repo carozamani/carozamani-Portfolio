@@ -1,7 +1,8 @@
 .root {
   position: relative;
   flex-shrink: 0;
-  height: 2.75rem;
+  height: 2.25rem;
+  width: 3rem;
 }
 
 .panel {
@@ -28,8 +29,8 @@
 .trigger {
   justify-content: center;
   width: 100%;
-  height: 2.75rem;
-  padding-inline: 1.125rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
   border: 0;
   background: transparent;
 }
@@ -58,8 +59,8 @@
 .option {
   justify-content: center;
   width: 100%;
-  height: 2.75rem;
-  padding-inline: 1.125rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -90,12 +91,7 @@
 /* From the width where the nav becomes a floating capsule, the switcher gets its own matching
    capsule: same height, hairline border, blur and shadow as the nav bar beside it */
 @media (min-width: 40rem) {
-  .root {
-    height: 4rem;
-  }
-
   .panel {
-    border-radius: 2rem;
     backdrop-filter: blur(24px);
     box-shadow:
       0 10px 15px -3px hsla(0, 0%, 0%, 0.4),
@@ -110,31 +106,5 @@
     border: 1px solid hsla(0, 0%, 100%, 0.05);
     border-radius: inherit;
     pointer-events: none;
-  }
-
-  .trigger,
-  .option {
-    height: 4rem;
-  }
-}
-
-@media (max-width: 519px) {
-  .root {
-    height: 2.25rem;
-  }
-
-  .panel {
-    border-radius: 1.125rem;
-  }
-
-  .trigger,
-  .option {
-    height: 2.25rem;
-    padding-inline: 0.5rem;
-  }
-
-  .code,
-  .optionCode {
-    display: none;
   }
 }
