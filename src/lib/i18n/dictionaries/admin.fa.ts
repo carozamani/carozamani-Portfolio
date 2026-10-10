@@ -50,6 +50,7 @@ export const adminFa: typeof adminEn = {
     addImages: 'افزودن تصویر',
     dropImages: 'تصاویر را بکشید و رها کنید یا انتخاب کنید',
     imageNumber: 'تصویر {n}',
+    imageTitle: 'عنوان (در منوی کناری نمایش داده می‌شود)',
     moveUp: 'انتقال به بالا',
     moveDown: 'انتقال به پایین',
     coverPreviewAlt: 'پیش‌نمایش کاور',

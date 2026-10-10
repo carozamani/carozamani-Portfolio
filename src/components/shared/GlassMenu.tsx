@@ -112,7 +112,7 @@ export default function GlassMenu() {
           'relative flex h-14 min-w-0 flex-1 items-center gap-0.5 rounded-e-full py-1 ps-3 pe-1.5 min-[520px]:h-16 min-[520px]:gap-1.5 min-[520px]:ps-4 min-[520px]:pe-2 sm:h-16 sm:flex-none sm:shrink-0 sm:gap-1 sm:rounded-full sm:px-2',
           'no-scrollbar max-w-full overflow-x-auto sm:max-w-[92vw]',
           'border border-s-0 border-white/5 sm:border-s',
-          'backdrop-blur-xl',
+          'bg-black/30 backdrop-blur-xl',
           'shadow-lg shadow-black/40',
         )}
       >
@@ -155,7 +155,9 @@ export default function GlassMenu() {
           );
         })}
       </section>
-      <LanguageSwitcher />
+      <div className="sm:hidden">
+        <LanguageSwitcher />
+      </div>
     </nav>
   );
 }

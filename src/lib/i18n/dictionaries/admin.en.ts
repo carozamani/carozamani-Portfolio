@@ -48,6 +48,7 @@ export const adminEn = {
     addImages: 'Add images',
     dropImages: 'Drag and drop images, or browse',
     imageNumber: 'Image {n}',
+    imageTitle: 'Title (shown in the side navigation)',
     moveUp: 'Move up',
     moveDown: 'Move down',
     coverPreviewAlt: 'Cover preview',

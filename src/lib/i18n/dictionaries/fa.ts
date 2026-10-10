@@ -53,6 +53,7 @@ export const fa: Dictionary = {
       prevProject: 'قبلی',
       nextProject: 'بعدی',
       allProjects: 'همه‌ی پروژه‌ها',
+      sections: 'بخش‌های کیس‌استادی',
     },
     items: {
       jabedee: {

@@ -179,7 +179,11 @@ function CaseStudyForm({ initial }: FormProps) {
       <FormField label={t.caseStudies.imagesTitle} hint={t.caseStudies.imagesHint}>
         <GalleryUpload
           value={draft.caseImages ?? []}
-          onChange={(images) => set('caseImages', images)}
+          titles={draft.caseImageTitles ?? []}
+          onChange={(images, titles) => {
+            set('caseImages', images);
+            set('caseImageTitles', titles);
+          }}
         />
       </FormField>
 

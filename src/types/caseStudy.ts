@@ -5,6 +5,8 @@ export type CaseStudy = {
   image: string;
   /** Case study images, stacked on the case study page in this order. */
   caseImages?: string[];
+  /** Titles for `caseImages`, same order; labels the side navigation on the case study page. */
+  caseImageTitles?: string[];
   description?: string;
   tag?: string;
   /** Editable list behind `tag`, which stays as the joined display string. */

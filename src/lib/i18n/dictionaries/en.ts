@@ -7,6 +7,7 @@ export type ProjectItemContent = {
   tags?: string[];
   image?: string;
   caseImages?: string[];
+  caseImageTitles?: string[];
 };
 
 export const en = {
@@ -61,6 +62,7 @@ In my free time, I explore new web technologies, experiment with UI animations, 
       prevProject: 'Previous',
       nextProject: 'Next',
       allProjects: 'All projects',
+      sections: 'Case study sections',
     },
     items: {} as Record<string, ProjectItemContent>,
   },
