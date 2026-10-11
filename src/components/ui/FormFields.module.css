@@ -185,6 +185,43 @@ textarea.control {
   color: var(--color-brand-primary);
 }
 
+/* password reveal button sits at the end; the validity check moves in beside it */
+.toggle {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition: color 200ms var(--ease-out);
+}
+
+.toggle:hover,
+.toggle:focus-visible {
+  color: var(--color-text-primary);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+}
+
+.shell[data-toggle] .control {
+  padding-inline-end: 78px;
+}
+
+.shell[data-toggle] .check {
+  inset-inline-end: 44px;
+}
+
 /* validity check draws itself in */
 .check {
   position: absolute;

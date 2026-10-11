@@ -19,6 +19,7 @@ type Step = 'login' | 'forgot' | 'code' | 'reset';
 export function AdminLoginModule() {
   const { locale, dict } = useLocale();
   const t = dict.admin.login;
+  const reveal = { show: dict.fields.showPassword, hide: dict.fields.hidePassword };
   const router = useRouter();
   const [step, setStep] = useState<Step>('login');
   const [error, setError] = useState('');
@@ -97,15 +98,33 @@ export function AdminLoginModule() {
         <form className={styles.form} onSubmit={handleSubmit} key={step}>
           {step === 'login' && <FormFields variant="email" label={t.email} name="email" required />}
           {step === 'login' && (
-            <FormFields variant="password" label={t.password} name="password" required />
+            <FormFields
+              variant="password"
+              revealLabels={reveal}
+              label={t.password}
+              name="password"
+              required
+            />
           )}
           {step === 'code' && (
             <FormFields variant="text" label={t.code} name="code" maxLength={6} required />
           )}
           {step === 'reset' && (
             <>
-              <FormFields variant="password" label={t.newPassword} name="password" required />
-              <FormFields variant="password" label={t.confirmPassword} name="confirm" required />
+              <FormFields
+                variant="password"
+                revealLabels={reveal}
+                label={t.newPassword}
+                name="password"
+                required
+              />
+              <FormFields
+                variant="password"
+                revealLabels={reveal}
+                label={t.confirmPassword}
+                name="confirm"
+                required
+              />
             </>
           )}
           {error && (
