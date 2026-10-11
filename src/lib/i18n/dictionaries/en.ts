@@ -5,17 +5,20 @@ export type ProjectItemContent = {
   description?: string;
   tag?: string;
   tags?: string[];
+  year?: string;
   image?: string;
   caseImages?: string[];
   caseImageTitles?: string[];
+  htmlFile?: string;
 };
 
 export const en = {
   meta: {
-    title: 'Caro Zamani — UX & Product Designer',
+    title: 'Caro Zamani — Product Designer',
     description:
-      'Portfolio of Caro Zamani, a UX/Product Designer crafting seamless, user-centered digital experiences.',
+      'Caro Zamani is a product designer focused on UX/UI, with front-end skills in React, Next.js, and TypeScript.',
   },
+  fields: { showPassword: 'Show password', hidePassword: 'Hide password' },
   skipLink: 'Skip to main content',
   language: { code: 'EN', label: 'Select language' },
   nav: {
@@ -27,26 +30,33 @@ export const en = {
     contact: 'Contact',
   },
   hero: {
-    title: 'User Experience Engineer',
+    title: 'Product Designer',
     ctaWork: 'See my case studies',
     profileAlt: 'Carozamani profile picture',
     logoAlt: 'Carozamani logo',
   },
   about: {
     title: 'About Me',
-    description: `Hi! I’m Caro Zamani, a front-end developer who loves turning complex ideas into sleek, interactive digital experiences.
-I specialize in building user-centered interfaces that are both intuitive and visually engaging.
-With a keen eye for detail and a passion for clean, modern design, I aim to create products that delight users and drive engagement.
-In my free time, I explore new web technologies, experiment with UI animations, and contribute to open-source projects.`,
+    description: `I’m Caro Zamani, a product designer focused on clear, useful digital products. I work across UX and UI—from framing problems and mapping user flows to interaction design, prototyping, and design systems.
+I also build front ends with React, Next.js, and TypeScript, and I’m familiar with Express and MongoDB. This technical background helps me collaborate closely with engineers and design with implementation in mind.`,
     highlight: 'Caro Zamani',
     resume: 'Download Resume',
     philosophyTitle: 'Design Philosophy',
     philosophyText:
-      'I create clean, user-focused interfaces that solve complex problems with simplicity and thoughtful interactions.',
-    techSubtitle: 'Continuously learning and improving',
-    techTitle: 'My Tech Stack',
-    tagsLeft: ['User Research', 'Wireframing', 'Prototyping', 'Interaction Design'],
-    tagsRight: ['Visual Design', 'Figma', 'Usability Testing', 'Design Systems'],
+      'I turn complex workflows into clear, usable experiences by balancing user needs, business goals, and implementation realities.',
+    techSubtitle:
+      'Product design is my focus; my technical background helps me take ideas further.',
+    techTitle: 'Product Design & Development',
+    tagsLeft: [
+      'Product Thinking',
+      'User Research',
+      'UX Flows',
+      'UI Design',
+      'Prototyping',
+      'Figma',
+      'Design Systems',
+    ],
+    tagsRight: ['React', 'Next.js', 'TypeScript', 'Express.js', 'MongoDB'],
   },
   projects: {
     title: 'Projects',
@@ -64,8 +74,37 @@ In my free time, I explore new web technologies, experiment with UI animations, 
       allProjects: 'All projects',
       sections: 'Case study sections',
       section: 'Section {n}',
+      backToTop: 'Back to top',
+      gate: {
+        title: 'Protected case study',
+        text: 'This case study is locked and password protected. Enter the password to continue.',
+        label: 'Password',
+        submit: 'Open case study',
+        checking: 'Checking…',
+        denied: 'You don’t have permission to access this file.',
+        error: 'Something went wrong. Please try again.',
+        back: 'Back to projects',
+      },
     },
-    items: {} as Record<string, ProjectItemContent>,
+    items: {
+      jabedee: {
+        title: 'jabeDee',
+        image: '/image/jabedee/cover-en.webp',
+        htmlFile: '/case-studies/jabedee-en.html',
+        description:
+          'A marketing assistant that turns a WooCommerce store’s data into a short, ranked list of tasks, each with the tool to get it done.',
+        tags: ['Product design & build'],
+        year: '2026',
+      },
+      karvita: {
+        title: 'Karvita',
+        image: '/image/karvita/cover-en.webp',
+        description:
+          'One right-to-left platform for theory, skills training and internship management, serving eleven roles.',
+        tags: ['Product & UI design'],
+        year: '2026',
+      },
+    } as Record<string, ProjectItemContent>,
   },
   media: {
     podcasts: {
