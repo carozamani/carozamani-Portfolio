@@ -91,6 +91,26 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
   return docs.map(mapCaseStudy);
 }
 
+export type CaseContent = Pick<
+  CaseStudy,
+  'htmlFile' | 'htmlFileFa' | 'caseImages' | 'caseImageTitles'
+>;
+
+export async function unlockCaseStudy(slug: string, password: string) {
+  return request<{ token?: string; content: CaseContent }>(
+    `/case-studies/${encodeURIComponent(slug)}/unlock`,
+    { method: 'POST', body: JSON.stringify({ password }) },
+  );
+}
+
+export async function getCaseStudyContent(slug: string, token: string) {
+  const { content } = await request<{ content: CaseContent }>(
+    `/case-studies/${encodeURIComponent(slug)}/content`,
+    { headers: authHeaders(token) },
+  );
+  return content;
+}
+
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   try {
     const doc = await request<CaseStudyDoc>(`/case-studies/${slug}`, publicCache);

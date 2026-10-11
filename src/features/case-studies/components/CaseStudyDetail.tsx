@@ -1,12 +1,18 @@
 'use client';
 
 import clsx from 'clsx';
+import { useState } from 'react';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
-import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
+import { format, useDictionary, useLocale } from '@/lib/i18n/LocaleProvider';
 import type { CaseStudy } from '@/types/caseStudy';
+import { useCaseAccess } from '../hooks/useCaseAccess';
+import { usePreloadedSources } from '../hooks/usePreloadedSources';
+import { BackToTop } from './BackToTop';
 import { CaseImageNav } from './CaseImageNav';
+import { HtmlEmbed, type EmbedPlate } from './HtmlEmbed';
+import { PasswordGate } from './PasswordGate';
 import styles from './CaseStudyDetail.module.css';
 
 type CaseStudyDetailProps = {
@@ -17,14 +23,23 @@ type CaseStudyDetailProps = {
 
 export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: CaseStudyDetailProps) {
   const { projects } = useDictionary();
+  const { locale } = useLocale();
   const { detail } = projects;
+  const isProtected = Boolean(caseStudy.passwordProtected);
+  const { access, unlock } = useCaseAccess(caseStudy.slug, isProtected);
+  const unlocked = access.status === 'open' ? access.content : null;
 
   const content = projects.items[caseStudy.slug];
   const title = content?.title ?? caseStudy.title;
   const image = content?.image ?? caseStudy.image;
-  const caseImages = content?.caseImages ?? caseStudy.caseImages ?? [];
+  // A protected study's own fields are empty until the server has accepted the password.
+  const caseImages = isProtected
+    ? (unlocked?.caseImages ?? [])
+    : (content?.caseImages ?? caseStudy.caseImages ?? []);
 
-  const caseImageTitles = content?.caseImageTitles ?? caseStudy.caseImageTitles ?? [];
+  const caseImageTitles = isProtected
+    ? (unlocked?.caseImageTitles ?? [])
+    : (content?.caseImageTitles ?? caseStudy.caseImageTitles ?? []);
 
   const entries = [
     { src: image, label: title },
@@ -36,29 +51,65 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
       id: `case-image-${index}`,
       label: entry.label || format(detail.section, { n: index + 1 }),
     }));
-  const images = entries.map(({ src }) => src);
+  const images = usePreloadedSources(entries.map(({ src }) => src));
+  const source = isProtected ? unlocked : caseStudy;
+  const htmlFile = isProtected
+    ? (locale === 'fa' && unlocked?.htmlFileFa) || unlocked?.htmlFile
+    : (content?.htmlFile ?? ((locale === 'fa' && source?.htmlFileFa) || source?.htmlFile));
+
+  const [plates, setPlates] = useState<EmbedPlate[]>([]);
+  const plateEntries = plates.map((plate, index) => ({
+    ...plate,
+    id: `case-plate-${index}`,
+    label: (index === 0 ? title : plate.label) || format(detail.section, { n: index + 1 }),
+  }));
 
   const prevTitle = prevStudy && (projects.items[prevStudy.slug]?.title ?? prevStudy.title);
   const nextTitle = nextStudy && (projects.items[nextStudy.slug]?.title ?? nextStudy.title);
+
+  if (isProtected && access.status !== 'open') {
+    return (
+      <div className={styles.page}>
+        <h1 className={styles.srOnly}>{title}</h1>
+        {access.status === 'locked' && <PasswordGate image={image} onUnlock={unlock} />}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
       <h1 className={styles.srOnly}>{title}</h1>
 
       {/* Outside AnimatedSection: a transformed ancestor would break its fixed positioning. */}
-      <CaseImageNav items={entries} ariaLabel={detail.sections} />
+      <CaseImageNav items={htmlFile ? plateEntries : entries} ariaLabel={detail.sections} />
+
+      <BackToTop label={detail.backToTop} />
 
       <div className={styles.content}>
-        {images.length > 0 ? (
+        {htmlFile ? (
+          <div id="case-gallery" className={styles.htmlDocument}>
+            <HtmlEmbed src={htmlFile} title={title} onPlates={setPlates} />
+            {/* The iframe's content is invisible to the host page, so each plate gets a marker the nav can track. */}
+            {plateEntries.map(({ id, top, height }) => (
+              <span
+                key={id}
+                id={id}
+                aria-hidden="true"
+                className={styles.plateMarker}
+                style={{ top, height }}
+              />
+            ))}
+          </div>
+        ) : images.length > 0 ? (
           <AnimatedSection id="case-gallery" viewAmount={0}>
             {/* Not lazy: before loading these images have no height, and a 0px lazy image can stay unloaded. */}
             <div className={styles.stack}>
-              {entries.map(({ src, id }, index) => (
+              {entries.map(({ id }, index) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  key={src}
+                  key={id}
                   id={id}
-                  src={src}
+                  src={images[index] ?? entries[index].src}
                   alt={index === 0 ? title : ''}
                   decoding="async"
                   className={styles.stackImage}
