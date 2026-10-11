@@ -103,6 +103,8 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
   );
 }
 
+const LONG_WORD_LENGTH = 10;
+
 export default function BlockTechTags() {
   const { about } = useDictionary();
   const allTags = useMemo(() => [...about.tagsLeft, ...about.tagsRight], [about]);
@@ -116,7 +118,16 @@ export default function BlockTechTags() {
             {about.techSubtitle}
           </TypographyComponent>
           <TypographyComponent variant="h2" color="text-primary" className="mb-4">
-            {about.techTitle}
+            {about.techTitle.split(' ').map((word, index) => (
+              <span key={index}>
+                {index > 0 && ' '}
+                {word.length >= LONG_WORD_LENGTH ? (
+                  <span className={styles.longWord}>{word}</span>
+                ) : (
+                  word
+                )}
+              </span>
+            ))}
           </TypographyComponent>
         </div>
 
