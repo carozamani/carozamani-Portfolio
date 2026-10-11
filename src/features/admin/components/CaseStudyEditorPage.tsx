@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/admin-ui/select';
+import { Checkbox } from '@/components/admin-ui/checkbox';
+import { Label } from '@/components/admin-ui/label';
 import { Textarea } from '@/components/admin-ui/textarea';
 import type { AdminCaseStudy } from '@/types/admin';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
@@ -24,6 +26,7 @@ import { ConfirmDialog } from './ConfirmDialog';
 import { EmptyState } from './EmptyState';
 import { FormField } from './FormField';
 import { GalleryUpload } from './GalleryUpload';
+import { HtmlUpload } from './HtmlUpload';
 import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
 
@@ -34,6 +37,10 @@ const blank = (): AdminCaseStudy => ({
   title: '',
   image: '',
   caseImages: [],
+  htmlFile: '',
+  htmlFileFa: '',
+  passwordProtected: false,
+  password: '',
   description: '',
   tags: [],
   year: String(new Date().getFullYear()),
@@ -78,6 +85,12 @@ function CaseStudyForm({ initial }: FormProps) {
     if (!/^\d{4}$/.test(draft.year ?? '')) {
       next.year = format(common.errRequired, { field: common.year });
     }
+    const hasPassword = Boolean(initial?.passwordProtected) || Boolean(draft.password);
+    if (draft.passwordProtected && !hasPassword) {
+      next.password = format(common.errRequired, { field: t.caseStudies.passwordLabel });
+    } else if (draft.password && draft.password.length < 4) {
+      next.password = t.caseStudies.passwordMin;
+    }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -90,6 +103,7 @@ function CaseStudyForm({ initial }: FormProps) {
       .then(() => {
         toast.success(initial ? common.saved : common.created);
         setDirty(false);
+        setDraft((prev) => ({ ...prev, password: '' }));
         if (!initial) router.replace(`${LIST_HREF}/${slug}`);
       })
       .catch(reportFailure(common.requestFailed))
@@ -186,6 +200,49 @@ function CaseStudyForm({ initial }: FormProps) {
           }}
         />
       </FormField>
+
+      <FormField label={t.caseStudies.htmlTitle} hint={t.caseStudies.htmlHint}>
+        <HtmlUpload value={draft.htmlFile ?? ''} onChange={(url) => set('htmlFile', url)} />
+      </FormField>
+
+      <FormField label={t.caseStudies.htmlFaTitle} hint={t.caseStudies.htmlFaHint}>
+        <HtmlUpload value={draft.htmlFileFa ?? ''} onChange={(url) => set('htmlFileFa', url)} />
+      </FormField>
+
+      <div className="border-border grid gap-4 rounded-lg border p-4">
+        <div className="flex items-start gap-3">
+          <Checkbox
+            id="cs-protected"
+            checked={Boolean(draft.passwordProtected)}
+            onCheckedChange={(checked) => set('passwordProtected', checked === true)}
+            className="mt-0.5"
+          />
+          <div className="grid gap-1.5">
+            <Label htmlFor="cs-protected">{t.caseStudies.protectLabel}</Label>
+            <p className="text-muted-foreground text-xs">{t.caseStudies.protectHint}</p>
+          </div>
+        </div>
+        {draft.passwordProtected && (
+          <FormField
+            label={t.caseStudies.passwordLabel}
+            htmlFor="cs-password"
+            error={errors.password}
+            hint={
+              initial?.passwordProtected
+                ? t.caseStudies.passwordSetHint
+                : t.caseStudies.passwordNewHint
+            }
+          >
+            <Input
+              id="cs-password"
+              type="text"
+              autoComplete="off"
+              value={draft.password ?? ''}
+              onChange={(e) => set('password', e.target.value)}
+            />
+          </FormField>
+        )}
+      </div>
 
       {dirty && <p className="text-muted-foreground text-sm">{common.unsaved}</p>}
 

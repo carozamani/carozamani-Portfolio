@@ -17,6 +17,7 @@ type WithStatus = { status?: PublishStatus };
 /** Matches the backend whitelist; SVG is refused there because it can carry scripts. */
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
 export const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+export const MAX_HTML_BYTES = 5 * 1024 * 1024;
 
 async function adminRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
@@ -92,5 +93,12 @@ export async function uploadImage(file: File): Promise<string> {
   const body = new FormData();
   body.append('file', file);
   const { url } = await adminRequest<{ url: string }>('/uploads', { method: 'POST', body });
+  return url;
+}
+
+export async function uploadHtml(file: File): Promise<string> {
+  const body = new FormData();
+  body.append('file', file);
+  const { url } = await adminRequest<{ url: string }>('/uploads/html', { method: 'POST', body });
   return url;
 }
