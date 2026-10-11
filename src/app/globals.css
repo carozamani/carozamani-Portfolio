@@ -39,13 +39,18 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden;
   background: var(--color-page-bg);
   color: var(--color-text-primary);
   font-family: var(--font-brand), system-ui, sans-serif;
 }
 
+/* clip, not hidden: hidden would turn body into a scroll container and break position: sticky */
+body {
+  overflow-x: clip;
+}
+
 html {
+  overflow-x: hidden;
   --font-brand: var(--font-outfit);
 }
 

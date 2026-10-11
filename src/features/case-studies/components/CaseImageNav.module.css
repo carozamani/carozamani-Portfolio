@@ -1,94 +1,206 @@
-/* Floating dots on the page edge; the title of each image slides out on hover and for the active one. */
+/* "Where am I?" for a case study: the titles of the sections around the one in view, scrolling
+   past a fixed marker. The current title is large and bright, its neighbours fade with distance.
+   Pinned left in both languages, so it is laid out physically rather than by text direction.
+   Live values from useRulerMotion:
+   --d         each row's distance from the focus point (scroll position)
+   --velocity  0–1 smoothed scroll speed */
 .nav {
+  --step: 2.875rem;
+  --falloff: 4;
+  --velocity: 0;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   display: none;
 }
 
-@media (min-width: 64rem) {
+/* the list only fits in the left margin once the 1100px content column leaves ~170px */
+@media (min-width: 90rem) {
   .nav {
     display: block;
     position: fixed;
-    inset-inline-end: var(--space-m);
+    left: 1rem;
     top: 50%;
     z-index: 40;
+    width: 10rem;
+    direction: ltr;
     transform: translateY(-50%);
+    animation: nav-in 1200ms var(--ease-expo) both;
   }
 }
 
+.rail {
+  position: relative;
+  height: calc(var(--step) * (var(--falloff) * 2 + 1));
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
+}
+
+.spine {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background: hsla(0, 0%, 100%, 0.12);
+}
+
+/* stays on the current row; stretches and glows with scroll speed */
+.marker {
+  position: absolute;
+  top: 50%;
+  left: -1px;
+  width: 3px;
+  height: calc(var(--step) * 0.5);
+  border-radius: 3px;
+  background: var(--color-brand-primary);
+  box-shadow: 0 0 calc(8px + var(--velocity) * 20px) var(--color-brand-primary);
+  transform: translateY(-50%) scaleY(calc(1 + var(--velocity) * 0.8));
+}
+
 .list {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
+  will-change: transform;
 }
 
-.item {
+.slot {
+  --d: var(--falloff);
+  --swell: calc(1 / (1 + var(--d) * var(--d) * 0.9));
+  height: var(--step);
+}
+
+.row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.375rem 0.25rem;
-  color: var(--color-text-secondary);
+  gap: 0.625rem;
+  height: 100%;
+  padding-left: 1.125rem;
+  color: var(--color-text-primary);
   text-decoration: none;
+  outline: none;
+  opacity: calc(0.16 + var(--swell) * 0.84);
+  transform: scale(calc(0.84 + var(--swell) * 0.16));
+  transform-origin: left center;
 }
 
-.label {
-  max-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding-block: 0.25rem;
-  border-radius: 999px;
-  background: hsla(0, 0%, 0%, 0.4);
-  backdrop-filter: blur(12px);
-  transition:
-    max-width var(--duration-slow) var(--ease-out),
-    opacity var(--duration-slow) var(--ease-out),
-    padding var(--duration-slow) var(--ease-out);
+.row:focus-visible .name {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-.dot {
+.num {
   flex-shrink: 0;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: hsla(0, 0%, 100%, 0.35);
-  transition:
-    background var(--transition-normal),
-    transform var(--transition-normal);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+  transition: color 400ms var(--ease-out);
 }
 
-.item:hover .label,
-.item:focus-visible .label,
-.active .label {
-  max-width: 16rem;
-  padding-inline: 0.75rem;
-  opacity: 1;
+.name {
+  display: -webkit-box;
+  overflow: hidden;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+  color: var(--color-text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  transition:
+    color 400ms var(--ease-out),
+    font-weight 400ms var(--ease-out);
+}
+
+.active .num {
+  color: var(--color-brand-primary);
+}
+
+.active .name {
+  font-size: 0.9375rem;
+  font-weight: 600;
   color: var(--color-text-primary);
 }
 
-.item:hover .dot,
-.item:focus-visible .dot {
-  background: hsla(0, 0%, 100%, 0.8);
-}
+/* ---------- compact version: current section pinned to the corner ---------- */
 
-.active .dot {
-  background: var(--color-brand-primary);
-  transform: scale(1.5);
-}
-
-.item:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 2px;
+.pill {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: min(18rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.5rem 1rem 0.5rem 0.75rem;
   border-radius: 999px;
+  background: hsla(0, 0%, 0%, 0.55);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow:
+    inset 0 0 0 1px hsla(0, 0%, 100%, 0.08),
+    0 12px 28px -12px hsla(0, 0%, 0%, 0.7);
+  direction: ltr;
+  animation: nav-in 1200ms var(--ease-expo) both;
+}
+
+@media (min-width: 90rem) {
+  .pill {
+    display: none;
+  }
+}
+
+.pillNum {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-brand-primary);
+}
+
+.pillTotal {
+  margin-left: 0.15rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.pillName {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+  color: var(--color-text-primary);
+  animation: name-in 600ms var(--ease-expo) both;
+}
+
+@keyframes nav-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes name-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .label,
-  .dot {
+  .nav,
+  .pill,
+  .pillName {
+    animation: none;
+  }
+
+  .num,
+  .name {
     transition: none;
   }
 }

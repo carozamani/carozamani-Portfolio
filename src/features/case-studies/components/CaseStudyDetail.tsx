@@ -34,7 +34,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
     .map((entry, index) => ({
       ...entry,
       id: `case-image-${index}`,
-      label: entry.label || String(index + 1),
+      label: entry.label || format(detail.section, { n: index + 1 }),
     }));
   const images = entries.map(({ src }) => src);
 
