@@ -18,11 +18,8 @@ export function SiteChrome() {
       >
         <GlassMenu />
       </div>
-      {/* sticky, not fixed: a zero-height strip pinned to the top of the page for its full length */}
-      <div className="sticky top-0 z-50 hidden h-0 sm:block">
-        <div className="absolute top-[1.875rem] right-6">
-          <LanguageSwitcher />
-        </div>
+      <div className="absolute top-[1.875rem] right-6 z-50 hidden sm:block">
+        <LanguageSwitcher />
       </div>
     </>
   );
