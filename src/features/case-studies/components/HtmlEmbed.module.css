@@ -1,0 +1,25 @@
+.frame {
+  display: block;
+  width: 100%;
+  min-height: 60vh;
+  border: 0;
+  background: transparent;
+  animation: frameIn 260ms ease both;
+}
+
+@keyframes frameIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    animation: none;
+  }
+}
+
+.loading {
+  min-height: 60vh;
+}

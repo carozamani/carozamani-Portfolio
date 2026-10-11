@@ -1,4 +1,5 @@
 .page {
+  --case-max-width: 1440px;
   position: relative;
   min-height: 100vh;
 }
@@ -17,7 +18,7 @@
 
 .content {
   position: relative;
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
   padding: clamp(5rem, 9vw, 7rem) var(--space-l) clamp(4rem, 8vw, 6rem);
 }
@@ -27,11 +28,38 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: clamp(3rem, 7vw, 5rem);
+  max-width: var(--case-max-width);
+  margin: 0 auto clamp(3rem, 7vw, 5rem);
   overflow: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-lg);
+}
+
+.plateMarker {
+  position: absolute;
+  inset-inline: 0;
+  pointer-events: none;
+}
+
+.htmlDocument {
+  position: relative;
+  width: 100%;
+  max-width: var(--case-max-width);
+  margin: 0 auto clamp(3rem, 7vw, 5rem);
+  overflow: hidden;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Sparse, very faint watermark so a screenshot still carries the author's name. */
+.htmlDocument::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='800'%3E%3Ctext x='500' y='400' text-anchor='middle' font-family='sans-serif' font-size='84' font-weight='700' fill='%23808080' fill-opacity='0.06' transform='rotate(-24 500 400)'%3ECaro Zamani%3C/text%3E%3C/svg%3E");
 }
 
 .stackImage {
@@ -61,6 +89,8 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-m);
   margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  max-width: 1100px;
+  margin-inline: auto;
 }
 
 .pagerItem {

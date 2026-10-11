@@ -48,7 +48,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
               const image = content?.image ?? caseStudy.image;
               const subtitle = [
                 content?.tags?.[0] ?? content?.tag ?? caseStudy.tags?.[0] ?? caseStudy.tag,
-                caseStudy.year,
+                content?.year ?? caseStudy.year,
               ]
                 .filter(Boolean)
                 .join(' · ');
