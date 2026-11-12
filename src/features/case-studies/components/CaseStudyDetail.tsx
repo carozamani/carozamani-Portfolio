@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { format, useDictionary, useLocale } from '@/lib/i18n/LocaleProvider';
 import type { CaseStudy } from '@/types/caseStudy';
+import { withAssetAccess } from '../lib/assetUrl';
 import { useCaseAccess } from '../hooks/useCaseAccess';
 import { usePreloadedSources } from '../hooks/usePreloadedSources';
 import { BackToTop } from './BackToTop';
@@ -28,18 +29,25 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
   const isProtected = Boolean(caseStudy.passwordProtected);
   const { access, unlock } = useCaseAccess(caseStudy.slug, isProtected);
   const unlocked = access.status === 'open' ? access.content : null;
+  const token = access.status === 'open' ? access.token : null;
 
   const content = projects.items[caseStudy.slug];
   const title = content?.title ?? caseStudy.title;
   const image = content?.image ?? caseStudy.image;
-  // A protected study's own fields are empty until the server has accepted the password.
-  const caseImages = isProtected
-    ? (unlocked?.caseImages ?? [])
-    : (content?.caseImages ?? caseStudy.caseImages ?? []);
+  // The API value wins, so an upload from the admin replaces the shipped page.
+  // The dictionary is only the fallback for projects that have not been given a file yet.
+  const source = isProtected ? unlocked : caseStudy;
+  const apiImages = source?.caseImages ?? [];
+  const caseImages = (
+    isProtected ? apiImages : apiImages.length > 0 ? apiImages : (content?.caseImages ?? [])
+  ).map((src) => withAssetAccess(src, token));
 
+  const apiTitles = source?.caseImageTitles ?? [];
   const caseImageTitles = isProtected
-    ? (unlocked?.caseImageTitles ?? [])
-    : (content?.caseImageTitles ?? caseStudy.caseImageTitles ?? []);
+    ? apiTitles
+    : apiTitles.length > 0
+      ? apiTitles
+      : (content?.caseImageTitles ?? []);
 
   const entries = [
     { src: image, label: title },
@@ -52,10 +60,11 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
       label: entry.label || format(detail.section, { n: index + 1 }),
     }));
   const images = usePreloadedSources(entries.map(({ src }) => src));
-  const source = isProtected ? unlocked : caseStudy;
-  const htmlFile = isProtected
-    ? (locale === 'fa' && unlocked?.htmlFileFa) || unlocked?.htmlFile
-    : (content?.htmlFile ?? ((locale === 'fa' && source?.htmlFileFa) || source?.htmlFile));
+  const rawHtml =
+    (locale === 'fa' && source?.htmlFileFa) || source?.htmlFile || content?.htmlFile || '';
+  const htmlFile = withAssetAccess(rawHtml, token);
+  const [failedHtml, setFailedHtml] = useState('');
+  const showHtml = Boolean(htmlFile) && failedHtml !== htmlFile;
 
   const [plates, setPlates] = useState<EmbedPlate[]>([]);
   const plateEntries = plates.map((plate, index) => ({
@@ -81,14 +90,19 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
       <h1 className={styles.srOnly}>{title}</h1>
 
       {/* Outside AnimatedSection: a transformed ancestor would break its fixed positioning. */}
-      <CaseImageNav items={htmlFile ? plateEntries : entries} ariaLabel={detail.sections} />
+      <CaseImageNav items={showHtml ? plateEntries : entries} ariaLabel={detail.sections} />
 
       <BackToTop label={detail.backToTop} />
 
       <div className={styles.content}>
-        {htmlFile ? (
+        {showHtml ? (
           <div id="case-gallery" className={styles.htmlDocument}>
-            <HtmlEmbed src={htmlFile} title={title} onPlates={setPlates} />
+            <HtmlEmbed
+              src={htmlFile}
+              title={title}
+              onPlates={setPlates}
+              onError={() => setFailedHtml(htmlFile)}
+            />
             {/* The iframe's content is invisible to the host page, so each plate gets a marker the nav can track. */}
             {plateEntries.map(({ id, top, height }) => (
               <span

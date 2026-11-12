@@ -40,7 +40,7 @@ import {
   SidebarTrigger,
 } from '@/components/admin-ui/sidebar';
 import { adminNav } from '@/data/admin';
-import { clearToken, getToken } from '@/lib/api';
+import { clearToken, getToken, setToken } from '@/lib/api';
 import { localeDirection } from '@/lib/i18n/config';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { CommandPalette } from './CommandPalette';
@@ -77,6 +77,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (auth === 'out') router.replace('/admin/login');
   }, [auth, router]);
+
+  // Image requests cannot send the Authorization header, so the same token is also a cookie.
+  useEffect(() => {
+    const token = getToken();
+    if (token) setToken(token);
+  }, []);
 
   const handleLogout = () => {
     clearToken();

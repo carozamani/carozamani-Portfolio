@@ -187,7 +187,15 @@ export const adminEn = {
     currentPassword: 'Current password',
     newPassword: 'New password',
     saveChanges: 'Save changes',
-    savedDemo: 'Settings saved (demo).',
+    saved: 'Settings saved.',
+    saveFailed: 'Could not save settings.',
+    wrongPassword: 'Current password is incorrect.',
+    passwordShort: 'New password must be at least 8 characters.',
+    emailInvalid: 'Enter a valid email address.',
+    currentRequired: 'Enter your current password.',
+    passwordHint:
+      'Leave this blank to keep the current password. A new password needs at least 8 characters.',
+    loading: 'Loading settings…',
     resumeTitle: 'Resume',
     resumeHint:
       'These files are used by the “Download Resume” button in the About section — the English PDF is served when the site is in English, and the Persian PDF when it’s in Persian.',

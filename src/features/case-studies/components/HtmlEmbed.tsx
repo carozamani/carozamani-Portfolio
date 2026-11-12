@@ -26,6 +26,7 @@ type HtmlEmbedProps = {
   src: string;
   title: string;
   onPlates?: (plates: EmbedPlate[]) => void;
+  onError?: () => void;
 };
 
 const isPlate = (value: unknown): value is EmbedPlate => {
@@ -40,8 +41,12 @@ const isPlate = (value: unknown): value is EmbedPlate => {
 };
 
 /** Without `allow-same-origin` the page gets an opaque origin, so it cannot reach cookies or the admin token. */
-export function HtmlEmbed({ src, title, onPlates }: HtmlEmbedProps) {
+export function HtmlEmbed({ src, title, onPlates, onError }: HtmlEmbedProps) {
   const frame = useRef<HTMLIFrameElement>(null);
+  const onErrorRef = useRef(onError);
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
   const [loaded, setLoaded] = useState<{ src: string; doc: string } | null>(null);
   const [height, setHeight] = useState(0);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -61,7 +66,10 @@ export function HtmlEmbed({ src, title, onPlates }: HtmlEmbedProps) {
         }),
       )
       .catch(() => {
-        if (!controller.signal.aborted) setFailedSrc(src);
+        if (!controller.signal.aborted) {
+          setFailedSrc(src);
+          onErrorRef.current?.();
+        }
       });
     return () => controller.abort();
   }, [src]);

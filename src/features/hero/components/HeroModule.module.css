@@ -189,6 +189,12 @@
   margin-bottom: 2.5rem;
 }
 
+.subtitle {
+  max-width: 36rem;
+  margin: 0.75rem auto 0;
+  padding-inline: 1rem;
+}
+
 .ctaContainer {
   position: relative;
   z-index: 10;

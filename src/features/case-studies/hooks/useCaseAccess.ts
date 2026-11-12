@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { ApiError, getCaseStudyContent, unlockCaseStudy, type CaseContent } from '@/lib/api';
 
 type Access =
-  { status: 'checking' } | { status: 'locked' } | { status: 'open'; content: CaseContent | null };
+  | { status: 'checking' }
+  | { status: 'locked' }
+  | { status: 'open'; content: CaseContent | null; token: string | null };
 
 const storageKey = (slug: string) => `case-access:${slug}`;
 
@@ -38,8 +40,12 @@ export function useCaseAccess(slug: string, passwordProtected: boolean) {
     const settle = (access: Access) => !cancelled && setState({ slug, access });
     // Every state change happens in a promise callback, never synchronously in the effect body.
     Promise.resolve(readToken(slug))
-      .then((token) => (token ? getCaseStudyContent(slug, token) : Promise.reject(new Error())))
-      .then((content) => settle({ status: 'open', content }))
+      .then((token) =>
+        token
+          ? getCaseStudyContent(slug, token).then((content) => ({ token, content }))
+          : Promise.reject(new Error()),
+      )
+      .then(({ token, content }) => settle({ status: 'open', content, token }))
       .catch(() => {
         writeToken(slug, null);
         settle({ status: 'locked' });
@@ -55,7 +61,7 @@ export function useCaseAccess(slug: string, passwordProtected: boolean) {
       try {
         const { token, content } = await unlockCaseStudy(slug, password);
         if (token) writeToken(slug, token);
-        setState({ slug, access: { status: 'open', content } });
+        setState({ slug, access: { status: 'open', content, token: token ?? null } });
         return true;
       } catch (error) {
         if (error instanceof ApiError && error.status === 403) return false;
@@ -66,7 +72,7 @@ export function useCaseAccess(slug: string, passwordProtected: boolean) {
   );
 
   const access: Access = !passwordProtected
-    ? { status: 'open', content: null }
+    ? { status: 'open', content: null, token: null }
     : state.slug === slug
       ? state.access
       : { status: 'checking' };

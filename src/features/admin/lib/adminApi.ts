@@ -69,6 +69,39 @@ export const caseStudiesApi = {
   reorder: (slugs: string[]) => adminRequest<void>('/case-studies/order', json('PUT', { slugs })),
 };
 
+export type SiteResumes = { en: string; fa: string };
+
+export type AdminSettings = {
+  email: string;
+  notificationEmail: string;
+  resumes: SiteResumes;
+};
+
+export function getAdminSettings() {
+  return adminRequest<AdminSettings>('/settings');
+}
+
+export function saveAdminAccount(body: {
+  notificationEmail: string;
+  currentPassword: string;
+  newPassword: string;
+}) {
+  return adminRequest<{ notificationEmail: string; token: string | null }>(
+    '/settings',
+    json('PATCH', body),
+  );
+}
+
+export function uploadResume(locale: 'en' | 'fa', file: File) {
+  const body = new FormData();
+  body.append('file', file);
+  return adminRequest<{ resumes: SiteResumes }>(`/resumes/${locale}`, { method: 'POST', body });
+}
+
+export function deleteResume(locale: 'en' | 'fa') {
+  return adminRequest<{ resumes: SiteResumes }>(`/resumes/${locale}`, { method: 'DELETE' });
+}
+
 export function mediaApi(type: AdminCard['type']) {
   return {
     async list() {

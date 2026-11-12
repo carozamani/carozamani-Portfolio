@@ -4,6 +4,14 @@ import type { AdminMessage } from '@/data/admin';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api';
 const TOKEN_KEY = 'admin_token';
+const ADMIN_COOKIE_AGE = 60 * 60 * 24 * 7;
+
+function writeAdminCookie(token: string | null) {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  const age = token ? ADMIN_COOKIE_AGE : 0;
+  document.cookie = `admin_token=${token ? encodeURIComponent(token) : ''}; Path=/; Max-Age=${age}; SameSite=Lax${secure}`;
+}
 
 type ServerFields = { _id: string; order?: number; createdAt?: string; updatedAt?: string };
 export type CaseStudyDoc = CaseStudy & ServerFields;
@@ -73,10 +81,12 @@ export function getToken(): string | null {
 
 export function setToken(token: string) {
   window.localStorage.setItem(TOKEN_KEY, token);
+  writeAdminCookie(token);
 }
 
 export function clearToken() {
   window.localStorage.removeItem(TOKEN_KEY);
+  writeAdminCookie(null);
 }
 
 export async function login(email: string, password: string) {
@@ -133,6 +143,10 @@ export async function getMediaBySlug(slug: string): Promise<CardProps | null> {
   } catch {
     return null;
   }
+}
+
+export async function getPublicSettings() {
+  return request<{ resumes: { en: string; fa: string } }>('/settings', publicCache);
 }
 
 export async function submitContactMessage(values: {

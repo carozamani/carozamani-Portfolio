@@ -59,6 +59,9 @@ export function HeroModule() {
         <TypographyComponent variant="h1" id="hero-title" color="text-primary">
           {hero.title}
         </TypographyComponent>
+        <TypographyComponent variant="body1" color="text-secondary" className={styles.subtitle}>
+          {hero.subtitle}
+        </TypographyComponent>
       </div>
 
       <div className={`${styles.ctaContainer} ${styles.enter}`}>

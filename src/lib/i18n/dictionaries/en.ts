@@ -31,6 +31,7 @@ export const en = {
   },
   hero: {
     title: 'Product Designer',
+    subtitle: 'I design complex, multi-role products and build them in code.',
     ctaWork: 'See my case studies',
     profileAlt: 'Carozamani profile picture',
     logoAlt: 'Carozamani logo',
@@ -93,7 +94,7 @@ I also build front ends with React, Next.js, and TypeScript, and I’m familiar 
         htmlFile: '/case-studies/jabedee-en.html',
         description:
           'A marketing assistant that turns a WooCommerce store’s data into a short, ranked list of tasks, each with the tool to get it done.',
-        tags: ['Product design & build'],
+        tags: ['Product design & build', 'Working prototype'],
         year: '2026',
       },
       karvita: {
