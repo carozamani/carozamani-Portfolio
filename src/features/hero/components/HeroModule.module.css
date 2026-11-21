@@ -1,4 +1,17 @@
+/* The background is plain page black, not --gradient-hero-bg: that blue gradient showed for a moment
+   before the planet canvas drew its first frame, then jumped to the planet. Now the planet fades in
+   out of black instead. */
 .heroSection {
+  /* The visible gap between the name line, the title and the subtitle: the empty space from the
+     lowest ink of one line to the highest ink of the next, the same in English and Persian.
+     Margins alone can't give that, because every line box holds some empty space above and below
+     its letters and how much depends on the font. The --*-trim-* values below are that empty space
+     in em of the line's own font size (measured on the shipped copy), and the margins subtract it. */
+  --hero-text-gap: 1.75rem;
+  --name-trim-bottom: 0.2;
+  --title-trim-top: 0.25;
+  --title-trim-bottom: 0.02;
+  --sub-trim-top: 0.435;
   position: relative;
   width: 100%;
   min-height: var(--section-min-height);
@@ -8,8 +21,28 @@
   justify-content: center;
   padding: var(--space-xl) var(--space-l);
   color: var(--color-text-primary);
-  background: var(--gradient-hero-bg);
+  background: var(--color-page-bg, #000);
   overflow: hidden;
+}
+
+/* Vazirmatn sits differently in its line box than Outfit: the tall letters start lower and the name
+   line's tails (و، ی) hang out below its box, hence the negative bottom trim. */
+.heroSection:lang(fa) {
+  --name-trim-bottom: -0.057;
+  --title-trim-top: 0.175;
+  --title-trim-bottom: 0.035;
+  --sub-trim-top: 0.245;
+}
+
+/* Backdrop: a dark sheet over the planet canvas and under the grid and content.
+   --hero-backdrop-opacity is how dark the sheet is (0 = clear, 1 = solid black). */
+.heroSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-color: hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4));
 }
 
 .gridOverlay {
@@ -17,75 +50,27 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image: var(--grid-pattern);
+  /* Hero-only line colour, brighter than the shared --grid-pattern token, which stays as it is */
+  --hero-grid-line: hsla(0, 0%, 100%, 0.15);
+  background-image:
+    linear-gradient(var(--hero-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hero-grid-line) 1px, transparent 1px);
   background-size: 6.25rem 6.25rem;
+  /* The glow sits on the bottom edge of the profile ring: HeroModule.tsx measures it and overrides --glow-x and
+     --glow-y inline. The 50% values are only the fallback until that runs.
+     The visible area is an ellipse: --glow-radius-x is half its width, --glow-radius-y half its height. */
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-radius-x: 700px;
+  --glow-radius-y: 450px;
   --glow-mask: radial-gradient(
-    circle 1000px at var(--glow-x) var(--glow-y),
+    ellipse var(--glow-radius-x) var(--glow-radius-y) at var(--glow-x) var(--glow-y),
     #fff 0%,
     transparent 100%
   );
   mask-image: var(--glow-mask);
   -webkit-mask-image: var(--glow-mask);
-  animation:
-    glow-x 15.7s infinite,
-    glow-y 18.85s infinite;
-}
-
-/* Registered so the glow centre can be interpolated; the keyframes trace sin(t)/cos(t) */
-@property --glow-x {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 50%;
-}
-
-@property --glow-y {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 100%;
-}
-
-@keyframes glow-x {
-  0% {
-    --glow-x: 50%;
-    animation-timing-function: ease-out;
-  }
-  25% {
-    --glow-x: 100%;
-    animation-timing-function: ease-in;
-  }
-  50% {
-    --glow-x: 50%;
-    animation-timing-function: ease-out;
-  }
-  75% {
-    --glow-x: 0%;
-    animation-timing-function: ease-in;
-  }
-  100% {
-    --glow-x: 50%;
-  }
-}
-
-@keyframes glow-y {
-  0% {
-    --glow-y: 100%;
-    animation-timing-function: ease-in;
-  }
-  25% {
-    --glow-y: 50%;
-    animation-timing-function: ease-out;
-  }
-  50% {
-    --glow-y: 0%;
-    animation-timing-function: ease-in;
-  }
-  75% {
-    --glow-y: 50%;
-    animation-timing-function: ease-out;
-  }
-  100% {
-    --glow-y: 100%;
-  }
+  transition: opacity var(--duration-slower) var(--ease-out);
 }
 
 .enter {
@@ -121,7 +106,6 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
   width: 100%;
 }
 
@@ -176,10 +160,51 @@
   object-fit: cover;
 }
 
-.logoImage {
+.nameLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35em;
   margin-top: 0.5rem;
+  /* The gap to the title is measured letter to letter: the title's own empty space above its
+     letters (--title-trim-top, in em of the h1) is taken off here, since the title sits right below */
+  margin-bottom: calc(
+    var(--hero-text-gap) - var(--name-trim-bottom) * 1em - var(--title-trim-top) *
+      var(--font-size-h1)
+  );
   font-size: 2.75rem;
   filter: drop-shadow(0 0 0.625rem hsla(0, 0%, 0%, 0.5));
+}
+
+.greeting {
+  font-family: var(--font-brand), system-ui, sans-serif;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+/* Persian: lighter and smaller than the Latin logotype line, with the name set as one glued word
+   whose first half is dimmer, like the "caro"/"zamani" split of the wordmark */
+.nameLine.nameLinePersian {
+  gap: 0.3em;
+  font-size: clamp(1.5rem, 1.25rem + 0.6vw, 1.875rem);
+}
+
+.nameLinePersian .greeting,
+.nameLinePersian .name {
+  font-weight: 400;
+}
+
+.name {
+  font-family: var(--font-brand), system-ui, sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+
+.nameFirst {
+  color: hsla(0, 0%, 100%, 0.4);
+  text-shadow: 0 0.04em 0.06em hsla(0, 0%, 0%, 0.6);
 }
 
 .titleContainer {
@@ -191,7 +216,13 @@
 
 .subtitle {
   max-width: 36rem;
-  margin: 0.75rem auto 0;
+  /* Same letter-to-letter gap as above: the title's empty space below its letters (in em of the
+     h1, whose size is --font-size-h1) and the subtitle's own above its letters are taken off */
+  margin: calc(
+      var(--hero-text-gap) - var(--title-trim-bottom) * var(--font-size-h1) - var(--sub-trim-top) *
+        1em
+    )
+    auto 0;
   padding-inline: 1rem;
 }
 
@@ -206,30 +237,38 @@
 }
 
 @media (max-width: 768px) {
+  .heroSection {
+    --hero-text-gap: 1.5rem;
+  }
+
   .flipCard {
     width: 160px;
     height: 160px;
   }
 
-  .logoImage {
+  .nameLine {
     font-size: 2.4rem;
   }
 }
 
 @media (max-width: 480px) {
+  .heroSection {
+    --hero-text-gap: 1.25rem;
+  }
+
   .flipCard {
     width: 140px;
     height: 140px;
   }
 
-  .logoImage {
+  .nameLine {
     font-size: 2.2rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gridOverlay {
-    animation: none;
+    transition: none;
     mask-image: none;
     -webkit-mask-image: none;
   }
@@ -268,4 +307,93 @@
   box-shadow:
     0 0 10px var(--color-hero-ring),
     0 0 20px var(--color-hero-ring);
+}
+
+.layer {
+  position: relative;
+  z-index: 10;
+}
+
+/* Scrolling out, the hero is a stack of layers at different depths: the profile flies past the
+   camera first, the title follows, the actions lag behind. The grid itself stays flat and fixed
+   in place; only its opacity is driven by scroll (see .gridOverlay below). */
+@keyframes hero-fly-near {
+  55% {
+    opacity: 1;
+  }
+  100% {
+    translate: 0 calc(var(--depth-recede) * -0.8) calc(var(--depth-recede) * 2);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-fly-mid {
+  55% {
+    opacity: 1;
+  }
+  100% {
+    translate: 0 calc(var(--depth-recede) * -0.3) calc(var(--depth-recede) * 0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-fly-far {
+  55% {
+    opacity: 1;
+  }
+  100% {
+    translate: 0 0 calc(var(--depth-recede) * 0.25);
+    opacity: 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .heroSection {
+      perspective: var(--depth-perspective);
+      view-timeline: --hero block;
+    }
+
+    .layer {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 100%;
+    }
+
+    .layerNear {
+      animation-name: hero-fly-near;
+    }
+
+    .layerMid {
+      animation-name: hero-fly-mid;
+    }
+
+    .layerFar {
+      animation-name: hero-fly-far;
+    }
+  }
+}
+
+/* The planet sinks into the black page: this veil sits above the canvas and the grid but below the
+   content layers, so the bottom of the hero fades to --color-page-bg and meets the next section
+   with no visible edge. The stops are eased (not linear) so the falloff reads as natural shadow.
+   --hero-fade-height is how tall the fade is; a smaller value gives a shorter fade to black. */
+.heroSection::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  height: var(--hero-fade-height, 9%);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    hsla(0, 0%, 0%, 0) 0%,
+    hsla(0, 0%, 0%, 0.12) 20%,
+    hsla(0, 0%, 0%, 0.38) 45%,
+    hsla(0, 0%, 0%, 0.72) 72%,
+    hsla(0, 0%, 0%, 0.92) 90%,
+    var(--color-page-bg) 100%
+  );
 }
