@@ -1,0 +1,36 @@
+/*
+  Lenis: the rules the library needs to work, copied from lenis@1.3.27 (node_modules/lenis/dist/lenis.css).
+  Re-copy them when upgrading Lenis. Only the classes Lenis toggles on <html> are involved, so
+  routes where <SmoothScroll /> is off are untouched.
+
+  The `iframe` rule switches off pointer events on embedded frames while Lenis smooths, so wheel
+  events over them still reach it. The case-study detail pages stretch iframes over the whole
+  page and need those events to stay interactive, which is why Lenis is off there.
+*/
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
