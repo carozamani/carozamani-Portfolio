@@ -11,3 +11,16 @@
   color: hsla(0, 0%, 100%, 0.4);
   text-shadow: 0 0.04em 0.06em hsla(0, 0%, 0%, 0.6);
 }
+
+/*
+  Flat colouring for the whole word, with no shadow: it takes the colour it inherits. "caro" can be
+  set a shade apart by giving a parent --wordmark-caro-color; without it, it matches the rest.
+*/
+.uniform {
+  color: inherit;
+}
+
+.uniform .caro {
+  color: var(--wordmark-caro-color, inherit);
+  text-shadow: none;
+}
