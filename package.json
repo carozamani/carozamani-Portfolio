@@ -29,6 +29,7 @@
     "cmdk": "^1.1.1",
     "framer-motion": "^12.23.24",
     "kinet": "^2.2.1",
+    "lenis": "^1.3.27",
     "lucide-react": "^1.48.0",
     "next": "16.3.8",
     "radix-ui": "^1.6.7",
