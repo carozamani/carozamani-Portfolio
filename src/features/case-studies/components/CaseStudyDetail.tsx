@@ -10,7 +10,7 @@ import type { CaseStudy } from '@/types/caseStudy';
 import { withAssetAccess } from '../lib/assetUrl';
 import { useCaseAccess } from '../hooks/useCaseAccess';
 import { usePreloadedSources } from '../hooks/usePreloadedSources';
-import { BackToTop } from './BackToTop';
+import { BackToTop } from '@/components/shared/BackToTop';
 import { CaseImageNav } from './CaseImageNav';
 import { HtmlEmbed, type EmbedPlate } from './HtmlEmbed';
 import { PasswordGate } from './PasswordGate';
@@ -23,7 +23,7 @@ type CaseStudyDetailProps = {
 };
 
 export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: CaseStudyDetailProps) {
-  const { projects } = useDictionary();
+  const { projects, backToTop } = useDictionary();
   const { locale } = useLocale();
   const { detail } = projects;
   const isProtected = Boolean(caseStudy.passwordProtected);
@@ -92,7 +92,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
       {/* Outside AnimatedSection: a transformed ancestor would break its fixed positioning. */}
       <CaseImageNav items={showHtml ? plateEntries : entries} ariaLabel={detail.sections} />
 
-      <BackToTop label={detail.backToTop} />
+      <BackToTop label={backToTop} />
 
       <div className={styles.content}>
         {showHtml ? (
