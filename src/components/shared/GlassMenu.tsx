@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { navItems } from '@/data/navigation';
 import { useHasSection } from '@/lib/ContentProvider';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { scrollToTarget, type ScrollPlan } from '@/lib/scroll/scrollEngine';
 
 const MIN_PILL_WIDTH = 60;
 
@@ -33,6 +33,9 @@ export default function GlassMenu() {
   const navRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const isScrollingRef = useRef(false);
+  const scrollRunRef = useRef(0);
+  // While a nav click scrolls the page, the pill and the labels borrow its timing so they land together
+  const [scrollPlan, setScrollPlan] = useState<ScrollPlan | null>(null);
 
   const pageSection = Object.entries(SECTION_BY_PATH).find(([path]) =>
     pathname.startsWith(path),
@@ -44,19 +47,22 @@ export default function GlassMenu() {
     const el = document.querySelector(href);
     if (!el) return;
 
+    // Clicking another item mid-scroll starts a new run, and only the latest run may release the lock
+    scrollRunRef.current += 1;
+    const run = scrollRunRef.current;
     isScrollingRef.current = true;
-
-    window.scrollTo({
-      top: el.getBoundingClientRect().top + window.scrollY,
-      behavior: 'smooth',
-    });
 
     setCurrentHash(href);
     window.history.replaceState(null, '', href);
 
-    setTimeout(() => {
+    // The lock keeps the observer from fighting the animation. scrollToTarget always resolves, at
+    // the latest by its deadline, so a wheel gesture that interrupts the scroll can't leave it on.
+    setScrollPlan(null);
+    void scrollToTarget(el, { onPlan: setScrollPlan }).then(() => {
+      if (run !== scrollRunRef.current) return;
       isScrollingRef.current = false;
-    }, 600);
+      setScrollPlan(null);
+    });
   };
 
   useEffect(() => {
@@ -100,6 +106,12 @@ export default function GlassMenu() {
     return () => observer.disconnect();
   }, [activeHash, dict, visibleNavItems.length]);
 
+  const pillTransition = scrollPlan
+    ? ['left', 'width']
+        .map((prop) => `${prop} ${scrollPlan.durationMs}ms ${scrollPlan.easing}`)
+        .join(', ')
+    : 'left var(--duration-slow) var(--ease-out), width var(--duration-slow) var(--ease-out)';
+
   return (
     <nav
       className="pointer-events-auto flex w-full items-center justify-center gap-1.5 ps-0 pe-1.5 pt-2 pb-6 text-white min-[520px]:gap-3 min-[520px]:pe-3 sm:w-auto sm:gap-3 sm:px-3"
@@ -125,8 +137,7 @@ export default function GlassMenu() {
             backdropFilter: 'blur(12px)',
             boxShadow: '0 0 18px rgba(0, 81, 255, 0.4)',
             border: '1px solid rgba(0, 81, 255, 0.5)',
-            transition:
-              'left var(--duration-slow) var(--ease-out), width var(--duration-slow) var(--ease-out)',
+            transition: pillTransition,
           }}
         />
 
@@ -149,15 +160,22 @@ export default function GlassMenu() {
                 'focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]',
                 isActive ? 'text-white' : 'text-white/70 hover:text-white/90',
               )}
+              style={
+                scrollPlan
+                  ? {
+                      transitionDuration: `${scrollPlan.durationMs}ms`,
+                      transitionTimingFunction: scrollPlan.easing,
+                    }
+                  : undefined
+              }
             >
               {dict.nav[item.key]}
             </LinkComponent>
           );
         })}
       </section>
-      <div className="sm:hidden">
-        <LanguageSwitcher />
-      </div>
+      {/* Room for the language switcher, which SiteChrome keeps fixed on the page itself */}
+      <div className="w-12 shrink-0 sm:hidden" aria-hidden="true" />
     </nav>
   );
 }
