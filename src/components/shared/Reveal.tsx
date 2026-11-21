@@ -6,6 +6,7 @@ import { useInView } from '@/hooks/useInView';
 import styles from './Reveal.module.css';
 
 export type RevealVariant = 'fade-up' | 'fade-left' | 'fade-right' | 'scale-in';
+export type RevealDepth = 'rise' | 'swing-start' | 'swing-end';
 
 type RevealProps = {
   children: ReactNode;
@@ -19,6 +20,10 @@ type RevealProps = {
   distance?: number;
   duration?: number;
   delay?: number;
+  /** Scroll-linked 3D lean on top of the reveal; the parent needs `perspective: var(--depth-perspective)`. */
+  depth?: RevealDepth;
+  /** 0-4: how late this element's lean starts relative to siblings that enter together. */
+  depthIndex?: number;
 };
 
 const FROM: Record<RevealVariant, (distance: number) => string> = {
@@ -39,6 +44,8 @@ export function Reveal({
   distance = 24,
   duration = 0.7,
   delay = 0,
+  depth,
+  depthIndex = 0,
 }: RevealProps) {
   const [ref, inView] = useInView<HTMLDivElement>(amount);
 
@@ -46,12 +53,14 @@ export function Reveal({
     '--reveal-from': FROM[variant](distance),
     '--reveal-duration': `${duration}s`,
     '--reveal-delay': `${delay}s`,
+    ...(depth && { '--depth-i': depthIndex }),
   } as CSSProperties;
 
   return (
     <Tag
       ref={ref}
       id={id}
+      data-depth={depth}
       className={clsx(styles.reveal, inView && styles.visible, className)}
       style={style}
     >

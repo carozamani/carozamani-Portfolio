@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type PointerEvent } from 'react';
+import { scrollToTarget } from '@/lib/scroll/scrollEngine';
 import styles from './PageScrollbar.module.css';
 
 const MIN_THUMB = 40;
@@ -125,7 +126,7 @@ export function PageScrollbar() {
   const onThumbMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!drag.current) return;
     const delta = (event.clientY - drag.current.startY) * scrollRatio();
-    window.scrollTo({ top: drag.current.startScroll + delta, behavior: 'instant' });
+    void scrollToTarget(drag.current.startScroll + delta, { immediate: true });
   };
 
   return (
