@@ -27,6 +27,7 @@ a.button {
   align-self: center;
   --button-padding-y: 0.75rem;
   --button-padding-x: 4rem;
+  --button-radius: var(--radius-card);
   --icon-size: 2.25rem;
   gap: 0.875rem;
   border-color: transparent;

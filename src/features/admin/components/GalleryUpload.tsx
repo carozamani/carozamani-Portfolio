@@ -3,36 +3,41 @@
 import { useRef, useState, type DragEvent } from 'react';
 import { ArrowDown, ArrowUp, ImagePlus, X } from 'lucide-react';
 import { Button } from '@/components/admin-ui/button';
+import { Input } from '@/components/admin-ui/input';
 import { cn } from '@/lib/utils';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
+import { IMAGE_TYPES, MAX_IMAGE_BYTES, uploadImage } from '../lib/adminApi';
 
-type Props = { value: string[]; onChange: (images: string[]) => void };
-
-const MAX_BYTES = 5 * 1024 * 1024;
-
-const readAsDataUrl = (file: File) =>
-  new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.readAsDataURL(file);
-  });
+type Props = {
+  value: string[];
+  titles: string[];
+  onChange: (images: string[], titles: string[]) => void;
+};
 
 /** A stack of images kept in the order they are shown on the page, like a Behance project. */
-export function GalleryUpload({ value, onChange }: Props) {
+export function GalleryUpload({ value, titles, onChange }: Props) {
   const { common } = useDictionary().admin;
   const input = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
   const [over, setOver] = useState(false);
 
+  // titles are stored as a parallel array, so pad it to stay aligned with the images
+  const titleAt = value.map((_, index) => titles[index] ?? '');
+
   const addFiles = async (files: FileList | File[]) => {
     const list = [...files];
-    const images = list.filter((file) => file.type.startsWith('image/'));
+    const images = list.filter((file) => IMAGE_TYPES.includes(file.type));
     if (images.length < list.length) setError(common.errImageType);
     else setError('');
-    const fit = images.filter((file) => file.size <= MAX_BYTES);
+    const fit = images.filter((file) => file.size <= MAX_IMAGE_BYTES);
     if (fit.length < images.length) setError(common.errImageSize);
     if (fit.length === 0) return;
-    onChange([...value, ...(await Promise.all(fit.map(readAsDataUrl)))]);
+    try {
+      const uploaded = await Promise.all(fit.map(uploadImage));
+      onChange([...value, ...uploaded], [...titleAt, ...uploaded.map(() => '')]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
   };
 
   const onDrop = (event: DragEvent) => {
@@ -42,10 +47,19 @@ export function GalleryUpload({ value, onChange }: Props) {
   };
 
   const move = (from: number, to: number) => {
-    const next = [...value];
-    next.splice(to, 0, next.splice(from, 1)[0]);
-    onChange(next);
+    const reorder = (list: string[]) => {
+      const next = [...list];
+      next.splice(to, 0, next.splice(from, 1)[0]);
+      return next;
+    };
+    onChange(reorder(value), reorder(titleAt));
   };
+
+  const setTitle = (index: number, title: string) =>
+    onChange(
+      value,
+      titleAt.map((current, i) => (i === index ? title : current)),
+    );
 
   return (
     <div className="grid gap-3">
@@ -57,9 +71,13 @@ export function GalleryUpload({ value, onChange }: Props) {
             alt={format(common.imageNumber, { n: index + 1 })}
             className="h-16 w-24 shrink-0 rounded-sm object-cover"
           />
-          <span className="text-muted-foreground min-w-0 flex-1 text-sm">
-            {format(common.imageNumber, { n: index + 1 })}
-          </span>
+          <Input
+            className="min-w-0 flex-1"
+            value={titleAt[index]}
+            placeholder={format(common.imageNumber, { n: index + 1 })}
+            aria-label={`${format(common.imageNumber, { n: index + 1 })} — ${common.imageTitle}`}
+            onChange={(e) => setTitle(index, e.target.value)}
+          />
           <Button
             type="button"
             variant="ghost"
@@ -85,7 +103,12 @@ export function GalleryUpload({ value, onChange }: Props) {
             variant="ghost"
             size="icon-sm"
             aria-label={common.remove}
-            onClick={() => onChange(value.filter((_, i) => i !== index))}
+            onClick={() =>
+              onChange(
+                value.filter((_, i) => i !== index),
+                titleAt.filter((_, i) => i !== index),
+              )
+            }
           >
             <X />
           </Button>
@@ -111,7 +134,7 @@ export function GalleryUpload({ value, onChange }: Props) {
         <input
           ref={input}
           type="file"
-          accept="image/*"
+          accept={IMAGE_TYPES.join(',')}
           multiple
           hidden
           onChange={(e) => {

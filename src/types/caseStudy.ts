@@ -1,18 +1,18 @@
-export type CaseStudyMetric = {
-  value: string;
-  label: string;
-};
-
-/** How much of the project this case study covers — shapes which sections apply. */
-export type ProjectScope = 'ui-ux' | 'ui-ux-frontend' | 'full-stack';
-
 export type CaseStudy = {
   slug: string;
   title: string;
-  /** Cover shown on the landing page carousel. */
+  /** Cover shown on the landing page carousel and at the top of the case study page. */
   image: string;
-  /** Full case study images, stacked on the case study page in this order. */
+  /** Case study images, stacked on the case study page in this order. */
   caseImages?: string[];
+  /** Titles for `caseImages`, same order; labels the side navigation on the case study page. */
+  caseImageTitles?: string[];
+  /** Uploaded HTML page; when set it is shown on the case study page instead of the images. */
+  htmlFile?: string;
+  /** Persian version of `htmlFile`; the other one is the fallback. */
+  htmlFileFa?: string;
+  /** Protected studies arrive without their content; it is fetched after the password is accepted. */
+  passwordProtected?: boolean;
   description?: string;
   tag?: string;
   /** Editable list behind `tag`, which stays as the joined display string. */
@@ -20,17 +20,4 @@ export type CaseStudy = {
   year?: string;
   companyName?: string;
   companyLogo?: string;
-  role?: string;
-  duration?: string;
-  tools?: string[];
-  overview?: string;
-  problem?: string;
-  process?: string[];
-  results?: CaseStudyMetric[];
-  /** Defaults to 'ui-ux' for case studies created before this field existed. */
-  scope?: ProjectScope;
-  /** Shown when scope includes frontend work, e.g. Next.js, Framer Motion. */
-  techStack?: string[];
-  /** Shown only for full-stack scope — architecture, API/data decisions, backend challenges. */
-  architectureNotes?: string;
 };

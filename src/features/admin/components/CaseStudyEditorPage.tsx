@@ -12,47 +12,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/admin-ui/select';
+import { Checkbox } from '@/components/admin-ui/checkbox';
+import { Label } from '@/components/admin-ui/label';
 import { Textarea } from '@/components/admin-ui/textarea';
 import type { AdminCaseStudy } from '@/types/admin';
-import type { ProjectScope } from '@/types/caseStudy';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { caseStudyStore, useCaseStudies } from '../lib/caseStudyStore';
-import { useHydrated } from '../lib/entityStore';
+import { reportFailure } from '../lib/reportFailure';
 import { uniqueSlug } from '../lib/slug';
 import { BackButton } from './BackButton';
+import { CollectionState } from './CollectionState';
 import { ConfirmDialog } from './ConfirmDialog';
 import { EmptyState } from './EmptyState';
 import { FormField } from './FormField';
 import { GalleryUpload } from './GalleryUpload';
+import { HtmlUpload } from './HtmlUpload';
 import { ImageUpload } from './ImageUpload';
-import { MetricsInput } from './MetricsInput';
-import { ProcessStepsInput } from './ProcessStepsInput';
 import { TagInput } from './TagInput';
 
 const LIST_HREF = '/admin/case-studies';
-
-const SCOPES: ProjectScope[] = ['ui-ux', 'ui-ux-frontend', 'full-stack'];
 
 const blank = (): AdminCaseStudy => ({
   slug: '',
   title: '',
   image: '',
   caseImages: [],
+  htmlFile: '',
+  htmlFileFa: '',
+  passwordProtected: false,
+  password: '',
   description: '',
   tags: [],
   year: String(new Date().getFullYear()),
   companyName: '',
   companyLogo: '',
-  role: '',
-  duration: '',
-  tools: [],
-  overview: '',
-  problem: '',
-  process: [],
-  results: [],
-  scope: 'ui-ux',
-  techStack: [],
-  architectureNotes: '',
   status: 'draft',
 });
 
@@ -68,7 +61,8 @@ function CaseStudyForm({ initial }: FormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [dirty, setDirty] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
-  const existingSlugs = useCaseStudies().map((study) => study.slug);
+  const [saving, setSaving] = useState(false);
+  const existingSlugs = useCaseStudies().items.map((study) => study.slug);
 
   useEffect(() => {
     if (!dirty) return;
@@ -91,20 +85,29 @@ function CaseStudyForm({ initial }: FormProps) {
     if (!/^\d{4}$/.test(draft.year ?? '')) {
       next.year = format(common.errRequired, { field: common.year });
     }
+    const hasPassword = Boolean(initial?.passwordProtected) || Boolean(draft.password);
+    if (draft.passwordProtected && !hasPassword) {
+      next.password = format(common.errRequired, { field: t.caseStudies.passwordLabel });
+    } else if (draft.password && draft.password.length < 4) {
+      next.password = t.caseStudies.passwordMin;
+    }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
     const tags = draft.tags ?? [];
     // the link stays stable after the first save
     const slug = initial?.slug ?? uniqueSlug(draft.title, existingSlugs);
-    const stored = caseStudyStore.upsert(
-      { ...draft, slug, tags, tag: tags.join(' · ') },
-      initial?.slug,
-    );
-    toast.success(initial ? common.saved : common.created);
-    if (!stored) toast.warning(t.editor.saveFailedStorage);
-    setDirty(false);
-    if (!initial) router.replace(`${LIST_HREF}/${slug}`);
+    setSaving(true);
+    caseStudyStore
+      .upsert({ ...draft, slug, tags, tag: tags.join(' · ') }, initial?.slug)
+      .then(() => {
+        toast.success(initial ? common.saved : common.created);
+        setDirty(false);
+        setDraft((prev) => ({ ...prev, password: '' }));
+        if (!initial) router.replace(`${LIST_HREF}/${slug}`);
+      })
+      .catch(reportFailure(common.requestFailed))
+      .finally(() => setSaving(false));
   };
 
   return (
@@ -129,7 +132,7 @@ function CaseStudyForm({ initial }: FormProps) {
               <SelectItem value="published">{common.published}</SelectItem>
             </SelectContent>
           </Select>
-          <Button type="submit" disabled={Boolean(initial) && !dirty}>
+          <Button type="submit" disabled={saving || (Boolean(initial) && !dirty)}>
             {common.save}
           </Button>
         </div>
@@ -167,44 +170,12 @@ function CaseStudyForm({ initial }: FormProps) {
         />
       </FormField>
 
-      <FormField label={t.caseStudies.scope} htmlFor="cs-scope" hint={t.caseStudies.scopeHint}>
-        <Select
-          value={draft.scope ?? 'ui-ux'}
-          onValueChange={(value) => set('scope', value as ProjectScope)}
-        >
-          <SelectTrigger id="cs-scope" className="w-full sm:w-72">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {SCOPES.map((scope) => (
-              <SelectItem key={scope} value={scope}>
-                {t.caseStudies.scopeLabels[scope]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FormField>
-
       <div className="grid gap-6 sm:grid-cols-2">
         <FormField label={t.caseStudies.companyName} htmlFor="cs-company">
           <Input
             id="cs-company"
             value={draft.companyName ?? ''}
             onChange={(e) => set('companyName', e.target.value)}
-          />
-        </FormField>
-        <FormField label={t.caseStudies.role} htmlFor="cs-role">
-          <Input
-            id="cs-role"
-            value={draft.role ?? ''}
-            onChange={(e) => set('role', e.target.value)}
-          />
-        </FormField>
-        <FormField label={t.caseStudies.duration} htmlFor="cs-duration">
-          <Input
-            id="cs-duration"
-            value={draft.duration ?? ''}
-            onChange={(e) => set('duration', e.target.value)}
           />
         </FormField>
         <FormField label={t.caseStudies.companyLogo}>
@@ -215,72 +186,6 @@ function CaseStudyForm({ initial }: FormProps) {
         </FormField>
       </div>
 
-      <FormField label={t.caseStudies.overview} htmlFor="cs-overview">
-        <Textarea
-          id="cs-overview"
-          rows={8}
-          value={draft.overview ?? ''}
-          onChange={(e) => set('overview', e.target.value)}
-        />
-      </FormField>
-
-      <FormField label={t.caseStudies.problem} htmlFor="cs-problem">
-        <Textarea
-          id="cs-problem"
-          rows={5}
-          value={draft.problem ?? ''}
-          onChange={(e) => set('problem', e.target.value)}
-        />
-      </FormField>
-
-      <FormField label={t.caseStudies.processTitle} hint={t.caseStudies.processHint}>
-        <ProcessStepsInput
-          value={draft.process ?? []}
-          onChange={(steps) => set('process', steps)}
-        />
-      </FormField>
-
-      {draft.scope !== 'ui-ux' && (
-        <FormField
-          label={t.caseStudies.techStack}
-          htmlFor="cs-tech"
-          hint={t.caseStudies.techStackHint}
-        >
-          <TagInput
-            id="cs-tech"
-            value={draft.techStack ?? []}
-            onChange={(tools) => set('techStack', tools)}
-          />
-        </FormField>
-      )}
-
-      {draft.scope === 'full-stack' && (
-        <FormField
-          label={t.caseStudies.architectureNotes}
-          htmlFor="cs-architecture"
-          hint={t.caseStudies.architectureHint}
-        >
-          <Textarea
-            id="cs-architecture"
-            rows={6}
-            value={draft.architectureNotes ?? ''}
-            onChange={(e) => set('architectureNotes', e.target.value)}
-          />
-        </FormField>
-      )}
-
-      <FormField label={t.caseStudies.tools} htmlFor="cs-tools" hint={t.caseStudies.toolsHint}>
-        <TagInput
-          id="cs-tools"
-          value={draft.tools ?? []}
-          onChange={(tools) => set('tools', tools)}
-        />
-      </FormField>
-
-      <FormField label={t.caseStudies.resultsTitle} hint={t.caseStudies.resultsHint}>
-        <MetricsInput value={draft.results ?? []} onChange={(results) => set('results', results)} />
-      </FormField>
-
       <FormField label={common.coverImage} hint={t.caseStudies.coverHint}>
         <ImageUpload value={draft.image} onChange={(url) => set('image', url)} />
       </FormField>
@@ -288,9 +193,56 @@ function CaseStudyForm({ initial }: FormProps) {
       <FormField label={t.caseStudies.imagesTitle} hint={t.caseStudies.imagesHint}>
         <GalleryUpload
           value={draft.caseImages ?? []}
-          onChange={(images) => set('caseImages', images)}
+          titles={draft.caseImageTitles ?? []}
+          onChange={(images, titles) => {
+            set('caseImages', images);
+            set('caseImageTitles', titles);
+          }}
         />
       </FormField>
+
+      <FormField label={t.caseStudies.htmlTitle} hint={t.caseStudies.htmlHint}>
+        <HtmlUpload value={draft.htmlFile ?? ''} onChange={(url) => set('htmlFile', url)} />
+      </FormField>
+
+      <FormField label={t.caseStudies.htmlFaTitle} hint={t.caseStudies.htmlFaHint}>
+        <HtmlUpload value={draft.htmlFileFa ?? ''} onChange={(url) => set('htmlFileFa', url)} />
+      </FormField>
+
+      <div className="border-border grid gap-4 rounded-lg border p-4">
+        <div className="flex items-start gap-3">
+          <Checkbox
+            id="cs-protected"
+            checked={Boolean(draft.passwordProtected)}
+            onCheckedChange={(checked) => set('passwordProtected', checked === true)}
+            className="mt-0.5"
+          />
+          <div className="grid gap-1.5">
+            <Label htmlFor="cs-protected">{t.caseStudies.protectLabel}</Label>
+            <p className="text-muted-foreground text-xs">{t.caseStudies.protectHint}</p>
+          </div>
+        </div>
+        {draft.passwordProtected && (
+          <FormField
+            label={t.caseStudies.passwordLabel}
+            htmlFor="cs-password"
+            error={errors.password}
+            hint={
+              initial?.passwordProtected
+                ? t.caseStudies.passwordSetHint
+                : t.caseStudies.passwordNewHint
+            }
+          >
+            <Input
+              id="cs-password"
+              type="text"
+              autoComplete="off"
+              value={draft.password ?? ''}
+              onChange={(e) => set('password', e.target.value)}
+            />
+          </FormField>
+        )}
+      </div>
 
       {dirty && <p className="text-muted-foreground text-sm">{common.unsaved}</p>}
 
@@ -308,16 +260,14 @@ function CaseStudyForm({ initial }: FormProps) {
 
 export function CaseStudyEditorPage({ slug }: { slug?: string }) {
   const { caseStudies } = useDictionary().admin;
-  const hydrated = useHydrated();
-  const studies = useCaseStudies();
+  const { items: studies, status } = useCaseStudies();
   const existing = slug ? studies.find((study) => study.slug === slug) : undefined;
 
-  if (!hydrated) {
+  if (status !== 'ready') {
     return (
-      <div className="mx-auto grid w-full max-w-4xl gap-4" aria-busy="true">
-        <div className="bg-muted h-9 w-48 animate-pulse rounded-xl" />
-        <div className="bg-muted h-96 animate-pulse rounded-xl" />
-      </div>
+      <CollectionState status={status} onRetry={caseStudyStore.retry}>
+        {null}
+      </CollectionState>
     );
   }
 

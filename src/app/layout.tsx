@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Outfit, Vazirmatn } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Toaster } from 'sonner';
+import { LazyToaster } from '@/components/shared/LazyToaster';
+import { PageScrollbar } from '@/components/shared/PageScrollbar';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
+import { ContentProvider } from '@/lib/ContentProvider';
+import { getSiteContent } from '@/lib/content';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { localeDirection } from '@/lib/i18n/config';
 import { dictionaries } from '@/lib/i18n/dictionaries';
@@ -18,22 +20,25 @@ import '@/styles/motion.css';
 
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
+// Self-hosted rather than next/font/google: the build machine can't reach Google Fonts,
+// which silently degraded every page to Arial.
+const brandFont = localFont({
+  src: '../assets/fonts/outfit-latin-variable.woff2',
+  weight: '100 900',
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-outfit',
 });
 
-const brandFont = Outfit({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-brand',
-});
-
-const persianFont = Vazirmatn({
-  subsets: ['arabic', 'latin'],
+const persianFont = localFont({
+  src: '../assets/fonts/vazirmatn-arabic-variable.woff2',
+  weight: '100 900',
   display: 'swap',
   variable: '--font-vazirmatn',
+  // only Persian pages render Arabic-script glyphs; preloading would cost English visitors ~45KB
+  preload: false,
+  declarations: [
+    { prop: 'unicode-range', value: 'U+0600-06FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFC' },
+  ],
 });
 
 const wordmarkFont = localFont({
@@ -77,12 +82,13 @@ type RootLayoutProps = {
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
   const locale = await getLocale();
   const dict = dictionaries[locale];
+  const content = await getSiteContent();
 
   return (
     <html
       lang={locale}
       dir={localeDirection[locale]}
-      className={`${brandFont.variable} ${inter.variable} ${persianFont.variable} ${wordmarkFont.variable}`}
+      className={`${brandFont.variable} ${persianFont.variable} ${wordmarkFont.variable}`}
     >
       <body className="relative min-h-screen w-full bg-cover bg-top bg-no-repeat">
         <script
@@ -90,22 +96,25 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <LocaleProvider locale={locale} dict={dict}>
-          <PodcastPlayerProvider>
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border-2 focus:border-(--color-brand-primary) focus:bg-(--color-surface-canvas) focus:px-5 focus:py-3 focus:text-(--color-text-primary)"
-            >
-              {dict.skipLink}
-            </a>
+          <ContentProvider content={content}>
+            <PodcastPlayerProvider>
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border-2 focus:border-(--color-brand-primary) focus:bg-(--color-surface-canvas) focus:px-5 focus:py-3 focus:text-(--color-text-primary)"
+              >
+                {dict.skipLink}
+              </a>
 
-            <SiteChrome />
+              <SiteChrome />
 
-            <main id="main-content" className="relative z-20 h-full w-full">
-              {children}
-            </main>
+              <main id="main-content" className="relative z-20 h-full w-full">
+                {children}
+              </main>
 
-            <Toaster richColors position="bottom-right" />
-          </PodcastPlayerProvider>
+              <LazyToaster />
+              <PageScrollbar />
+            </PodcastPlayerProvider>
+          </ContentProvider>
         </LocaleProvider>
       </body>
     </html>

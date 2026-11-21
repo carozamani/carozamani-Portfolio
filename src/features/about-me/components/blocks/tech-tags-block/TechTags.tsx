@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import styles from './TechTags.module.css';
 import TypographyComponent from '@/components/ui/Typography';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
@@ -17,7 +17,7 @@ const FRICTION = 0.94;
 
 function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrollColumnProps) {
   const infiniteTags = useMemo(() => [...tags, ...tags, ...tags], [tags]);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const targetRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -82,7 +82,7 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
   };
 
   return (
-    <motion.div
+    <div
       className={`${styles.scrollColumn} ${isDragging ? styles.dragging : ''} ${offsetClass}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -99,9 +99,11 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }
+
+const LONG_WORD_LENGTH = 10;
 
 export default function BlockTechTags() {
   const { about } = useDictionary();
@@ -116,7 +118,16 @@ export default function BlockTechTags() {
             {about.techSubtitle}
           </TypographyComponent>
           <TypographyComponent variant="h2" color="text-primary" className="mb-4">
-            {about.techTitle}
+            {about.techTitle.split(' ').map((word, index) => (
+              <span key={index}>
+                {index > 0 && ' '}
+                {word.length >= LONG_WORD_LENGTH ? (
+                  <span className={styles.longWord}>{word}</span>
+                ) : (
+                  word
+                )}
+              </span>
+            ))}
           </TypographyComponent>
         </div>
 

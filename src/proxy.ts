@@ -9,6 +9,15 @@ import type { NextRequest } from 'next/server';
 const ADMIN_HOST = process.env.ADMIN_SUBDOMAIN_HOST;
 
 export function proxy(request: NextRequest) {
+  // These HTML exports used to sit in public/. They now go through an access check so a
+  // password on the case study can actually hide the file.
+  const caseFile = request.nextUrl.pathname.match(/^\/case-studies\/([a-z0-9-]+\.html)$/);
+  if (caseFile) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/case-file/${caseFile[1]}`;
+    return NextResponse.rewrite(url);
+  }
+
   if (!ADMIN_HOST) return NextResponse.next();
 
   const host = request.headers.get('host')?.split(':')[0];
@@ -25,5 +34,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|image|resume-en.pdf|resume-fa.pdf).*)'],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|image|uploads|resume-en.pdf|resume-fa.pdf).*)',
+  ],
 };

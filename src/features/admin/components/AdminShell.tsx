@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useSyncExternalStore, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -40,7 +40,7 @@ import {
   SidebarTrigger,
 } from '@/components/admin-ui/sidebar';
 import { adminNav } from '@/data/admin';
-import { clearToken, getToken } from '@/lib/api';
+import { clearToken, getToken, setToken } from '@/lib/api';
 import { localeDirection } from '@/lib/i18n/config';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { CommandPalette } from './CommandPalette';
@@ -57,6 +57,11 @@ const icons: Record<NavKey, LucideIcon> = {
   settings: Settings,
 };
 
+// The JWT lives in localStorage, so the server can't tell if the visitor is signed in:
+// render nothing until the client has checked, otherwise the panel flashes before the redirect.
+const subscribeNever = () => () => undefined;
+const readAuth = () => (getToken() ? ('in' as const) : ('out' as const));
+
 export function AdminShell({ children }: { children: ReactNode }) {
   const { locale, dict } = useLocale();
   const t = dict.admin;
@@ -67,14 +72,24 @@ export function AdminShell({ children }: { children: ReactNode }) {
     href === '/admin' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
   const current = adminNav.find((n) => isActive(n.href));
 
+  const auth = useSyncExternalStore(subscribeNever, readAuth, () => 'pending' as const);
+
   useEffect(() => {
-    if (!getToken()) router.replace('/admin/login');
-  }, [router]);
+    if (auth === 'out') router.replace('/admin/login');
+  }, [auth, router]);
+
+  // Image requests cannot send the Authorization header, so the same token is also a cookie.
+  useEffect(() => {
+    const token = getToken();
+    if (token) setToken(token);
+  }, []);
 
   const handleLogout = () => {
     clearToken();
     router.push('/admin/login');
   };
+
+  if (auth !== 'in') return <div className="admin-canvas min-h-svh" aria-hidden="true" />;
 
   return (
     <SidebarProvider className="admin-canvas" dir={dir}>

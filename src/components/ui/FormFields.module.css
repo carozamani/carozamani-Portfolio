@@ -84,7 +84,7 @@
   visibility: hidden;
   pointer-events: none;
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.04em;
   padding: 0 6px;
 }
@@ -179,10 +179,47 @@ textarea.control {
 .control:not(:placeholder-shown) + .label {
   top: -9px;
   inset-inline-start: 10px;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.04em;
   padding: 0 6px;
   color: var(--color-brand-primary);
+}
+
+/* password reveal button sits at the end; the validity check moves in beside it */
+.toggle {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition: color 200ms var(--ease-out);
+}
+
+.toggle:hover,
+.toggle:focus-visible {
+  color: var(--color-text-primary);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+}
+
+.shell[data-toggle] .control {
+  padding-inline-end: 78px;
+}
+
+.shell[data-toggle] .check {
+  inset-inline-end: 44px;
 }
 
 /* validity check draws itself in */
@@ -221,7 +258,7 @@ textarea.control {
   inset-inline-end: 14px;
   bottom: 10px;
   z-index: 3;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
   pointer-events: none;
@@ -296,7 +333,6 @@ textarea.control {
   .control:focus + .label,
   .control:not(:placeholder-shown) + .label {
     top: -8px;
-    font-size: 0.65rem;
   }
 }
 

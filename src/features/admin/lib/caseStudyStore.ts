@@ -1,14 +1,10 @@
-import { caseStudies } from '@/data/caseStudies';
-import type { AdminCaseStudy } from '@/types/admin';
-import { createEntityStore } from './entityStore';
+import { caseStudiesApi } from './adminApi';
+import { createRemoteCollection } from './remoteCollection';
 
-const seed: AdminCaseStudy[] = caseStudies.map((study) => ({ ...study, status: 'published' }));
-
-const { store, useItems } = createEntityStore<AdminCaseStudy>({
-  key: 'admin.case-studies.v1',
-  seed,
+const { store, useCollection } = createRemoteCollection({
   getId: (study) => study.slug,
+  source: caseStudiesApi,
 });
 
 export const caseStudyStore = store;
-export const useCaseStudies = useItems;
+export const useCaseStudies = useCollection;

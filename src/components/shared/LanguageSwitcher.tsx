@@ -1,15 +1,11 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { IranFlag, UkFlag } from '@/components/ui/Flags';
+import { useEffect, useId, useRef, useState } from 'react';
 import { locales, type Locale } from '@/lib/i18n/config';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './LanguageSwitcher.module.css';
 
-const OPTIONS: Record<Locale, { code: string; flag: ReactNode }> = {
-  en: { code: 'EN', flag: <UkFlag className="h-4 w-8 rounded-[2px]" /> },
-  fa: { code: 'FA', flag: <IranFlag className="h-4 w-8 rounded-[2px]" /> },
-};
+const CODES: Record<Locale, string> = { en: 'EN', fa: 'FA' };
 
 export function LanguageSwitcher() {
   const { locale, dict, setLocale } = useLocale();
@@ -53,8 +49,7 @@ export function LanguageSwitcher() {
           className={styles.trigger}
           dir="ltr"
         >
-          <span className={styles.code}>{OPTIONS[locale].code}</span>
-          {OPTIONS[locale].flag}
+          <span className={styles.code}>{CODES[locale]}</span>
         </button>
 
         <ul
@@ -71,14 +66,13 @@ export function LanguageSwitcher() {
                 <button
                   type="button"
                   role="option"
-                  aria-label={OPTIONS[code].code}
+                  aria-label={CODES[code]}
                   aria-selected={code === locale}
                   onClick={() => choose(code)}
                   className={styles.option}
                   dir="ltr"
                 >
-                  <span className={styles.optionCode}>{OPTIONS[code].code}</span>
-                  {OPTIONS[code].flag}
+                  <span className={styles.optionCode}>{CODES[code]}</span>
                 </button>
               </li>
             ))}

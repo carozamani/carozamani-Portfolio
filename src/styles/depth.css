@@ -1,0 +1,144 @@
+/*
+  Depth: scroll-linked 3D for the landing page.
+
+  Pure CSS. Every plane animates the individual `rotate` / `translate` / `scale` properties, so it
+  stacks on top of Reveal's `transform` transition instead of replacing it, and it runs on the
+  compositor with no JavaScript. Browsers without scroll-driven animations, and visitors who prefer
+  reduced motion, simply keep the flat Reveal.
+
+  Usage: `perspective: var(--depth-perspective)` on the parent, `data-depth="..."` on the child.
+  `--depth-i` (0-4) staggers siblings that enter together.
+  The timeline binds to the nearest scroll container, so no ancestor may use `overflow: hidden`
+  (use `clip`), or the effect would be driven by that ancestor instead of the page.
+*/
+
+:root {
+  --depth-perspective: 1200px;
+  --depth-tilt: 12deg;
+  --depth-recede: 120px;
+  --depth-swing: 18deg;
+  --depth-dir: 1;
+}
+
+:root[dir='rtl'] {
+  --depth-dir: -1;
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --depth-tilt: 8deg;
+    --depth-recede: 72px;
+  }
+}
+
+/* A whole section: leans in from depth, sits flat while it fills the screen, sinks back on exit */
+@keyframes depth-stage {
+  0% {
+    rotate: x var(--depth-tilt);
+    translate: 0 0 calc(var(--depth-recede) * -0.6);
+    scale: 0.97;
+  }
+  36%,
+  64% {
+    rotate: x 0deg;
+    translate: 0 0 0;
+    scale: 1;
+  }
+  100% {
+    rotate: x calc(var(--depth-tilt) * 0.5);
+    translate: 0 0 calc(var(--depth-recede) * -1);
+    scale: 0.95;
+  }
+}
+
+/* The last section: a lid that opens up from its bottom edge and stays open */
+@keyframes depth-unfold {
+  from {
+    rotate: x calc(var(--depth-tilt) * 1.6);
+    translate: 0 0 calc(var(--depth-recede) * -0.8);
+    scale: 0.96;
+  }
+  to {
+    rotate: x 0deg;
+    translate: 0 0 0;
+    scale: 1;
+  }
+}
+
+/* A block inside a section: tips forward out of the distance */
+@keyframes depth-rise {
+  from {
+    rotate: x var(--depth-tilt);
+    translate: 0 0 calc(var(--depth-recede) * -0.35);
+  }
+  to {
+    rotate: x 0deg;
+    translate: 0 0 0;
+  }
+}
+
+/* A block on one side of a two-column layout: swings open on its inner edge like a door */
+@keyframes depth-swing {
+  from {
+    rotate: y calc(var(--depth-side) * var(--depth-dir) * var(--depth-swing));
+    translate: calc(var(--depth-side) * var(--depth-dir) * -3rem) 0 calc(var(--depth-recede) * -0.4);
+  }
+  to {
+    rotate: y 0deg;
+    translate: 0 0 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-depth] {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+    }
+
+    [data-depth='stage'] {
+      animation-name: depth-stage;
+      animation-range: cover;
+    }
+
+    [data-depth='unfold'] {
+      animation-name: depth-unfold;
+      animation-range: entry 0% entry 100%;
+      transform-origin: 50% 100%;
+    }
+
+    /* Stacked layouts make whole sections several screens tall, and tilting that much glass warps it:
+       below the breakpoint only the individual blocks lean in */
+    @media (max-width: 63.99rem) {
+      [data-depth='stage'],
+      [data-depth='unfold'] {
+        animation-name: none;
+      }
+    }
+
+    /* Blocks finish settling when their own centre reaches the middle of the screen (cover 50%), the
+       siblings staggered so the last one lands exactly there. Below the breakpoint the columns stack,
+       so there is no side to swing from: lean back instead */
+    [data-depth='rise'],
+    [data-depth^='swing'] {
+      animation-name: depth-rise;
+      animation-range: cover calc(var(--depth-i, 0) * 3%) cover calc(38% + var(--depth-i, 0) * 3%);
+    }
+
+    [data-depth='swing-start'] {
+      --depth-side: 1;
+    }
+
+    [data-depth='swing-end'] {
+      --depth-side: -1;
+    }
+
+    @media (min-width: 64rem) {
+      [data-depth^='swing'] {
+        animation-name: depth-swing;
+        transform-origin: calc(50% + var(--depth-side) * var(--depth-dir) * 50%) 50%;
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import clsx from 'clsx';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import styles from './FormFields.module.css';
 
 type InputVariant = 'text' | 'email' | 'password' | 'textarea';
@@ -22,6 +23,8 @@ interface BaseFieldProps {
   placeholder?: string;
   disabled?: boolean;
   error?: string;
+  /** Adds a show/hide button to password fields; omitted, the field stays plain. */
+  revealLabels?: { show: string; hide: string };
 }
 
 interface InputFieldProps
@@ -42,10 +45,22 @@ type FieldElement = HTMLInputElement & HTMLTextAreaElement;
 function FormFieldsComponent(props: FormFieldProps) {
   const fieldId = useId();
   const errorId = `${fieldId}-error`;
-  const { label, variant, required, placeholder, disabled, error, className, onInput, ...rest } =
-    props;
+  const {
+    label,
+    variant,
+    required,
+    placeholder,
+    disabled,
+    error,
+    revealLabels,
+    className,
+    onInput,
+    ...rest
+  } = props;
   const maxLength = (props as TextareaFieldProps).maxLength;
 
+  const [revealed, setRevealed] = useState(false);
+  const hasToggle = variant === 'password' && Boolean(revealLabels);
   const [length, setLength] = useState(0);
   const [isValid, setIsValid] = useState(false);
 
@@ -91,6 +106,7 @@ function FormFieldsComponent(props: FormFieldProps) {
         className={styles.shell}
         data-valid={showValid || undefined}
         data-invalid={error ? true : undefined}
+        data-toggle={hasToggle || undefined}
         style={{ '--label-w': `${labelWidth}px` } as CSSProperties}
       >
         {variant === 'textarea' ? (
@@ -103,7 +119,7 @@ function FormFieldsComponent(props: FormFieldProps) {
           <input
             {...(rest as Omit<InputFieldProps, keyof BaseFieldProps | 'variant' | 'className'>)}
             {...sharedProps}
-            type={variant}
+            type={hasToggle && revealed ? 'text' : variant}
           />
         )}
         <label htmlFor={fieldId} className={clsx(styles.label, required && styles.required)}>
@@ -114,6 +130,19 @@ function FormFieldsComponent(props: FormFieldProps) {
           {label}
           {required && ' *'}
         </span>
+
+        {hasToggle && (
+          <button
+            type="button"
+            className={styles.toggle}
+            aria-label={revealed ? revealLabels?.hide : revealLabels?.show}
+            aria-pressed={revealed}
+            disabled={disabled}
+            onClick={() => setRevealed((value) => !value)}
+          >
+            {revealed ? <FiEyeOff aria-hidden="true" /> : <FiEye aria-hidden="true" />}
+          </button>
+        )}
 
         <svg className={styles.check} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="10" className={styles.checkRing} />

@@ -79,6 +79,10 @@
   );
   --gradient-tag: radial-gradient(circle at center, rgb(0, 110, 255), rgba(0, 68, 255, 0.774));
 
+  /* Page-transition blast: the hero background blue (--gradient-hero-bg) at full strength */
+  --color-blast-primary: hsl(226, 100%, 50%);
+  --color-blast-secondary: hsl(229, 100%, 50%);
+
   /* Hero ring */
   --color-hero-ring: rgba(0, 217, 255, 0.877);
   --hero-ring-border: 5px solid var(--color-hero-ring);

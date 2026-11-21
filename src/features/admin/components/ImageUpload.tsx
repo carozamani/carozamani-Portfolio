@@ -5,10 +5,9 @@ import { ImagePlus } from 'lucide-react';
 import { Button } from '@/components/admin-ui/button';
 import { cn } from '@/lib/utils';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
+import { IMAGE_TYPES, MAX_IMAGE_BYTES, uploadImage } from '../lib/adminApi';
 
 type Props = { value: string; onChange: (url: string) => void };
-
-const MAX_BYTES = 5 * 1024 * 1024;
 
 export function ImageUpload({ value, onChange }: Props) {
   const { common } = useDictionary().admin;
@@ -18,12 +17,16 @@ export function ImageUpload({ value, onChange }: Props) {
 
   const load = (file?: File) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) return setError(common.errImageType);
-    if (file.size > MAX_BYTES) return setError(common.errImageSize);
-    setError('');
-    const reader = new FileReader();
-    reader.onload = () => onChange(String(reader.result));
-    reader.readAsDataURL(file);
+    if (!IMAGE_TYPES.includes(file.type)) return setError(common.errImageType);
+    if (file.size > MAX_IMAGE_BYTES) return setError(common.errImageSize);
+    setError(common.uploading);
+    uploadImage(file).then(
+      (url) => {
+        setError('');
+        onChange(url);
+      },
+      (err: Error) => setError(err.message),
+    );
   };
 
   const onDrop = (e: DragEvent) => {
@@ -72,7 +75,7 @@ export function ImageUpload({ value, onChange }: Props) {
         <input
           ref={input}
           type="file"
-          accept="image/*"
+          accept={IMAGE_TYPES.join(',')}
           hidden
           onChange={(e) => load(e.target.files?.[0])}
         />

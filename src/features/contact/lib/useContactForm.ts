@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { submitContactMessage } from '@/lib/api';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
 import type { Dictionary } from '@/lib/i18n/dictionaries';

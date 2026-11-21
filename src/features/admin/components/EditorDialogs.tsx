@@ -13,9 +13,8 @@ import {
 import { Input } from '@/components/admin-ui/input';
 import { Label } from '@/components/admin-ui/label';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
+import { IMAGE_TYPES, MAX_IMAGE_BYTES, uploadImage } from '../lib/adminApi';
 import { FormField } from './FormField';
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 const normalizeUrl = (value: string) => {
   const url = value.trim();
@@ -100,12 +99,16 @@ export function ImageDialog({ onInsert, onClose }: ImageDialogProps) {
 
   const pick = (file?: File) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) return setError(common.errImageType);
+    if (!IMAGE_TYPES.includes(file.type)) return setError(common.errImageType);
     if (file.size > MAX_IMAGE_BYTES) return setError(common.errImageSize);
-    setError('');
-    const reader = new FileReader();
-    reader.onload = () => setSrc(String(reader.result));
-    reader.readAsDataURL(file);
+    setError(common.uploading);
+    uploadImage(file).then(
+      (url) => {
+        setError('');
+        setSrc(url);
+      },
+      (err: Error) => setError(err.message),
+    );
   };
 
   const submit = (event: FormEvent) => {
@@ -139,7 +142,7 @@ export function ImageDialog({ onInsert, onClose }: ImageDialogProps) {
               <input
                 ref={input}
                 type="file"
-                accept="image/*"
+                accept={IMAGE_TYPES.join(',')}
                 hidden
                 onChange={(e) => pick(e.target.files?.[0])}
               />
