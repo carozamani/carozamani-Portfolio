@@ -1,9 +1,19 @@
 .dock {
   position: fixed;
-  bottom: 1rem;
-  left: 0;
-  right: 0;
-  z-index: 60;
-  width: min(60rem, calc(100% - 2rem));
-  margin-inline: auto;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 80;
+  width: 100%;
+  pointer-events: none;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.surface {
+  pointer-events: auto;
+  width: 100%;
+  /* Match active podcast card fill */
+  background-color: rgba(18, 18, 24, 0.55);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-top: 1px solid hsla(0, 0%, 100%, 0.1);
 }

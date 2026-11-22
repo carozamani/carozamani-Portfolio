@@ -1,35 +1,31 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, m } from 'framer-motion';
-import { MotionProvider } from '@/components/shared/MotionProvider';
 import { PodcastPlayer } from './PodcastPlayer';
-import type { CardProps } from '@/types/card';
+import { usePodcastPlayer } from './PodcastPlayerProvider';
 import styles from './PodcastPlayerDock.module.css';
 
-type Props = { card: CardProps | undefined; onClose: () => void };
+const emptySubscribe = () => () => {};
 
-/** Docks the player to the bottom of the viewport; portalled out so page transforms can't break `fixed`. */
-export function PodcastPlayerDock({ card, onClose }: Props) {
-  if (typeof document === 'undefined') return null;
+/** Fixed mini-player dock on every page while an episode is active. */
+export function PodcastPlayerDock() {
+  const { activeCard } = usePodcastPlayer();
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
+  if (!mounted || !activeCard?.audioSrc) return null;
+
+  // No transform/opacity animation on this tree: both break backdrop-filter.
   return createPortal(
-    <MotionProvider>
-      <AnimatePresence>
-        {card?.audioSrc && (
-          <m.div
-            key={card.id}
-            className={styles.dock}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.3 }}
-          >
-            <PodcastPlayer title={card.title} src={card.audioSrc} onClose={onClose} />
-          </m.div>
-        )}
-      </AnimatePresence>
-    </MotionProvider>,
+    <div className={styles.dock}>
+      <div className={styles.surface}>
+        <PodcastPlayer />
+      </div>
+    </div>,
     document.body,
   );
 }
