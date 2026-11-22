@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { createBlastEngine } from '@/lib/transition/blastEngine';
+import { COVER_MS, createBlastEngine } from '@/lib/transition/blastEngine';
 import type { Point } from '@/lib/transition/blastMath';
 import { resolveTransitionHref } from '@/lib/transition/transitionTarget';
 import styles from './PageTransition.module.css';
@@ -11,6 +11,10 @@ import styles from './PageTransition.module.css';
 // visitor behind a black screen
 const NAVIGATION_TIMEOUT_MS = 4000;
 const PAINT_FALLBACK_MS = 120;
+
+// The brand mark, filled with the brand colour: the SVG itself is not recolourable, so it is used as a
+// mask over a solid colour instead
+const LOGO_MASK = 'url(/image/LogoMark.svg)';
 
 type Arrival = { from: string; resolve: () => void };
 
@@ -36,12 +40,17 @@ const clickOrigin = (event: MouseEvent, anchor: HTMLAnchorElement): Point => {
 /**
  * Plays the blast on every internal link that changes page: the screen is blown to black from the
  * click point, the route changes underneath, then the black is burned away to reveal the new page.
+ * A small logo in the brand colour is in the middle of the screen from the first frame: it fades up
+ * over the same `COVER_MS` the blast takes to spread, so it reaches full opacity exactly when the
+ * screen is fully black, never before. The black clears as soon as the new page is ready, with no
+ * extra hold.
  * Links opt out with `data-page-transition="off"` on themselves or an ancestor.
  */
 export function PageTransition() {
   const router = useRouter();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
   const pathnameRef = useRef(pathname);
   const arrivalRef = useRef<Arrival | null>(null);
 
@@ -58,6 +67,10 @@ export function PageTransition() {
 
     let busy = false;
 
+    const showLogo = (visible: boolean) => {
+      if (logoRef.current) logoRef.current.dataset.visible = String(visible);
+    };
+
     const waitForArrival = () =>
       new Promise<void>((resolve) => {
         let timer = 0;
@@ -72,6 +85,9 @@ export function PageTransition() {
 
     const play = async (href: string, origin: Point) => {
       busy = true;
+      // Shown before the blast starts, not after it ends: the fade is a compositor transition that
+      // is already running when the main thread gets busy with the route change
+      showLogo(true);
       try {
         await engine.cover(origin);
         const arrival = waitForArrival();
@@ -79,6 +95,8 @@ export function PageTransition() {
         await arrival;
         await nextPaint();
       } finally {
+        // It starts leaving as the black starts to clear, well before the front reaches the middle
+        showLogo(false);
         await engine.reveal();
         busy = false;
       }
@@ -111,11 +129,28 @@ export function PageTransition() {
     return () => {
       window.removeEventListener('click', onClick, true);
       arrivalRef.current = null;
+      showLogo(false);
       engine.destroy();
     };
   }, [router]);
 
   return (
-    <canvas ref={canvasRef} className={styles.canvas} data-active="false" aria-hidden="true" />
+    <>
+      <canvas ref={canvasRef} className={styles.canvas} data-active="false" aria-hidden="true" />
+      <div
+        ref={logoRef}
+        className={styles.logo}
+        data-visible="false"
+        aria-hidden="true"
+        style={{ '--logo-fade-ms': `${COVER_MS}ms` } as React.CSSProperties}
+      >
+        <span className={styles.badge}>
+          <span
+            className={styles.mark}
+            style={{ maskImage: LOGO_MASK, WebkitMaskImage: LOGO_MASK }}
+          />
+        </span>
+      </div>
+    </>
   );
 }

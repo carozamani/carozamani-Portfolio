@@ -1,0 +1,71 @@
+.stage {
+  /* Resting values, used until the first frame and for good under reduced motion */
+  --px: 0;
+  --py: 0;
+  --cx: 960;
+  --cy: 420;
+  --mx: 50;
+  --my: 46;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    var(--display-pine-scale-2) 0%,
+    var(--display-pine-scale-0) 46%,
+    #000 100%
+  );
+}
+
+/* Two distant nebulae */
+.stage::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    radial-gradient(48rem 34rem at 16% 22%, hsla(226, 100%, 50%, 0.2), transparent 70%),
+    radial-gradient(42rem 30rem at 86% 64%, hsla(195, 100%, 50%, 0.1), transparent 70%);
+}
+
+/* The cursor's soft light on the whole page */
+.stage::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: '';
+  background: radial-gradient(
+    34rem circle at calc(var(--cx) * 1px) calc(var(--cy) * 1px),
+    hsla(212, 100%, 55%, 0.14),
+    transparent 65%
+  );
+}
+
+/* The limb of a far larger planet: an echo of the hero's horizon */
+.horizon {
+  position: absolute;
+  top: calc(100% - 6.5rem);
+  left: 50%;
+  z-index: 1;
+  width: 260vw;
+  height: 260vw;
+  margin-left: -130vw;
+  pointer-events: none;
+  background: radial-gradient(closest-side, #01030f 90%, #02061f 100%);
+  border-radius: 50%;
+  box-shadow:
+    0 -2px 6px hsla(195, 100%, 80%, 0.55),
+    0 -10px 60px 4px hsla(205, 100%, 55%, 0.4),
+    inset 0 10px 80px hsla(195, 100%, 50%, 0.22);
+  transform: translate3d(calc(var(--px) * -6px), 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .horizon {
+    transform: none;
+  }
+}

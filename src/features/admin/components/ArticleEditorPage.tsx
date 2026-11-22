@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/admin-ui/select';
+import { Textarea } from '@/components/admin-ui/textarea';
 import type { AdminCard } from '@/types/admin';
 import { countWords, excerpt, hasContent, readingMinutes } from '@/lib/rich-text/doc';
 import { format, useDictionary, useLocale } from '@/lib/i18n/LocaleProvider';
@@ -76,11 +77,12 @@ function ArticleForm({ initial, existingIds }: FormProps) {
   const save = () => {
     const next: Record<string, string> = {};
     if (!draft.title.trim()) next.title = format(common.errRequired, { field: common.title });
+    if (!draft.summary.trim()) next.summary = format(common.errRequired, { field: common.summary });
     if (!hasContent(doc)) next.content = format(common.errRequired, { field: t.articles.body });
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
-    // the link stays stable after the first save; date, summary and reading time are derived
+    // the link stays stable after the first save; reading time is derived from the body
     const id = initial?.id ?? uniqueSlug(draft.title, existingIds);
     setSaving(true);
     articleStore
@@ -89,7 +91,7 @@ function ArticleForm({ initial, existingIds }: FormProps) {
           ...draft,
           id,
           href: `/articles/${id}`,
-          summary: excerpt(doc),
+          summary: draft.summary.trim() || excerpt(doc),
           readTime: `${minutes} min`,
           body: undefined,
         },
@@ -139,6 +141,21 @@ function ArticleForm({ initial, existingIds }: FormProps) {
           placeholder={t.editor.titlePlaceholder}
           value={draft.title}
           onChange={(e) => set('title', e.target.value)}
+        />
+      </FormField>
+
+      <FormField
+        label={common.summary}
+        htmlFor="article-summary"
+        hint={t.articles.summaryHint}
+        error={errors.summary}
+      >
+        <Textarea
+          id="article-summary"
+          rows={3}
+          placeholder={t.articles.summaryPlaceholder}
+          value={draft.summary}
+          onChange={(e) => set('summary', e.target.value)}
         />
       </FormField>
 

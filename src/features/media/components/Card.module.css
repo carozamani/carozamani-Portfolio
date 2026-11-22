@@ -2,7 +2,7 @@
 .cardDiv {
   position: relative;
   display: flex;
-  flex-direction: row; /* پیش‌فرض افقی */
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
@@ -11,15 +11,30 @@
   overflow: hidden;
   transition: all 0.5s;
   background-color: rgba(18, 18, 24, 0.55);
-  backdrop-filter: blur(2xl);
-  border: var(--card-border-md); /* px باقی موند */
-  box-shadow: 0 0 5px var(--drop-shadow); /* px باقی موند */
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: var(--card-border-md);
+  box-shadow: 0 0 5px var(--drop-shadow);
   width: 100%;
 }
 
+.cardShell {
+  cursor: default;
+}
+
+.cardBodyLink {
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
 .cardLink:hover,
-.cardDiv:hover {
-  box-shadow: 0 0 25px var(--drop-shadow); /* px باقی موند */
+.cardDiv:hover,
+.cardShell:hover {
+  box-shadow: 0 0 25px var(--drop-shadow);
   transform: scale(1.02);
 }
 
@@ -37,7 +52,8 @@
 }
 
 .cardLink:hover .beforeLayer,
-.cardDiv:hover .beforeLayer {
+.cardDiv:hover .beforeLayer,
+.cardShell:hover .beforeLayer {
   opacity: 0.6;
 }
 
@@ -107,13 +123,27 @@
   transition: all 0.5s;
 }
 
-.centerIcon {
+.playButton {
   position: absolute;
   inset: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
+  border: 0;
+  padding: 0;
+  border-radius: inherit;
+  background: hsla(0, 0%, 0%, 0.28);
+  cursor: pointer;
+}
+
+.playButton:hover {
+  background: hsla(0, 0%, 0%, 0.4);
+}
+
+.playButton:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
 }
 
 .progressCircle {

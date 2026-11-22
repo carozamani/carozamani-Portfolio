@@ -27,7 +27,14 @@ export function mapCaseStudy(doc: CaseStudyDoc): CaseStudy {
 export function mapMedia(doc: MediaDoc): CardProps {
   const { _id, order, createdAt, updatedAt, slug, ...rest } = doc;
   void [_id, order, createdAt, updatedAt];
-  return { id: slug, ...rest };
+  const href =
+    rest.href ??
+    (rest.type === 'podcast'
+      ? `/podcasts/${slug}`
+      : rest.type === 'article'
+        ? `/articles/${slug}`
+        : undefined);
+  return { id: slug, ...rest, href };
 }
 
 function mapMessage(doc: MessageDoc): AdminMessage {

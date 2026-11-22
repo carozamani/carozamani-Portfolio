@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, type FormEvent } from 'react';
+import type { JSONContent } from '@tiptap/react';
 import { Button } from '@/components/admin-ui/button';
 import {
   Dialog,
@@ -24,6 +25,7 @@ import { uniqueSlug } from '../lib/slug';
 import { ConfirmDialog } from './ConfirmDialog';
 import { FormField } from './FormField';
 import { ImageUpload } from './ImageUpload';
+import { RichTextEditor } from './RichTextEditor';
 
 type Props = {
   initial: AdminCard | null;
@@ -36,6 +38,8 @@ const isHttpUrl = (value: string) => /^https?:\/\/\S+$/i.test(value.trim());
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+const emptyDoc: JSONContent = { type: 'doc', content: [{ type: 'paragraph' }] };
+
 const blank = (): AdminCard => ({
   id: '',
   type: 'podcast',
@@ -46,12 +50,16 @@ const blank = (): AdminCard => ({
   duration: '',
   date: today(),
   status: 'draft',
+  content: emptyDoc,
 });
 
 export function PodcastEditor({ initial, existingIds, onSave, onClose }: Props) {
   const t = useDictionary().admin;
   const { common } = t;
-  const [base] = useState(() => initial ?? blank());
+  const [base] = useState(() => {
+    if (!initial) return blank();
+    return { ...initial, content: initial.content ?? emptyDoc };
+  });
   const [draft, setDraft] = useState<AdminCard>(base);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmDiscard, setConfirmDiscard] = useState(false);
@@ -61,7 +69,6 @@ export function PodcastEditor({ initial, existingIds, onSave, onClose }: Props) 
     setDraft((prev) => ({ ...prev, [key]: value }));
   const requestClose = () => (dirty ? setConfirmDiscard(true) : onClose());
 
-  // the length is read from the audio file itself once the link is filled in
   const probe = useRef(0);
   const detectDuration = (url: string) => {
     const id = ++probe.current;
@@ -84,14 +91,21 @@ export function PodcastEditor({ initial, existingIds, onSave, onClose }: Props) 
     else if (!isHttpUrl(draft.audioSrc)) next.audio = t.podcasts.audioUrlInvalid;
     setErrors(next);
     if (Object.keys(next).length > 0) return;
-    onSave({ ...draft, id: initial?.id ?? uniqueSlug(draft.title, existingIds) });
+
+    const id = initial?.id ?? uniqueSlug(draft.title, existingIds);
+    onSave({
+      ...draft,
+      id,
+      href: `/podcasts/${id}`,
+      body: undefined,
+    });
   };
 
   return (
     <>
       <Dialog open onOpenChange={(open) => !open && requestClose()}>
         <DialogContent
-          className="max-h-[90vh] overflow-y-auto sm:max-w-xl"
+          className="max-h-[90vh] overflow-y-auto sm:max-w-3xl"
           aria-describedby={undefined}
         >
           <DialogHeader>
@@ -135,6 +149,12 @@ export function PodcastEditor({ initial, existingIds, onSave, onClose }: Props) 
             </FormField>
             <FormField label={common.coverImage}>
               <ImageUpload value={draft.image ?? ''} onChange={(url) => set('image', url)} />
+            </FormField>
+            <FormField label={t.podcasts.body} hint={t.podcasts.bodyHint}>
+              <RichTextEditor
+                initialContent={draft.content ?? emptyDoc}
+                onChange={(next) => set('content', next)}
+              />
             </FormField>
             <FormField label={common.status} htmlFor="p-status">
               <Select

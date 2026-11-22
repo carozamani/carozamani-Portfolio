@@ -30,26 +30,27 @@
     linear-gradient(rgba(0, 191, 255, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 191, 255, 0.06) 1px, transparent 1px);
   background-size: 100px 100px;
-  z-index: 1;
+  /* Same ellipse as the glow; soft fade toward the corners */
+  z-index: 2;
+  --grid-mask: radial-gradient(ellipse 72% 68% at 50% 50%, #fff 0%, #fff 38%, transparent 78%);
+  mask-image: var(--grid-mask);
+  -webkit-mask-image: var(--grid-mask);
 }
 
 .glowEffect {
   position: absolute;
-  width: 1000px;
-  height: 1000px;
-  border-radius: 50%;
+  inset: 0;
+  width: auto;
+  height: auto;
   pointer-events: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: radial-gradient(
-    circle,
+    ellipse 72% 68% at 50% 50%,
     var(--color-bg-canvas-alt) 0%,
-    rgba(0, 110, 255, 0.11) 50%,
-    transparent 100%
+    rgba(0, 110, 255, 0.12) 42%,
+    transparent 78%
   );
-  z-index: 2;
-  filter: blur(150px);
+  z-index: 1;
+  filter: blur(60px);
 }
 
 .viewMore {

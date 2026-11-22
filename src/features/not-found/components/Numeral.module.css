@@ -1,0 +1,190 @@
+.parallax {
+  width: min(94vw, 1080px);
+  margin-inline: auto;
+  transform: translate3d(calc(var(--px) * -9px), calc(var(--py) * -6px), 0);
+  will-change: transform;
+}
+
+.numeral {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1000 / 340;
+  /* How far the cursor's light reaches into the glyphs */
+  --spot: clamp(8rem, 26vw, 20rem);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.outline {
+  animation: acquire 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Two offset copies that snap onto the outline once: the signal locking in */
+.ghostCyan,
+.ghostBlue {
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: split 1.3s linear both;
+}
+
+.ghostCyan {
+  --shift: -14px;
+}
+
+.ghostBlue {
+  --shift: 14px;
+  animation-delay: 0.06s;
+}
+
+.planetShift {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(calc(var(--px) * 16px), calc(var(--py) * 10px), 0);
+  will-change: transform;
+}
+
+.planet {
+  animation:
+    arrive 1.3s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both,
+    float 9s 1.7s ease-in-out infinite;
+}
+
+/* The lit glyphs only exist where the cursor's light falls on them */
+.fill {
+  --spot-mask: radial-gradient(
+    circle var(--spot) at calc(var(--mx) * 1%) calc(var(--my) * 1%),
+    #000 0%,
+    rgba(0, 0, 0, 0.72) 38%,
+    transparent 100%
+  );
+
+  filter: drop-shadow(0 0 20px hsla(195, 100%, 50%, 0.5));
+  -webkit-mask-image: var(--spot-mask);
+  mask-image: var(--spot-mask);
+  animation: ignite 1.6s 0.5s ease-out both;
+}
+
+.scan {
+  position: absolute;
+  top: 0;
+  right: -3%;
+  left: -3%;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, hsla(195, 100%, 85%, 0.95), transparent);
+  box-shadow: 0 0 26px 7px hsla(195, 100%, 55%, 0.4);
+  opacity: 0;
+  animation: sweep 1.5s 0.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes acquire {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes split {
+  0% {
+    opacity: 0.95;
+    transform: translateX(var(--shift));
+  }
+  18% {
+    transform: translateX(calc(var(--shift) * -0.5));
+  }
+  36% {
+    opacity: 0.7;
+    transform: translateX(calc(var(--shift) * 0.7));
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateX(calc(var(--shift) * -0.2));
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.55) translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes ignite {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sweep {
+  0% {
+    top: -4%;
+    opacity: 0;
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: 104%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outline,
+  .planet,
+  .fill {
+    animation: none;
+  }
+
+  .ghostCyan,
+  .ghostBlue,
+  .scan {
+    display: none;
+  }
+
+  .parallax,
+  .planetShift {
+    transform: none;
+  }
+
+  .fill {
+    opacity: 0.3;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
