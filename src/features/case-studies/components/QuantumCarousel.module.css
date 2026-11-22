@@ -9,6 +9,30 @@
   overflow: visible;
 }
 
+/* Section wash: brightest over the title column, fades toward the corners */
+.carouselContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  --glow-x: 32%;
+  background: radial-gradient(
+    ellipse 48% 52% at var(--glow-x) 58%,
+    hsla(212, 100%, 50%, 0.2) 0%,
+    hsla(212, 100%, 50%, 0.1) 38%,
+    transparent 72%
+  );
+}
+
+:global(html[dir='ltr']) .carouselContainer::before {
+  --glow-x: 32%;
+}
+
+:global(html[dir='rtl']) .carouselContainer::before {
+  --glow-x: 68%;
+}
+
 .header {
   position: relative;
   z-index: 10;
@@ -288,20 +312,6 @@
   z-index: 10;
   color: var(--color-text-secondary);
   font-size: var(--font-size-body1);
-}
-
-.centerGlow {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: clamp(20rem, 32vw, 28rem);
-  background: hsla(212, 100%, 50%, 0.16);
-  border-radius: 50%;
-  filter: blur(140px);
-  transform: translateY(-50%);
-  z-index: 0;
-  pointer-events: none;
 }
 
 .viewAll {

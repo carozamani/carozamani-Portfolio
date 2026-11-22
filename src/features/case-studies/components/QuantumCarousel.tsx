@@ -7,6 +7,7 @@ import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
 import { PROJECTS_PREVIEW_LIMIT } from '@/data/caseStudies';
 import { useContent } from '@/lib/ContentProvider';
+import { formatProjectYear } from '@/lib/i18n/formatProjectYear';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import styles from './QuantumCarousel.module.css';
 
@@ -17,14 +18,12 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
   const visibleStudies = preview ? caseStudies.slice(-PROJECTS_PREVIEW_LIMIT) : caseStudies;
   const [hoveredSlug, setActiveSlug] = useState<string | null>(null);
   const activeSlug = hoveredSlug ?? visibleStudies[0]?.slug ?? null;
-  const hasMore = preview && caseStudies.length > PROJECTS_PREVIEW_LIMIT;
-
   return (
     <div className={styles.carouselContainer}>
       <div className={styles.header}>
         <h2 className={styles.sectionTitle}>{projects.title}</h2>
         <p className={styles.sectionDescription}>{projects.description}</p>
-        {hasMore && (
+        {preview && (
           <Button
             text={projects.viewAll}
             variant="ghost"
@@ -37,8 +36,6 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
 
       {caseStudies.length > 0 ? (
         <div className={styles.listWrapper}>
-          <div className={styles.centerGlow} aria-hidden="true" />
-
           <ul className={styles.list}>
             {visibleStudies.map((caseStudy) => {
               const isActive = activeSlug === caseStudy.slug;
@@ -48,7 +45,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
               const image = content?.image ?? caseStudy.image;
               const subtitle = [
                 content?.tags?.[0] ?? content?.tag ?? caseStudy.tags?.[0] ?? caseStudy.tag,
-                content?.year ?? caseStudy.year,
+                formatProjectYear(content?.year ?? caseStudy.year, locale),
               ]
                 .filter(Boolean)
                 .join(' · ');
