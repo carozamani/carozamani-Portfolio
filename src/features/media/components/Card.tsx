@@ -7,6 +7,12 @@ import TypographyComponent from '@/components/ui/Typography';
 import { format, useLocale } from '@/lib/i18n/LocaleProvider';
 import type { CardProps } from '@/types/card';
 
+type Props = CardProps & {
+  active?: boolean;
+  playing?: boolean;
+  onPlay?: () => void;
+};
+
 export default function Card({
   type,
   title,
@@ -18,26 +24,12 @@ export default function Card({
   duration = '',
   readTime = '',
   active = false,
-  onSelect,
-}: CardProps & { active?: boolean; onSelect?: () => void }) {
+  playing = false,
+  onPlay,
+}: Props) {
   const isPodcast = type === 'podcast';
   const { locale, dict } = useLocale();
-
   const truncatedSummary = summary.length > 150 ? summary.slice(0, 150) + '...' : summary;
-
-  const ImageBlock = image ? (
-    <div
-      className={`${styles.imageContainer} ${isPodcast ? styles.circle : styles.square} ${active ? styles.blur : ''}`}
-    >
-      <Image src={image} alt={title} fill className={styles.image} />
-
-      {isPodcast && (
-        <div className={styles.centerIcon}>{active ? <PauseIcon /> : <PlayIcon />}</div>
-      )}
-
-      <div className={styles.imageGradient} />
-    </div>
-  ) : null;
 
   const TextBlock = (
     <div className={styles.textSection}>
@@ -72,6 +64,41 @@ export default function Card({
     </div>
   );
 
+  const ImageBlock = image ? (
+    <div
+      className={`${styles.imageContainer} ${isPodcast ? styles.circle : styles.square} ${active ? styles.blur : ''}`}
+    >
+      <Image src={image} alt={title} fill className={styles.image} />
+
+      {isPodcast && onPlay ? (
+        <button
+          type="button"
+          className={styles.playButton}
+          aria-label={playing ? dict.player.pause : dict.player.play}
+          onClick={onPlay}
+        >
+          {playing ? <PauseIcon /> : <PlayIcon />}
+        </button>
+      ) : null}
+
+      <div className={styles.imageGradient} />
+    </div>
+  ) : null;
+
+  // Podcast cards keep the play control outside the link so the nested interactive is valid HTML.
+  if (isPodcast && href && onPlay) {
+    return (
+      <div className={`${styles.cardDiv} ${styles.cardShell}`}>
+        <Link href={href} className={styles.cardBodyLink}>
+          {TextBlock}
+        </Link>
+        {ImageBlock}
+        {active && <div className={styles.glowOverlay} />}
+        <div className={styles.beforeLayer} />
+      </div>
+    );
+  }
+
   const CardInner = (
     <>
       {TextBlock}
@@ -89,26 +116,9 @@ export default function Card({
     );
   }
 
-  return (
-    <div
-      className={styles.cardDiv}
-      role={onSelect ? 'button' : undefined}
-      tabIndex={onSelect ? 0 : undefined}
-      aria-pressed={onSelect ? active : undefined}
-      onClick={onSelect}
-      onKeyDown={(event) => {
-        if (onSelect && (event.key === 'Enter' || event.key === ' ')) {
-          event.preventDefault();
-          onSelect();
-        }
-      }}
-    >
-      {CardInner}
-    </div>
-  );
+  return <div className={styles.cardDiv}>{CardInner}</div>;
 }
 
-/* ============= Metadata Item ============= */
 function MetadataItem({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className={styles.metadataItem}>
@@ -120,7 +130,6 @@ function MetadataItem({ icon, label }: { icon: React.ReactNode; label: string })
   );
 }
 
-/* ============= Icons ============= */
 const CalendarIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
