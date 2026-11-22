@@ -8,9 +8,9 @@ export interface CardProps {
   image?: string;
   audioSrc?: string;
   href?: string;
-  /** Article body paragraphs (articles only). */
+  /** Plain body paragraphs (legacy articles/podcasts). */
   body?: string[];
-  /** Rich-text article body written in the admin editor; takes precedence over `body`. */
+  /** Rich-text body from the admin editor; takes precedence over `body`. */
   content?: JSONContent;
   date: string;
   listeners?: number;

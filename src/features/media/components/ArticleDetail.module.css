@@ -12,6 +12,20 @@
   gap: 1.25rem;
 }
 
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-normal);
+}
+
+.back:hover {
+  color: var(--color-text-primary);
+}
+
 .meta {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -28,7 +42,10 @@
 }
 
 .summary {
-  font-size: var(--font-size-body1);
+  max-width: 40rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.55;
   color: var(--color-text-secondary);
 }
 
