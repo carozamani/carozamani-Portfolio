@@ -1,0 +1,9 @@
+.satellite {
+  filter: drop-shadow(0 0 6px hsla(195, 100%, 70%, 0.9));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .satellite {
+    display: none;
+  }
+}

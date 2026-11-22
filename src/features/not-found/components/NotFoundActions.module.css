@@ -1,0 +1,122 @@
+.requested {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: min(100%, 34rem);
+  padding: 0.45rem 1rem;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  background: hsla(195, 100%, 50%, 0.05);
+  border: 1px dashed hsla(195, 100%, 50%, 0.32);
+  border-radius: 999px;
+}
+
+.label {
+  flex: none;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.path {
+  min-width: 0;
+  overflow: hidden;
+  color: hsl(195, 100%, 80%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caret {
+  flex: none;
+  width: 0.5rem;
+  height: 1rem;
+  background: var(--color-brand-primary);
+  animation: blink 1.1s steps(1) infinite;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1.1rem;
+  font-size: 0.875rem;
+}
+
+.jumpLabel {
+  color: var(--color-text-muted);
+}
+
+.jumpList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.25rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.jumpLink {
+  position: relative;
+  padding-block: 0.25rem;
+  color: var(--color-text-secondary);
+  transition: color 0.25s ease;
+}
+
+.jumpLink::after {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  content: '';
+  background: var(--color-brand-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:global(html[dir='rtl']) .jumpLink::after {
+  transform-origin: right;
+}
+
+.jumpLink:hover,
+.jumpLink:focus-visible {
+  color: var(--color-text-primary);
+}
+
+.jumpLink:hover::after,
+.jumpLink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+:global(html[lang='fa']) .label {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+
+  .jumpLink::after {
+    transition: none;
+  }
+}
