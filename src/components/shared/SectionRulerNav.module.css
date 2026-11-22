@@ -124,6 +124,57 @@
   color: var(--color-text-primary);
 }
 
+/* ---------- mobile / tablet: top reading progress (full ruler is desktop-only) ---------- */
+
+.topProgress {
+  --progress: 0;
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-0.35rem);
+  transition:
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
+}
+
+.topProgress[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 90rem) {
+  .topProgress {
+    display: none;
+  }
+}
+
+.topProgressTrack {
+  height: 2px;
+  overflow: hidden;
+  background: hsla(0, 0%, 100%, 0.08);
+}
+
+.topProgressFill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(var(--progress));
+  transform-origin: left center;
+  background: var(--color-brand-primary);
+  box-shadow: 0 0 12px hsla(195, 100%, 50%, 0.45);
+  will-change: transform;
+}
+
+:global(html[dir='rtl']) .topProgressFill {
+  transform-origin: right center;
+}
+
 /* ---------- compact version: current section pinned to the corner ---------- */
 
 .pill {
@@ -195,12 +246,15 @@
 @media (prefers-reduced-motion: reduce) {
   .nav,
   .pill,
-  .pillName {
+  .pillName,
+  .topProgress {
     animation: none;
+    transition: none;
   }
 
   .num,
-  .name {
+  .name,
+  .topProgressFill {
     transition: none;
   }
 }

@@ -11,7 +11,7 @@ import { withAssetAccess } from '../lib/assetUrl';
 import { useCaseAccess } from '../hooks/useCaseAccess';
 import { usePreloadedSources } from '../hooks/usePreloadedSources';
 import { BackToTop } from '@/components/shared/BackToTop';
-import { CaseImageNav } from './CaseImageNav';
+import { SectionRulerNav } from '@/components/shared/SectionRulerNav';
 import { HtmlEmbed, type EmbedPlate } from './HtmlEmbed';
 import { PasswordGate } from './PasswordGate';
 import styles from './CaseStudyDetail.module.css';
@@ -90,7 +90,7 @@ export default function CaseStudyDetail({ caseStudy, prevStudy, nextStudy }: Cas
       <h1 className={styles.srOnly}>{title}</h1>
 
       {/* Outside AnimatedSection: a transformed ancestor would break its fixed positioning. */}
-      <CaseImageNav items={showHtml ? plateEntries : entries} ariaLabel={detail.sections} />
+      <SectionRulerNav items={showHtml ? plateEntries : entries} ariaLabel={detail.sections} />
 
       <BackToTop label={backToTop} />
 
