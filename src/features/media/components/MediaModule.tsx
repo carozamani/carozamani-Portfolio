@@ -3,14 +3,13 @@
 import { Reveal } from '@/components/shared/Reveal';
 import MediaSection from './MediaSection';
 import { MEDIA_PREVIEW_LIMIT } from '@/data/media';
-import { podcastHub } from '@/data/podcastHub';
 import { useContent } from '@/lib/ContentProvider';
-import { format, useLocale } from '@/lib/i18n/LocaleProvider';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { localizeCard } from '../lib/localizeCard';
 import styles from './MediaModule.module.css';
 import TypographyComponent from '@/components/ui/Typography';
 import Button from '@/components/ui/Button';
-import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 export function MediaModule() {
   const { locale, dict } = useLocale();
@@ -20,6 +19,7 @@ export function MediaModule() {
 
   const podcasts = podcastCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
   const articles = articleCards.slice(-MEDIA_PREVIEW_LIMIT).map((card) => localizeCard(card, dict));
+  const hasMorePodcasts = podcastCards.length > MEDIA_PREVIEW_LIMIT;
   const hasMoreArticles = articleCards.length > MEDIA_PREVIEW_LIMIT;
 
   return (
@@ -36,9 +36,9 @@ export function MediaModule() {
               <ContentBlock
                 title={media.podcasts.title}
                 description={media.podcasts.description}
-                href={podcastHub.url}
-                linkText={format(media.podcasts.viewMore, { platform: podcastHub.name })}
-                iconRight={<FiArrowUpRight />}
+                href={hasMorePodcasts ? '/podcasts' : undefined}
+                linkText={media.podcasts.viewMore}
+                iconRight={isRtl ? <FiArrowLeft /> : <FiArrowRight />}
               />
             }
             cards={podcasts}

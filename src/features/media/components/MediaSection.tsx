@@ -15,21 +15,35 @@ interface SectionProps {
 interface CardsListProps {
   cards: CardProps[];
   activeId: string | null;
-  onSelect: (id: string) => void;
+  isPlaying: boolean;
+  onPlay: (id: string) => void;
   depth: 'swing-start' | 'swing-end';
 }
 
-function CardsList({ cards, activeId, onSelect, depth }: CardsListProps) {
+function CardsList({ cards, activeId, isPlaying, onPlay, depth }: CardsListProps) {
   return (
     <div className={styles.cards} data-depth={depth}>
-      {cards.map((card) => (
-        <Card
-          key={card.id}
-          {...card}
-          active={card.id === activeId}
-          onSelect={card.type === 'podcast' ? () => onSelect(card.id) : undefined}
-        />
-      ))}
+      {cards.map((card) => {
+        const href =
+          card.href ??
+          (card.type === 'podcast'
+            ? `/podcasts/${card.id}`
+            : card.type === 'article'
+              ? `/articles/${card.id}`
+              : undefined);
+        const isActive = card.type === 'podcast' && card.id === activeId;
+
+        return (
+          <Card
+            key={card.id}
+            {...card}
+            href={href}
+            active={isActive}
+            playing={isActive && isPlaying}
+            onPlay={card.type === 'podcast' ? () => onPlay(card.id) : undefined}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -44,13 +58,17 @@ function ContentBlock({ children }: { children: React.ReactNode }) {
 
 export default function Section({ type, layoutDirection, content, cards }: SectionProps) {
   const isCardsRight = layoutDirection === 'cardsRight';
-  const { activeId, select } = usePodcastPlayer();
+  const { activeId, isPlaying, select, toggle } = usePodcastPlayer();
 
   const list = (
     <CardsList
       cards={cards}
       activeId={type === 'podcast' ? activeId : null}
-      onSelect={select}
+      isPlaying={isPlaying}
+      onPlay={(id) => {
+        if (id === activeId) toggle();
+        else select(id);
+      }}
       depth={isCardsRight ? 'swing-end' : 'swing-start'}
     />
   );
