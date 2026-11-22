@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { podcastHub } from '@/data/podcastHub';
 import type { AdminCard } from '@/types/admin';
 import { format, useDictionary } from '@/lib/i18n/LocaleProvider';
 import { podcastStore, usePodcasts } from '../lib/podcastStore';
@@ -55,7 +54,7 @@ export function PodcastsAdminModule() {
     <CollectionState status={status} onRetry={podcastStore.retry}>
       <ContentList
         heading={copy.title}
-        note={format(copy.siteNote, { platform: podcastHub.name })}
+        note={copy.siteNote}
         newLabel={copy.new}
         onNew={() => setEditing('new')}
         searchLabel={copy.search}
