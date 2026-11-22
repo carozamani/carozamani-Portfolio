@@ -1,0 +1,211 @@
+/* Compact chrome (mobile + tablet): pill with in-box logo | language rail | edge arrow */
+.compact {
+  --chrome-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --chrome-ms: 420ms;
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.5rem 1.25rem;
+  padding-inline: 0.5rem 0;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .compact {
+    display: none;
+  }
+}
+
+.pill {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 0.2rem;
+  height: 3.5rem;
+  padding-inline: 0.35rem 0.5rem;
+  overflow: visible;
+  border: 1px solid hsla(0, 0%, 100%, 0.05);
+  border-radius: 999px;
+  background: hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 10px 15px -3px hsla(0, 0%, 0%, 0.4);
+  backdrop-filter: blur(24px);
+  transition: transform var(--chrome-ms) var(--chrome-ease);
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  margin-inline-end: 0.15rem;
+  overflow: hidden;
+  border: 1px solid hsla(0, 0%, 100%, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    width var(--chrome-ms) var(--chrome-ease),
+    height var(--chrome-ms) var(--chrome-ease),
+    margin var(--chrome-ms) var(--chrome-ease),
+    border-color var(--chrome-ms) var(--chrome-ease),
+    opacity var(--chrome-ms) var(--chrome-ease),
+    transform var(--chrome-ms) var(--chrome-ease);
+}
+
+.logoMark {
+  display: block;
+  width: 1.7rem;
+  height: auto;
+  aspect-ratio: 84 / 66;
+  background-color: var(--color-brand-primary);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.langRail {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.15rem;
+  max-width: 0;
+  height: 3.5rem;
+  padding-inline: 0;
+  overflow: hidden;
+  border: 0 solid hsla(0, 0%, 100%, 0.08);
+  border-radius: 999px;
+  background: hsla(0, 0%, 0%, 0.45);
+  box-shadow: none;
+  backdrop-filter: blur(24px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(0.75rem);
+  transition:
+    max-width var(--chrome-ms) var(--chrome-ease),
+    padding var(--chrome-ms) var(--chrome-ease),
+    border-width var(--chrome-ms) var(--chrome-ease),
+    transform var(--chrome-ms) var(--chrome-ease),
+    opacity calc(var(--chrome-ms) * 0.85) var(--chrome-ease),
+    box-shadow var(--chrome-ms) var(--chrome-ease);
+}
+
+.langOption {
+  display: grid;
+  place-items: center;
+  min-width: 2.5rem;
+  height: 2.4rem;
+  padding-inline: 0.55rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: hsla(0, 0%, 100%, 0.65);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    color var(--transition-normal),
+    background var(--transition-normal);
+}
+
+.langOption:hover,
+.langOption[aria-pressed='true'] {
+  color: white;
+  background: hsla(195, 100%, 50%, 0.16);
+}
+
+.langOption:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.edgeArrow {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.65rem;
+  height: 2.75rem;
+  margin-inline-end: 0;
+  padding: 0;
+  border: 1px solid hsla(0, 0%, 100%, 0.08);
+  border-inline-end: 0;
+  border-radius: 999px 0 0 999px;
+  background: hsla(0, 0%, 0%, 0.45);
+  color: hsla(0, 0%, 100%, 0.8);
+  font-size: 1.05rem;
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+  transition:
+    color var(--transition-normal),
+    background var(--transition-normal),
+    transform var(--chrome-ms) var(--chrome-ease);
+}
+
+.edgeArrow:hover {
+  color: white;
+  background: hsla(0, 0%, 0%, 0.6);
+}
+
+.edgeArrow:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.edgeArrowIcon {
+  transition: transform var(--chrome-ms) var(--chrome-ease);
+}
+
+/* Open: logo exits inside the pill, language rail enters */
+.compact[data-lang-open='true'] .logo {
+  width: 0;
+  height: 0;
+  margin-inline-end: 0;
+  border-color: transparent;
+  opacity: 0;
+  transform: translateX(-0.75rem);
+  pointer-events: none;
+}
+
+.compact[data-lang-open='true'] .langRail {
+  max-width: 7.5rem;
+  padding-inline: 0.35rem;
+  border-width: 1px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  box-shadow: 0 10px 15px -3px hsla(0, 0%, 0%, 0.4);
+}
+
+.compact[data-lang-open='true'] .edgeArrowIcon {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .pill,
+  .langRail,
+  .edgeArrow,
+  .edgeArrowIcon {
+    transition: none;
+  }
+}
