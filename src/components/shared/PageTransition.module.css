@@ -14,3 +14,63 @@
   visibility: visible;
   pointer-events: auto;
 }
+
+/* The logo that holds the black screen while the next page loads. Small on purpose: a mark, not a
+   splash. It starts fading in the moment a link is clicked and reaches full opacity after
+   --logo-fade-ms (set inline from the blast's own COVER_MS), so it is never visible until the
+   screen is actually black. It leaves quickly as the black starts to clear. */
+.logo {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease-in;
+}
+
+.logo[data-visible='true'] {
+  opacity: 1;
+  transition: opacity var(--logo-fade-ms, 610ms) var(--ease-out);
+}
+
+/* The glow sits on this wrapper: on the masked element itself a filter would run before the mask and
+   be cut away with it */
+.badge {
+  display: block;
+  filter: drop-shadow(0 0 0.75rem hsla(195, 100%, 50%, 0.45));
+}
+
+.mark {
+  display: block;
+  width: clamp(2.75rem, 5vw, 3.75rem);
+  aspect-ratio: 84 / 66;
+  background-color: var(--color-brand-primary);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.logo[data-visible='true'] .badge {
+  animation: logo-breathe 1.8s ease-in-out infinite;
+}
+
+@keyframes logo-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo[data-visible='true'] .badge {
+    animation: none;
+  }
+}

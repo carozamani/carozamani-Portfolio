@@ -22,7 +22,8 @@ type Variant = 'blast' | 'fade';
 
 const IGNITE_MS = 110;
 const EXPAND_MS = 500;
-const COVER_MS = IGNITE_MS + EXPAND_MS;
+// Exported so PageTransition can time the logo's fade-in to finish exactly when the blast does
+export const COVER_MS = IGNITE_MS + EXPAND_MS;
 const REVEAL_MS = 780;
 const FADE_COVER_MS = 180;
 const FADE_REVEAL_MS = 240;
