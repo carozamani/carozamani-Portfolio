@@ -11,6 +11,7 @@ type Props = CardProps & {
   active?: boolean;
   playing?: boolean;
   onPlay?: () => void;
+  onSelect?: () => void;
 };
 
 export default function Card({
@@ -26,6 +27,7 @@ export default function Card({
   active = false,
   playing = false,
   onPlay,
+  onSelect,
 }: Props) {
   const isPodcast = type === 'podcast';
   const { locale, dict } = useLocale();
@@ -113,6 +115,26 @@ export default function Card({
       <Link href={href} className={styles.cardLink}>
         {CardInner}
       </Link>
+    );
+  }
+
+  if (onSelect) {
+    return (
+      <div
+        className={styles.cardDiv}
+        role="button"
+        tabIndex={0}
+        aria-pressed={active}
+        onClick={onSelect}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onSelect();
+          }
+        }}
+      >
+        {CardInner}
+      </div>
     );
   }
 
