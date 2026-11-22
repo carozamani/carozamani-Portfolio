@@ -24,8 +24,8 @@ export default async function HomePage() {
   const dict = dictionaries[await getLocale()];
 
   return (
-    <div className="relative w-full overflow-x-clip bg-(--color-page-bg) text-white">
-      <div className="relative z-10">
+    <div className="relative w-full overflow-x-clip bg-(--color-footer-bg) text-white">
+      <div className="relative z-10 bg-(--color-page-bg) shadow-[0_20px_48px_hsla(0,0%,0%,0.72),0_4px_14px_hsla(0,0%,0%,0.4)]">
         <section id="Home">
           <HeroModule />
         </section>
@@ -52,9 +52,9 @@ export default async function HomePage() {
         <AnimatedSection id="contact" fullScreen viewAmount={0.4} variant="scale-in" depth="unfold">
           <ContactModule />
         </AnimatedSection>
-
-        <Footer />
       </div>
+
+      <Footer />
 
       <BackToTop label={dict.backToTop} />
     </div>

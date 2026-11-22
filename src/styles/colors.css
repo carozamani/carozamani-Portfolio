@@ -43,6 +43,7 @@
 
   /* Surfaces */
   --color-page-bg: hsl(0, 0%, 0%);
+  --color-footer-bg: #000;
   --color-surface-canvas: hsl(233, 100%, 5%);
   --color-surface-canvas-alt: hsl(235, 33%, 7%);
   --color-surface-elevated: hsl(0, 0%, 12%);
