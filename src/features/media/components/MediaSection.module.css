@@ -6,6 +6,7 @@
 
 .grid {
   display: grid;
+  perspective: var(--depth-perspective);
   grid-template-columns: 1fr 1fr; /* دو ستون در دسکتاپ */
   gap: 2rem;
   align-items: center;

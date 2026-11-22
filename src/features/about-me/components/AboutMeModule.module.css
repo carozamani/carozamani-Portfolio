@@ -12,6 +12,7 @@
   max-width: 75rem;
   display: grid;
   gap: 2rem;
+  perspective: var(--depth-perspective);
 
   /* موبایل: تک ستون */
   grid-template-columns: repeat(1, 1fr);

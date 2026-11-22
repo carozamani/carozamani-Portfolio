@@ -14,10 +14,15 @@ const DesignPhilosophyCard = dynamic(
 
 export function AboutMeModule() {
   const blocks = [
-    { id: 1, component: <BlockIntro />, className: styles.block1 },
-    { id: 2, component: <BlockTechTags />, className: styles.block2 },
-    { id: 3, component: <BlockCTA />, className: styles.block3 },
-    { id: 4, component: <DesignPhilosophyCard />, className: styles.block4 },
+    { id: 1, component: <BlockIntro />, className: styles.block1, depth: 'swing-start' as const },
+    { id: 2, component: <BlockTechTags />, className: styles.block2, depth: 'swing-end' as const },
+    { id: 3, component: <BlockCTA />, className: styles.block3, depth: 'swing-end' as const },
+    {
+      id: 4,
+      component: <DesignPhilosophyCard />,
+      className: styles.block4,
+      depth: 'rise' as const,
+    },
   ];
 
   return (
@@ -31,6 +36,8 @@ export function AboutMeModule() {
             distance={20}
             duration={0.4}
             delay={index * 0.1}
+            depth={block.depth}
+            depthIndex={index}
           >
             {block.component}
           </Reveal>

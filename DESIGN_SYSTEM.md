@@ -1,10 +1,10 @@
 # Design System
 
-Source of truth for the design tokens and reusable UI primitives used across this project. Written CSS Modules + native CSS Custom Properties — no Tailwind, no external UI library. Every visual (color, spacing, radius, shadow, type scale) should come from a token below; a new hardcoded value in a component is a bug, not a shortcut.
+Source of truth for the design tokens and reusable UI primitives used across this project. Components are styled with CSS Modules and native CSS Custom Properties. Tailwind 4 is installed as well (`@import 'tailwindcss'` in `globals.css`): its utility classes handle layout in the shared components, the UI primitives and the admin panel. Either way every visual (color, spacing, radius, shadow, type scale) should come from a token below; a new hardcoded value in a component is a bug, not a shortcut.
 
 ## Token files
 
-All tokens live in `src/app/styles/` and are imported once in `src/app/layout.tsx`:
+All tokens live in `src/styles/` and are imported once in `src/app/layout.tsx`:
 
 ```
 typography.css   →  type scale (.h1–.h6, .body1/2, .caption, .overline, .button)
@@ -12,6 +12,9 @@ colors.css        →  color tokens + gradients + border/shadow composites
 shadows.css        →  elevation
 shapes.css          →  border radius
 spacing.css          →  fluid spacing scale
+motion.css        →  durations, easing curves, composed transitions
+depth.css         →  scroll-linked 3D (see "Depth" below)
+lenis.css         →  the rules Lenis needs (see "Scrolling" below)
 ```
 
 ## Color tokens
@@ -112,6 +115,42 @@ A component-local design token (e.g. a card's own `--card-radius`) must be decla
 | `FormFields`          | `components/ui/form-fields`         | `variant`: `text` \| `email` \| `textarea`, `label`, `required`, `rows`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `SocialIcons`         | `components/ui/button/social-media` | `items: {type, href, color}[]`, `bordered`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `Card` (media)        | `components/ui/Media/card`          | podcast/article card with inline audio player; not a generic card — purpose-built for `MediaSection`/`MediaListPage`                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+## Depth (scroll-linked 3D, `styles/depth.css`)
+
+Landing sections and their blocks lean in from depth as they scroll into view. Pure CSS (scroll-driven animations on the individual `rotate` / `translate` / `scale` properties), so it composes with `Reveal`'s `transform` and ships no JavaScript. Where scroll-driven animations aren't supported, or the visitor prefers reduced motion, the flat `Reveal` is all they get.
+
+| Token                 | Default  | Use for                                                               |
+| --------------------- | -------- | --------------------------------------------------------------------- |
+| `--depth-perspective` | `1200px` | the `perspective` set on the **parent** of anything with `data-depth` |
+| `--depth-tilt`        | `12deg`  | how far a plane leans back while it enters (`8deg` on phones)         |
+| `--depth-recede`      | `120px`  | how far back it sinks (`72px` on phones)                              |
+| `--depth-swing`       | `18deg`  | door-swing angle for blocks in a two-column layout                    |
+| `--depth-dir`         | `1`      | flips to `-1` under `dir="rtl"` so swings open from the correct side  |
+
+| `data-depth`                | Where                            | Effect                                                                               |
+| --------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
+| `stage`                     | `AnimatedSection` (default)      | whole section leans in, sits flat while it fills the screen, sinks back as it leaves |
+| `unfold`                    | `AnimatedSection depth="unfold"` | last section only: opens from its bottom edge and stays open                         |
+| `rise`                      | `Reveal depth="rise"`            | a block tips forward out of the distance                                             |
+| `swing-start` / `swing-end` | `Reveal depth="swing-*"`         | a block swings open on its inner edge (stacks to `rise` below 64rem)                 |
+
+Below 64rem (stacked layouts, sections several screens tall) `stage` and `unfold` switch off and only the individual blocks lean in.
+
+Rules: put `perspective: var(--depth-perspective)` on the direct parent (a feature's own `.module.css`); no ancestor of a `data-depth` element may use `overflow: hidden` (use `overflow: clip`), because the scroll timeline binds to the nearest scroll container; don't put `data-depth` on a `display: contents` element. The hero's scroll-out (layers flying past the camera, the grid laying back into a floor) is feature-local in `HeroModule.module.css` and reads the same tokens.
+
+## Scrolling (`SmoothScroll`, `lib/scroll/`)
+
+Inertial page scrolling comes from Lenis. `components/shared/SmoothScroll.tsx` is mounted once in `layout.tsx` and renders nothing; `styles/lenis.css` holds the rules the library needs (copied from lenis@1.3.27, so re-copy them when upgrading).
+
+**Where it runs.** Only on `/`, `/articles` and `/case-studies`, decided by `isSmoothScrollRoute` in `lib/scroll/smoothScrollRoutes.ts` (exact matches, tested). Everything else keeps native scrolling:
+
+- `/case-studies/[slug]`: `HtmlEmbed` stretches iframes over the full page height, a wheel event over an iframe never reaches Lenis, and `lenis.css` switches iframe pointer events off while it smooths. Scrolling there would flip between smooth and native mid-page.
+- `/articles/[slug]` and the admin panel.
+
+**Reduced motion and touch.** Visitors who prefer reduced motion never get a Lenis instance, and it is created or torn down immediately if they change the setting while the page is open. Touch devices keep native momentum.
+
+**Programmatic scrolling goes through `scrollToTarget`** (`lib/scroll/scrollEngine.ts`), never `window.scrollTo` or `scrollIntoView` directly. It takes a pixel offset, a selector or an element, plus `{ offset, immediate }`, and uses Lenis when it is running, the browser's smooth scroll when it is not, and an instant jump for reduced motion. It returns a Promise that resolves when the scroll lands **or at a deadline**, because Lenis never calls `onComplete` when a wheel or touch gesture interrupts the animation; anything that locks UI while a scroll runs (the `GlassMenu` observer) must wait on that promise, not on a fixed timeout. `GlassMenu`, `HeroModule` and `PageScrollbar` use it. `BackToTop` and `CaseImageNav` use the browser's smooth scroll on purpose: they only exist on the case-study detail pages, where Lenis is off.
 
 ## Known debt (not yet unified)
 

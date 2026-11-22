@@ -16,11 +16,12 @@ interface CardsListProps {
   cards: CardProps[];
   activeId: string | null;
   onSelect: (id: string) => void;
+  depth: 'swing-start' | 'swing-end';
 }
 
-function CardsList({ cards, activeId, onSelect }: CardsListProps) {
+function CardsList({ cards, activeId, onSelect, depth }: CardsListProps) {
   return (
-    <div className={styles.cards}>
+    <div className={styles.cards} data-depth={depth}>
       {cards.map((card) => (
         <Card
           key={card.id}
@@ -34,7 +35,11 @@ function CardsList({ cards, activeId, onSelect }: CardsListProps) {
 }
 
 function ContentBlock({ children }: { children: React.ReactNode }) {
-  return <div className={styles.content}>{children}</div>;
+  return (
+    <div className={styles.content} data-depth="rise">
+      {children}
+    </div>
+  );
 }
 
 export default function Section({ type, layoutDirection, content, cards }: SectionProps) {
@@ -42,7 +47,12 @@ export default function Section({ type, layoutDirection, content, cards }: Secti
   const { activeId, select } = usePodcastPlayer();
 
   const list = (
-    <CardsList cards={cards} activeId={type === 'podcast' ? activeId : null} onSelect={select} />
+    <CardsList
+      cards={cards}
+      activeId={type === 'podcast' ? activeId : null}
+      onSelect={select}
+      depth={isCardsRight ? 'swing-end' : 'swing-start'}
+    />
   );
 
   return (

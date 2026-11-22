@@ -1,0 +1,19 @@
+---
+description: Before any git push, run lint/typecheck/format/test and only push if they pass
+alwaysApply: true
+---
+
+# Pre-push quality gate
+
+Before every `git push` (including `-u` / first push of a branch):
+
+1. Run these in order and wait for each to succeed:
+   - `npm run lint`
+   - `npm run typecheck`
+   - `npm run format:check`
+   - `npm test`
+2. Push only if all four exit 0.
+3. If any fail: fix the issues, re-run the failing command, then push. Do not push with `--no-verify`.
+4. If uncommitted WIP would make `format:check` fail on files not part of the push, stash it (`git stash push -u -m "pre-push-wip"`), run the four checks, push, then `git stash pop`.
+
+The repo also has `.husky/pre-push` as a hard gate; do not bypass it.

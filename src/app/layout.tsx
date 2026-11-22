@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
 import { PageScrollbar } from '@/components/shared/PageScrollbar';
+import { PageTransition } from '@/components/shared/PageTransition';
 import { SiteChrome } from '@/components/shared/SiteChrome';
+import { SmoothScroll } from '@/components/shared/SmoothScroll';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
 import { ContentProvider } from '@/lib/ContentProvider';
 import { getSiteContent } from '@/lib/content';
@@ -17,6 +19,8 @@ import '@/styles/spacing.css';
 import '@/styles/shadows.css';
 import '@/styles/shapes.css';
 import '@/styles/motion.css';
+import '@/styles/depth.css';
+import '@/styles/lenis.css';
 
 import './globals.css';
 
@@ -112,7 +116,9 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
               </main>
 
               <LazyToaster />
+              <SmoothScroll />
               <PageScrollbar />
+              <PageTransition />
             </PodcastPlayerProvider>
           </ContentProvider>
         </LocaleProvider>

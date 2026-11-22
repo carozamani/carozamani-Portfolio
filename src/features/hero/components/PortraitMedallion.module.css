@@ -1,0 +1,110 @@
+/* The ring is the portrait's HTML frame: the fallback when WebGL is missing, the hover target and the
+   measure the WebGL ring is drawn to. Once the coin is live, this frame fades out beneath it. */
+.ring {
+  --medallion-size: 190px;
+  /* Side of the canvas in portrait diameters: wide enough for the ring and its halo */
+  --medallion-reach: 2;
+
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 50%;
+  border: var(--hero-ring-border);
+  box-shadow: var(--hero-ring-shadow);
+  transition:
+    border-color var(--duration-slow) var(--ease-out),
+    box-shadow var(--duration-slow) var(--ease-out);
+}
+
+/* Only the colour changes: the border width is what the WebGL ring is measured from */
+.ring[data-webgl='true'] {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.card {
+  width: var(--medallion-size);
+  height: var(--medallion-size);
+  border-radius: 50%;
+  perspective: 62.5rem;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.ring[data-webgl='true'] .card {
+  opacity: 0;
+}
+
+.flipInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--duration-slower) cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+/* Without WebGL the portrait still turns over on hover, in plain CSS */
+.card:hover .flipInner {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 50%;
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+}
+
+.faceImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Centred on the portrait and larger than it, so the ring's glow has room.
+   Transparent until the first frame is drawn, and for good if WebGL is unavailable. */
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--medallion-size) * var(--medallion-reach));
+  height: calc(var(--medallion-size) * var(--medallion-reach));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-slower) var(--ease-out);
+}
+
+.canvas[data-ready='true'] {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .ring {
+    --medallion-size: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ring {
+    --medallion-size: 140px;
+    /* The ring's padding does not shrink with the portrait, so the ring sits further out in radii */
+    --medallion-reach: 2.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .card,
+  .flipInner,
+  .canvas {
+    transition: none;
+  }
+
+  .card:hover .flipInner {
+    transform: none;
+  }
+}

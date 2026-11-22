@@ -10,6 +10,7 @@ export const fa: Dictionary = {
   fields: { showPassword: 'نمایش رمز عبور', hidePassword: 'پنهان‌کردن رمز عبور' },
   skipLink: 'رفتن به محتوای اصلی',
   language: { code: 'FA', label: 'انتخاب زبان' },
+  backToTop: 'بازگشت به بالا',
   nav: {
     aria: 'منوی اصلی',
     home: 'خانه',
@@ -19,8 +20,13 @@ export const fa: Dictionary = {
     contact: 'تماس',
   },
   hero: {
-    title: 'طراح محصول',
-    subtitle: 'محصول‌های پیچیده و چندنقشی را طراحی می‌کنم و خودم پیاده‌سازی‌شان می‌کنم.',
+    greeting: 'سلام من',
+    showWordmark: false,
+    nameFirst: 'کارو',
+    nameLast: 'زمانی',
+    greetingEnd: 'هستم',
+    title: 'یک طراح محصول',
+    subtitle: 'من محصول‌های پیچیده و چندنقشی را طراحی و پیاده‌سازی می‌کنم.',
     ctaWork: 'مشاهده‌ی مطالعات موردی',
     profileAlt: 'عکس پروفایل کارو زمانی',
     logoAlt: 'لوگوی کارو زمانی',
@@ -64,7 +70,6 @@ export const fa: Dictionary = {
       allProjects: 'همه‌ی پروژه‌ها',
       sections: 'بخش‌های کیس‌استادی',
       section: 'بخش {n}',
-      backToTop: 'بازگشت به بالا',
       gate: {
         title: 'کیس‌استادی محافظت‌شده',
         text: 'این کیس‌استادی قفل و با رمز عبور محافظت می‌شود. برای ادامه رمز را وارد کنید.',

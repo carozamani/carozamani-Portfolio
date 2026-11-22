@@ -116,9 +116,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.75rem;
+  border-radius: 0.375rem;
   background: hsla(233, 60%, 8%, 0.6);
-  border: 1px solid var(--color-border-muted);
+  /* Fainter than the shared --color-border-muted (0.2), which other components still use */
+  border: 1px solid hsla(0, 0%, 100%, 0.09);
   color: var(--color-text-secondary);
   overflow: hidden;
   transition: opacity var(--transition-slow);

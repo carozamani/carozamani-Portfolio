@@ -21,6 +21,7 @@ export const en = {
   fields: { showPassword: 'Show password', hidePassword: 'Hide password' },
   skipLink: 'Skip to main content',
   language: { code: 'EN', label: 'Select language' },
+  backToTop: 'Back to top',
   nav: {
     aria: 'Main navigation',
     home: 'Home',
@@ -30,7 +31,12 @@ export const en = {
     contact: 'Contact',
   },
   hero: {
-    title: 'Product Designer',
+    greeting: 'I’m',
+    showWordmark: true,
+    nameFirst: '',
+    nameLast: '',
+    greetingEnd: '',
+    title: 'A Product Designer',
     subtitle: 'I design complex, multi-role products and build them in code.',
     ctaWork: 'See my case studies',
     profileAlt: 'Carozamani profile picture',
@@ -75,7 +81,6 @@ I also build front ends with React, Next.js, and TypeScript, and I’m familiar 
       allProjects: 'All projects',
       sections: 'Case study sections',
       section: 'Section {n}',
-      backToTop: 'Back to top',
       gate: {
         title: 'Protected case study',
         text: 'This case study is locked and password protected. Enter the password to continue.',
