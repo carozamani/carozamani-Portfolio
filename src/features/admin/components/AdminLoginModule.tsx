@@ -72,7 +72,7 @@ export function AdminLoginModule() {
       <div className={styles.langCorner}>
         <LanguageSwitcher />
       </div>
-      <div className={styles.card}>
+      <div className={`glassPanel ${styles.card}`}>
         <div className={styles.gridPattern} aria-hidden="true" />
         <div className={styles.brandBlock}>
           <div className={styles.logoRing}>
