@@ -1,0 +1,24 @@
+.track {
+  position: relative;
+}
+
+/* The pin lives in the track's content box, and the spacer after it is the extra scroll it stays pinned for.
+   No ancestor may use overflow other than `clip`, or sticky would bind to that ancestor instead of the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .pin {
+    position: sticky;
+    top: var(--pin-top, 0px);
+  }
+
+  .track::after {
+    content: '';
+    display: block;
+    height: calc(var(--hold) * 0.6vh);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  .track::after {
+    height: calc(var(--hold) * 1vh);
+  }
+}

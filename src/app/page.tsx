@@ -4,6 +4,7 @@ import { AboutMeModule } from '@/features/about-me/components/AboutMeModule';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { BackToTop } from '@/components/shared/BackToTop';
 import { ContentGate } from '@/components/shared/ContentGate';
+import { ScrollHold } from '@/components/shared/ScrollHold';
 import { dictionaries } from '@/lib/i18n/dictionaries';
 import { getLocale } from '@/lib/i18n/server';
 
@@ -18,14 +19,13 @@ const MediaModule = dynamic(() =>
 const ContactModule = dynamic(() =>
   import('@/features/contact/components/ContactModule').then((mod) => mod.ContactModule),
 );
-const Footer = dynamic(() => import('@/components/shared/Footer'));
 
 export default async function HomePage() {
   const dict = dictionaries[await getLocale()];
 
   return (
-    <div className="relative w-full overflow-x-clip bg-(--color-footer-bg) text-white">
-      <div className="relative z-10 bg-(--color-page-bg) shadow-[0_20px_48px_hsla(0,0%,0%,0.72),0_4px_14px_hsla(0,0%,0%,0.4)]">
+    <div className="relative w-full overflow-x-clip text-white">
+      <div className="relative z-10">
         <section id="Home">
           <HeroModule />
         </section>
@@ -33,28 +33,55 @@ export default async function HomePage() {
         {/* Server-rendered for crawlers/AI engines; AboutMeModule below renders this visually client-side. */}
         <p className="sr-only">{dict.about.description}</p>
 
-        <AnimatedSection id="about" fullScreen variant="fade-up" delay={0.1}>
-          <AboutMeModule />
-        </AnimatedSection>
+        {/* Held in place like the sections below it. It reveals on first contact (viewAmount 0): while pinned it
+            is always fully in view, so no fraction of it has to be visible before it appears. */}
+        <ScrollHold>
+          <AnimatedSection
+            id="about"
+            fullScreen
+            viewAmount={0}
+            variant="fade-up"
+            delay={0.1}
+            depth={false}
+          >
+            <AboutMeModule />
+          </AnimatedSection>
+        </ScrollHold>
 
         <ContentGate section="projects">
-          <AnimatedSection id="projects" fullScreen variant="fade-up" delay={0.1}>
-            <CaseStudiesModule preview />
-          </AnimatedSection>
+          <ScrollHold>
+            <AnimatedSection id="projects" fullScreen variant="fade-up" delay={0.1} depth="sink">
+              <CaseStudiesModule preview />
+            </AnimatedSection>
+          </ScrollHold>
         </ContentGate>
 
         <ContentGate section="media">
-          <AnimatedSection id="testimonials" fullScreen variant="fade-up" delay={0.1}>
-            <MediaModule />
-          </AnimatedSection>
+          <ScrollHold>
+            <AnimatedSection
+              id="testimonials"
+              fullScreen
+              variant="fade-up"
+              delay={0.1}
+              depth="sink"
+            >
+              <MediaModule />
+            </AnimatedSection>
+          </ScrollHold>
         </ContentGate>
 
-        <AnimatedSection id="contact" fullScreen viewAmount={0.4} variant="scale-in" depth="unfold">
-          <ContactModule />
-        </AnimatedSection>
+        <ScrollHold>
+          <AnimatedSection
+            id="contact"
+            fullScreen
+            viewAmount={0.4}
+            variant="scale-in"
+            depth="unfold"
+          >
+            <ContactModule />
+          </AnimatedSection>
+        </ScrollHold>
       </div>
-
-      <Footer />
 
       <BackToTop label={dict.backToTop} />
     </div>

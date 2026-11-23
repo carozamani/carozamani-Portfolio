@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { Reveal, type RevealVariant } from './Reveal';
 
-type SectionDepth = 'stage' | 'unfold';
+type SectionDepth = 'stage' | 'sink' | 'unfold';
 
 type AnimatedSectionProps = {
   id: string;
@@ -13,7 +13,7 @@ type AnimatedSectionProps = {
   variant?: RevealVariant;
   delay?: number;
   fullScreen?: boolean;
-  /** Scroll-linked 3D for the whole section: `stage` leans in and sinks back, `unfold` only opens. */
+  /** Scroll-linked 3D for the whole section: `stage` leans in and sinks back, `sink` also softens and dims as it recedes, `unfold` only opens. */
   depth?: SectionDepth | false;
 };
 

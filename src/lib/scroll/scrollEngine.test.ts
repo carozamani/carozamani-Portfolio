@@ -186,3 +186,135 @@ describe('scrollToTarget plan', () => {
     }
   });
 });
+
+describe('scrollToTarget across pinned sections', () => {
+  const HOLD_START = 1000;
+  const HOLD_END = 1600;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    // window.scrollY is 100 in these tests, so a track at 900 puts the hold at 1000-1600
+    const track = document.createElement('div');
+    track.setAttribute('data-scroll-hold', '');
+    track.append(document.createElement('div'));
+    track.getBoundingClientRect = () => ({ top: 900 }) as DOMRect;
+    document.body.append(track);
+
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(
+      (_element, pseudo) =>
+        ({ height: pseudo ? '600px' : 'auto', top: '0px' }) as unknown as CSSStyleDeclaration,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.innerHTML = '';
+  });
+
+  const positions = (engine: ReturnType<typeof createEngine>) =>
+    engine.scrollTo.mock.calls.map(([position]) => position as number);
+
+  it('steps over the hold instead of scrolling through it, and lands exactly', async () => {
+    const engine = createEngine(0);
+    registerScrollEngine(engine);
+
+    const landed = scrollToTarget(2000);
+    await vi.advanceTimersByTimeAsync(3000);
+    await landed;
+
+    const path = positions(engine);
+    expect(path.length).toBeGreaterThan(10);
+    expect(path.some((position) => position > HOLD_START && position < HOLD_END)).toBe(false);
+    expect(path.at(-1)).toBe(2000);
+    expect([...path].sort((a, b) => a - b)).toEqual(path);
+  });
+
+  it('drives the scroll itself rather than handing a long animation to Lenis', async () => {
+    const engine = createEngine(0);
+    registerScrollEngine(engine);
+
+    const landed = scrollToTarget(2000);
+    await vi.advanceTimersByTimeAsync(3000);
+    await landed;
+
+    for (const [, options] of engine.scrollTo.mock.calls) {
+      expect(options).toEqual({ immediate: true });
+    }
+  });
+
+  it('times the flight on the distance without the hold', async () => {
+    registerScrollEngine(createEngine(0));
+    const onPlan = vi.fn();
+
+    const landed = scrollToTarget(2000, { onPlan });
+
+    // 2000px of page, but only 1400px of it has to be travelled
+    expect(onPlan).toHaveBeenCalledWith({
+      durationMs: (0.7 + 1400 / 3000) * 1000,
+      easing: SCROLL_EASING_CSS,
+    });
+
+    await vi.advanceTimersByTimeAsync(3000);
+    await landed;
+  });
+
+  it('flies upwards over the hold too, as the back-to-top button does', async () => {
+    const engine = createEngine(3000);
+    registerScrollEngine(engine);
+
+    const landed = scrollToTarget(0);
+    await vi.advanceTimersByTimeAsync(3000);
+    await landed;
+
+    const path = positions(engine);
+    expect(path.some((position) => position > HOLD_START && position < HOLD_END)).toBe(false);
+    expect(path.at(-1)).toBe(0);
+    expect([...path].sort((a, b) => b - a)).toEqual(path);
+  });
+
+  it('stops when the visitor takes the wheel, and resolves', async () => {
+    const engine = createEngine(0);
+    registerScrollEngine(engine);
+
+    let resolved = false;
+    void scrollToTarget(2000).then(() => {
+      resolved = true;
+    });
+    await vi.advanceTimersByTimeAsync(300);
+    const written = engine.scrollTo.mock.calls.length;
+
+    window.dispatchEvent(new Event('wheel'));
+    await vi.advanceTimersByTimeAsync(3000);
+
+    expect(resolved).toBe(true);
+    expect(engine.scrollTo.mock.calls.length).toBe(written);
+  });
+
+  it('lets a newer request take over a flight that is still running', async () => {
+    const engine = createEngine(0);
+    registerScrollEngine(engine);
+
+    const first = scrollToTarget(2000);
+    await vi.advanceTimersByTimeAsync(300);
+    const second = scrollToTarget(0, { immediate: true });
+    await Promise.all([first, second]);
+    const written = engine.scrollTo.mock.calls.length;
+
+    await vi.advanceTimersByTimeAsync(3000);
+
+    expect(engine.scrollTo.mock.calls.length).toBe(written);
+    expect(positions(engine).at(-1)).toBe(0);
+  });
+
+  it('scrolls as before when no hold lies between here and the target', async () => {
+    const engine = createEngine(0);
+    registerScrollEngine(engine);
+
+    await scrollToTarget(800);
+
+    expect(engine.scrollTo).toHaveBeenCalledWith(
+      800,
+      expect.objectContaining({ duration: expect.any(Number), onComplete: expect.any(Function) }),
+    );
+  });
+});
