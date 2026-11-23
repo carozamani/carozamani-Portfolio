@@ -137,15 +137,7 @@ export function useHeroStage(
       }
     };
 
-    const handlePointerMove = (event: PointerEvent) => {
-      // Touch has no hover: the scene keeps its slow idle drift instead of jumping to every tap
-      if (event.pointerType === 'touch') return;
-      stage.setPointer(
-        (event.clientX / window.innerWidth) * 2 - 1,
-        (event.clientY / window.innerHeight) * 2 - 1,
-      );
-    };
-    const handlePointerLeave = () => stage.releasePointer();
+    // Keep the hero camera steady: pointer movement must not change the viewing angle.
     const handleScroll = () => stage.setScroll(window.scrollY);
 
     measure();
@@ -164,8 +156,6 @@ export function useHeroStage(
     });
     visibilityObserver.observe(section);
 
-    section.addEventListener('pointermove', handlePointerMove, { passive: true });
-    section.addEventListener('pointerleave', handlePointerLeave);
     window.addEventListener('scroll', handleScroll, { passive: true });
     motionQuery.addEventListener('change', sync);
 
@@ -173,8 +163,6 @@ export function useHeroStage(
       stop();
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
-      section.removeEventListener('pointermove', handlePointerMove);
-      section.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('scroll', handleScroll);
       motionQuery.removeEventListener('change', sync);
       clear();

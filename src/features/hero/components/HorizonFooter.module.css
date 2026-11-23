@@ -1,0 +1,48 @@
+.horizonFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(22rem, 56vh, 32rem);
+  overflow: hidden;
+}
+
+/* Turned over: the planet's body is at the top of the footer and its limb curves down. The mask is
+   the hero's bottom-edge mask (HeroModule.module.css, `.heroSection > canvas`) with the same stops,
+   read from the bottom up, so the planet's far edge melts into the page at the top of the footer the
+   way the hero's does at its bottom.
+   The dark sheet applies only here, over the planet itself, not as a rectangle over the whole footer:
+   a full-width sheet would end in a hard edge where the footer meets the page above. brightness()
+   only darkens the canvas's own drawn pixels, so the transparent rest of the frame is untouched, and
+   the mask still melts the planet's far edge into the page. Keep the darkness in sync with the hero's
+   own sheet (HeroModule.module.css, `.heroSection::before`), via the same --hero-backdrop-opacity. */
+.planet {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  filter: brightness(calc(1 - var(--hero-backdrop-opacity, 0.4)));
+  mask-image: linear-gradient(
+    to top,
+    hsla(0, 0%, 0%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 62%,
+    hsla(0, 0%, 0%, 0.72) 74%,
+    hsla(0, 0%, 0%, 0.42) 84%,
+    hsla(0, 0%, 0%, 0.16) 93%,
+    hsla(0, 0%, 0%, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    hsla(0, 0%, 0%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 62%,
+    hsla(0, 0%, 0%, 0.72) 74%,
+    hsla(0, 0%, 0%, 0.42) 84%,
+    hsla(0, 0%, 0%, 0.16) 93%,
+    hsla(0, 0%, 0%, 0) 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}

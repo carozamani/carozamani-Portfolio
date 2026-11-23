@@ -7,6 +7,7 @@ import { FiArrowDown } from 'react-icons/fi';
 
 import Button from '@/components/ui/Button';
 import SocialIcons from '@/components/ui/SocialIcons';
+import { earthFooterConfig } from '@/data/earthHorizon';
 import { heroSocialLinks } from '@/data/hero';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
@@ -58,7 +59,8 @@ export function HeroModule() {
 
   return (
     <section ref={sectionRef} className={styles.heroSection} aria-labelledby="hero-title">
-      <EarthHorizonCanvas stageRef={stageRef} />
+      <div className={styles.haze} aria-hidden="true" />
+      <EarthHorizonCanvas stageRef={stageRef} config={earthFooterConfig} />
       <div ref={gridRef} className={styles.gridOverlay} data-stage-grid aria-hidden="true" />
 
       <div className={styles.layer} data-stage-layer="near">
