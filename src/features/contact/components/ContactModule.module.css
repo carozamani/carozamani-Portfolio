@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--section-padding-y) var(--space-l);
+  padding: clamp(3rem, 7vh, 6rem) var(--space-l);
   background: transparent;
 }
 
@@ -29,7 +29,7 @@
     transparent,
     transparent
   );
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(6px);
   border: var(--card-border-default);
   box-shadow: var(--shadow-glow-sm);
   overflow: hidden;
