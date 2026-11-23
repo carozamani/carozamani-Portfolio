@@ -102,7 +102,7 @@ export default function QuantumCarousel({ preview = false }: { preview?: boolean
                             src={image}
                             alt=""
                             fill
-                            sizes="384px"
+                            sizes="400px"
                             className={styles.rowPreviewImage}
                           />
                         ) : (
