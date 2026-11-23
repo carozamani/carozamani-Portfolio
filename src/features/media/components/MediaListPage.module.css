@@ -17,7 +17,7 @@
 }
 
 .title {
-  font-size: var(--font-size-h1);
+  font-size: var(--font-size-page-title);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
 }

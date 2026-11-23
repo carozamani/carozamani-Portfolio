@@ -6,6 +6,9 @@
 }
 
 .list {
+  /* One step stronger than the shared --color-neutral-gray-soft (0.1), which other components still use.
+     The logo tile keeps its own border. */
+  --list-line: hsla(0, 0%, 60%, 0.2);
   position: relative;
   width: 100%;
   list-style: none;
@@ -13,7 +16,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  border-top: 1px solid var(--color-neutral-gray-soft);
+  border-top: 1px solid var(--list-line);
 }
 
 .listItem {
@@ -33,7 +36,7 @@
 .rowLogoColumn,
 .rowTitleWrap,
 .rowControlsCell {
-  border-bottom: 1px solid var(--color-neutral-gray-soft);
+  border-bottom: 1px solid var(--list-line);
 }
 
 .rowLogoColumn {
@@ -43,7 +46,7 @@
   align-items: center;
   padding-block: clamp(1.25rem, 3vw, 1.75rem);
   padding-inline-end: clamp(1rem, 3vw, 2rem);
-  border-inline-end: 1px solid var(--color-neutral-gray-soft);
+  border-inline-end: 1px solid var(--list-line);
 }
 
 .rowLogo {
@@ -90,7 +93,7 @@
   inset-inline-end: -1px;
   width: 1px;
   height: 1.5rem;
-  background: var(--color-neutral-gray-soft);
+  background: var(--list-line);
 }
 
 .listItem:last-child .rowLogoColumn::after {
@@ -100,7 +103,28 @@
   inset-inline-end: -1px;
   width: 1px;
   height: 1.5rem;
-  background: var(--color-neutral-gray-soft);
+  background: var(--list-line);
+}
+
+/* The third column's divider extends past the list's top and bottom edge exactly like the first column's */
+.listItem:first-child .rowControlsCell::before {
+  content: '';
+  position: absolute;
+  top: -1.5rem;
+  inset-inline-start: -1px;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--list-line);
+}
+
+.listItem:last-child .rowControlsCell::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5rem;
+  inset-inline-start: -1px;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--list-line);
 }
 
 .rowTitle {
@@ -153,7 +177,7 @@
   justify-content: center;
   padding-block: clamp(1.25rem, 3vw, 1.75rem);
   padding-inline: clamp(0.75rem, 2vw, 1.5rem);
-  border-inline-start: 1px solid var(--color-neutral-gray-soft);
+  border-inline-start: 1px solid var(--list-line);
 }
 
 .articleCue {
@@ -170,8 +194,12 @@
 }
 
 .row[data-active='true'] .articleCue {
-  color: var(--color-text-primary);
-  background: hsla(0, 0%, 100%, 0.06);
+  color: var(--color-primary);
+  background: var(--color-ambient-accent-faint);
+}
+
+.row[data-active='true'] .rowLogo {
+  border-color: var(--color-border-emphasis);
 }
 
 .row[data-active='true'] .rowTitle {
@@ -180,10 +208,6 @@
 
 .row[data-active='true'] .rowSummary {
   color: var(--color-text-secondary);
-}
-
-.row[data-active='true'] .rowSubtitle {
-  color: hsla(0, 0%, 100%, 0.92);
 }
 
 .centerGlow {
@@ -203,6 +227,11 @@
 @media (max-width: 700px) {
   .list {
     grid-template-columns: auto 1fr;
+  }
+
+  .rowControlsCell::before,
+  .rowControlsCell::after {
+    display: none;
   }
 
   .rowControlsCell {

@@ -118,6 +118,7 @@ I also build front ends with React, Next.js, and TypeScript, and I’m familiar 
       description: 'Episodes about design, UX, product thinking, and challenges.',
       viewMore: 'View all episodes',
       about: 'About this episode',
+      suggested: 'Suggested episodes',
     },
     articles: {
       title: 'Articles',
@@ -380,8 +381,7 @@ I also build front ends with React, Next.js, and TypeScript, and I’m familiar 
     title: 'This page drifted off-screen',
     text: 'The page you’re looking for doesn’t exist or has moved.',
     home: 'Back to Home',
-    eyebrow: 'Error 404',
-    status: 'Signal lost',
+    suggest: 'Closest match',
     requested: 'Requested',
     back: 'Go back',
     jump: 'Or jump to',

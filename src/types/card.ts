@@ -16,4 +16,6 @@ export interface CardProps {
   listeners?: number;
   duration?: string;
   readTime?: string;
+  /** Podcasts only: ids of the episodes suggested under this one, in the admin's order. */
+  recommended?: string[];
 }

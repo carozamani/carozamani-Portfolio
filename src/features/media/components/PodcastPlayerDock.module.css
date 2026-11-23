@@ -12,8 +12,9 @@
   pointer-events: auto;
   width: 100%;
   /* Match active podcast card fill */
-  background-color: rgba(18, 18, 24, 0.55);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background-color: var(--color-glass-card);
+  /* Unprefixed only: the CSS pipeline adds -webkit- itself. Written by hand after it, the prefixed
+     twin made the pipeline keep just that one, which Chrome ignores, so the dock was not blurred. */
+  backdrop-filter: blur(14px);
   border-top: 1px solid hsla(0, 0%, 100%, 0.1);
 }
