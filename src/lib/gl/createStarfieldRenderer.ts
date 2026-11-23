@@ -6,8 +6,10 @@ import { starfieldFragmentShader, starfieldVertexShader } from './starfieldShade
 
 export interface StarfieldFrame {
   elapsedSec: number;
-  /** Radians the sky has turned; see starRotation. */
-  starRotation: number;
+  /** Radians the camera has pitched; see cameraPitch. */
+  cameraPitch: number;
+  /** Brightness of the whole sky, 0 to 1; see skyBrightness. */
+  dim: number;
 }
 
 export interface StarfieldRenderer {
@@ -36,8 +38,9 @@ export function createStarfieldRenderer(
   const buffer = createFullscreenTriangle(gl, program);
   const uRes = gl.getUniformLocation(program, 'uRes');
   const uTime = gl.getUniformLocation(program, 'uTime');
-  const uStarRot = gl.getUniformLocation(program, 'uStarRot');
+  const uCameraPitch = gl.getUniformLocation(program, 'uCameraPitch');
   const uFocal = gl.getUniformLocation(program, 'uFocal');
+  const uDim = gl.getUniformLocation(program, 'uDim');
 
   return {
     resize(width, height) {
@@ -46,9 +49,10 @@ export function createStarfieldRenderer(
       gl.uniform1f(uFocal, lensFocal(width, height, config.camera));
     },
 
-    render({ elapsedSec, starRotation }) {
+    render({ elapsedSec, cameraPitch, dim }) {
       gl.uniform1f(uTime, elapsedSec);
-      gl.uniform1f(uStarRot, starRotation);
+      gl.uniform1f(uCameraPitch, cameraPitch);
+      gl.uniform1f(uDim, dim);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
 
