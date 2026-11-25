@@ -160,6 +160,12 @@ The stars are one fixed WebGL canvas behind the whole landing page (`/` only), m
 - The sky dims evenly with scroll progress down the document, from full at the top to `dim.floor` at the bottom (`skyBrightness`, applied in the shader as `uDim`).
 - Reduced motion keeps the sky still but still dims it. `createQualityGovernor` lowers the resolution on slow GPUs.
 
+## Section pinning (`ScrollHold`)
+
+On the landing page each section is wrapped in `components/shared/ScrollHold`, which pins it (`position: sticky` plus a spacer of `--hold` viewport heights) so it stays on screen for a while as the visitor scrolls by hand.
+
+**Desktop only.** The pin and its spacer exist only under `(min-width: 64rem) and (pointer: fine)` and no reduced-motion preference. Phones and tablets, in either orientation, scroll freely with nothing pinned. With no spacer `measureHolds()` finds no hold, so `scrollToTarget` animates over the real distance there and needs no special case.
+
 ## Known debt (not yet unified)
 
 - `QuantumCarousel`'s feature cards (`.featureItem`) and the media `Card` component both implement their own "glass panel" look (border + blur + glow) independently rather than sharing a `.glassPanel` base class. Low priority — they serve different content shapes (audio player vs. static feature card) — but worth extracting if a third card type is added.
