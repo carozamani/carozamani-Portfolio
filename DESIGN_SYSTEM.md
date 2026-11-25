@@ -152,6 +152,14 @@ Inertial page scrolling comes from Lenis. `components/shared/SmoothScroll.tsx` i
 
 **Programmatic scrolling goes through `scrollToTarget`** (`lib/scroll/scrollEngine.ts`), never `window.scrollTo` or `scrollIntoView` directly. It takes a pixel offset, a selector or an element, plus `{ offset, immediate }`, and uses Lenis when it is running, the browser's smooth scroll when it is not, and an instant jump for reduced motion. It returns a Promise that resolves when the scroll lands **or at a deadline**, because Lenis never calls `onComplete` when a wheel or touch gesture interrupts the animation; anything that locks UI while a scroll runs (the `GlassMenu` observer) must wait on that promise, not on a fixed timeout. `GlassMenu`, `HeroModule` and `PageScrollbar` use it. `BackToTop` and `CaseImageNav` use the browser's smooth scroll on purpose: they only exist on the case-study detail pages, where Lenis is off.
 
+## Page sky (`PageStarfield`, `lib/gl/`)
+
+The stars are one fixed WebGL canvas behind the whole landing page (`/` only), mounted once in `layout.tsx`. `<main>` stacks above it, so every section and box sits in front of the same sky; sections must stay transparent (no `--color-page-bg` fill on a section wrapper) or they hide it. The hero's planet canvas is transparent around the planet for the same reason.
+
+- The stars drift on their own and trail the page while it scrolls (`scrollParallax` in `data/starfieldBackdrop.ts`).
+- The sky dims evenly with scroll progress down the document, from full at the top to `dim.floor` at the bottom (`skyBrightness`, applied in the shader as `uDim`).
+- Reduced motion keeps the sky still but still dims it. `createQualityGovernor` lowers the resolution on slow GPUs.
+
 ## Known debt (not yet unified)
 
 - `QuantumCarousel`'s feature cards (`.featureItem`) and the media `Card` component both implement their own "glass panel" look (border + blur + glow) independently rather than sharing a `.glassPanel` base class. Low priority — they serve different content shapes (audio player vs. static feature card) — but worth extracting if a third card type is added.

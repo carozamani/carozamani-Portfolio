@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
 import { PageScrollbar } from '@/components/shared/PageScrollbar';
+import { PageStarfield } from '@/components/shared/PageStarfield';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { SiteChrome } from '@/components/shared/SiteChrome';
 import { SmoothScroll } from '@/components/shared/SmoothScroll';
@@ -99,6 +100,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <PageStarfield />
         <LocaleProvider locale={locale} dict={dict}>
           <ContentProvider content={content}>
             <PodcastPlayerProvider>
