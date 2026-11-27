@@ -1,0 +1,90 @@
+.menuBackdrop {
+  position: relative;
+  width: 100%;
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .menuBackdrop {
+    width: auto;
+  }
+}
+
+/* The tablet header's logo is the bare mark: no box, no glass, nothing behind it. The 4rem square only
+   keeps it centred on the menu bar's height (h-16). */
+.logoBadge {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+}
+
+/* The mark is the same colour as "zamani" in the wordmark */
+.logoMark {
+  display: block;
+  width: 2.75rem;
+  aspect-ratio: 84 / 66;
+  background-color: var(--color-text-primary);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* A soft shadow keeps the wordmark readable over the stars */
+.wordmark {
+  display: none;
+  filter: drop-shadow(0 0 0.625rem hsla(0, 0%, 0%, 0.5));
+}
+
+/* Tablet shows the mark alone; desktop (lg, 64rem) shows the wordmark alone */
+@media (min-width: 64rem) {
+  .logoBadge {
+    display: none;
+  }
+
+  .wordmark {
+    display: block;
+  }
+}
+/* Page black behind the menu, fading smoothly down to nothing. No shape of its own: an ellipse
+   or rounded bottom edge shows up as a second tone against the stars behind it, so the stops are
+   eased (not a straight ramp) and the veil stays translucent even at the top. */
+.headerBackdrop {
+  --header-fade: var(--color-page-bg);
+
+  height: 7rem;
+  opacity: 0;
+  transform: translateY(-1rem);
+  transform-origin: 50% 0;
+  /* A veil that stays solid black behind the menu row and only then eases out, reaching transparent at the
+     very bottom edge so nothing in it ever reads as a shape */
+  background: linear-gradient(
+    to bottom,
+    var(--header-fade) 0%,
+    var(--header-fade) 12%,
+    color-mix(in srgb, var(--header-fade) 96%, transparent) 24%,
+    color-mix(in srgb, var(--header-fade) 88%, transparent) 36%,
+    color-mix(in srgb, var(--header-fade) 76%, transparent) 48%,
+    color-mix(in srgb, var(--header-fade) 62%, transparent) 58%,
+    color-mix(in srgb, var(--header-fade) 46%, transparent) 68%,
+    color-mix(in srgb, var(--header-fade) 30%, transparent) 78%,
+    color-mix(in srgb, var(--header-fade) 14%, transparent) 88%,
+    color-mix(in srgb, var(--header-fade) 4%, transparent) 95%,
+    transparent 100%
+  );
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.headerBackdrop[data-scrolled='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .headerBackdrop {
+    transition: none;
+  }
+}

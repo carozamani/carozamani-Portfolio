@@ -4,11 +4,17 @@
   height: 2.25rem;
 }
 
+/* The same glass as the menu bar (GlassMenu): black at 30%, blurred, no border, no shadow */
 .panel {
   position: relative;
   z-index: 50;
   overflow: hidden;
   border-radius: 1.125rem;
+  background: var(--header-glass-bg);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 0;
+  box-shadow: none;
 }
 
 .trigger,
@@ -87,11 +93,8 @@
   outline-offset: 2px;
 }
 
-/* The trigger sits bare on the page; only the opened list needs a surface to stay readable */
+/* The opened list sits on a slightly denser surface to stay readable over whatever is behind it, still without a shadow */
 .panel[data-open='true'] {
-  background: hsla(0, 0%, 0%, 0.55);
-  backdrop-filter: blur(24px);
-  box-shadow:
-    0 10px 15px -3px hsla(0, 0%, 0%, 0.4),
-    0 4px 6px -4px hsla(0, 0%, 0%, 0.4);
+  background: hsla(0, 0%, 0%, 0.35);
+  box-shadow: none;
 }
