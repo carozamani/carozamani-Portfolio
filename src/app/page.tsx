@@ -5,6 +5,7 @@ import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { BackToTop } from '@/components/shared/BackToTop';
 import { ContentGate } from '@/components/shared/ContentGate';
 import { ScrollHold } from '@/components/shared/ScrollHold';
+import { testimonials } from '@/data/testimonials';
 import { dictionaries } from '@/lib/i18n/dictionaries';
 import { getLocale } from '@/lib/i18n/server';
 
@@ -15,6 +16,11 @@ const CaseStudiesModule = dynamic(() =>
 );
 const MediaModule = dynamic(() =>
   import('@/features/media/components/MediaModule').then((mod) => mod.MediaModule),
+);
+const TestimonialsModule = dynamic(() =>
+  import('@/features/testimonials/components/TestimonialsModule').then(
+    (mod) => mod.TestimonialsModule,
+  ),
 );
 const ContactModule = dynamic(() =>
   import('@/features/contact/components/ContactModule').then((mod) => mod.ContactModule),
@@ -69,6 +75,22 @@ export default async function HomePage() {
             </AnimatedSection>
           </ScrollHold>
         </ContentGate>
+
+        {/* Held in place and sized like the sections around it. Skipped when there are no recommendations:
+            TestimonialsModule renders nothing then, and an empty held screen would be dead scroll. */}
+        {testimonials.length > 0 && (
+          <ScrollHold>
+            <AnimatedSection
+              id="recommendations"
+              fullScreen
+              variant="fade-up"
+              delay={0.1}
+              depth={false}
+            >
+              <TestimonialsModule />
+            </AnimatedSection>
+          </ScrollHold>
+        )}
 
         <ScrollHold>
           <AnimatedSection
