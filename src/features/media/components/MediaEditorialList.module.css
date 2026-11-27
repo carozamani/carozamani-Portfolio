@@ -58,20 +58,35 @@
   justify-content: center;
   border-radius: 0.375rem;
   background: hsla(233, 60%, 8%, 0.6);
-  border: 1px solid hsla(0, 0%, 100%, 0.09);
+  border: 1px solid hsla(0, 0%, 100%, 0.05);
   color: var(--color-text-secondary);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .rowLogoImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: inherit;
 }
 
 .rowLogoGlyph {
   font-size: 1rem;
   font-weight: var(--font-weight-bold);
+}
+
+/* Podcast rows: the picture sits in a stack so a play button (phones only) can lie over it. The picture is
+   a link of its own, because a button can't live inside the row's link. */
+.rowLogoStack {
+  position: relative;
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.rowLogoLink {
+  display: block;
+  color: inherit;
 }
 
 .rowTitleWrap {
@@ -101,27 +116,6 @@
   position: absolute;
   bottom: -1.5rem;
   inset-inline-end: -1px;
-  width: 1px;
-  height: 1.5rem;
-  background: var(--list-line);
-}
-
-/* The third column's divider extends past the list's top and bottom edge exactly like the first column's */
-.listItem:first-child .rowControlsCell::before {
-  content: '';
-  position: absolute;
-  top: -1.5rem;
-  inset-inline-start: -1px;
-  width: 1px;
-  height: 1.5rem;
-  background: var(--list-line);
-}
-
-.listItem:last-child .rowControlsCell::after {
-  content: '';
-  position: absolute;
-  bottom: -1.5rem;
-  inset-inline-start: -1px;
   width: 1px;
   height: 1.5rem;
   background: var(--list-line);
@@ -177,7 +171,6 @@
   justify-content: center;
   padding-block: clamp(1.25rem, 3vw, 1.75rem);
   padding-inline: clamp(0.75rem, 2vw, 1.5rem);
-  border-inline-start: 1px solid var(--list-line);
 }
 
 .articleCue {
@@ -229,19 +222,30 @@
     grid-template-columns: auto 1fr;
   }
 
-  .rowControlsCell::before,
-  .rowControlsCell::after {
-    display: none;
-  }
-
   .rowControlsCell {
     grid-column: 1 / -1;
-    border-inline-start: 0;
     justify-content: flex-start;
     padding-block-start: 0;
   }
 
   .rowTitleWrap {
     border-bottom: 0;
+  }
+
+  /* Phones: no transport under a podcast. Its picture carries a single play button instead, and the title
+     takes over the row line the transport used to draw */
+  .rowTransportCell {
+    display: none;
+  }
+
+  .row[data-kind='podcasts'] .rowTitleWrap {
+    border-bottom: 1px solid var(--list-line);
+  }
+
+  /* The loaded episode's text takes the brand colour, like its play button. It follows the player rather
+     than the hover, so it also holds on touch screens. It comes last so it wins over the focus colours. */
+  .row[data-current] .rowTitle,
+  .row[data-current] .rowSummary {
+    color: var(--color-brand-primary);
   }
 }

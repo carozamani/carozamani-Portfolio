@@ -42,11 +42,11 @@ export default function ArticleDetail({ article }: { article: CardProps }) {
           {article.content ? (
             <div
               ref={proseRef}
-              className={`rich-content ${styles.richBody}`}
+              className={`rich-content ${styles.richBody} ${styles.panel}`}
               dangerouslySetInnerHTML={{ __html: richHtml }}
             />
           ) : article.body?.length ? (
-            <div ref={proseRef}>
+            <div ref={proseRef} className={styles.panel}>
               <ProseSections paragraphs={article.body} className={styles.body} />
             </div>
           ) : null}

@@ -71,3 +71,14 @@
 .richBody {
   width: 100%;
 }
+
+/* The text itself sits on a translucent glass panel */
+.panel {
+  width: 100%;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 1.25rem;
+  background: hsla(0, 0%, 0%, 0.42);
+  border: 1px solid hsla(0, 0%, 100%, 0.07);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}

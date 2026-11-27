@@ -100,3 +100,47 @@
   font-size: 0.75rem;
   color: var(--color-text-muted);
 }
+
+/* On phones the episodes sit in one row that scrolls sideways, each as wide as most of the screen so the
+   next one peeks in and the row reads as scrollable, with a fine line between neighbours. (This box is
+   only visible at this width through the wrapper PodcastDetail renders around it.) */
+@media (max-width: 900px) {
+  .list {
+    flex-direction: row;
+    gap: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.35rem;
+    scrollbar-width: none;
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .list > li {
+    position: relative;
+    flex: none;
+    width: min(16.5rem, 78%);
+    scroll-snap-align: start;
+  }
+
+  .list > li + li::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.35rem;
+    inset-inline-start: 0;
+    width: 1px;
+    background: hsla(0, 0%, 100%, 0.12);
+  }
+
+  .item {
+    height: 100%;
+    padding-inline: 0.85rem;
+  }
+
+  .list > li:first-child .item {
+    padding-inline-start: 0.35rem;
+  }
+}

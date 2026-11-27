@@ -41,12 +41,16 @@
   padding-block-end: clamp(1rem, 2.5vw, 1.75rem);
 }
 
+/* The heading panel and the text panel (.content) are stacked with no gap and wear the same fill and blur
+   with no border or rounded corners, so at every width they read as one box */
 .textHeading {
   grid-area: textHeading;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.25rem;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
 .content {
@@ -56,6 +60,14 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1.25rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: hsla(0, 0%, 0%, 0.42);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.content:empty {
+  display: none;
 }
 
 .textPanel {
@@ -222,11 +234,15 @@
     gap: 0;
   }
 
+  /* The back link and the date line sit on the start edge of the cover below them (left in English, right
+     in Persian), so they share its width and its centred column */
   .intro {
     order: 1;
     width: 100%;
-    align-items: center;
-    text-align: center;
+    max-width: 22rem;
+    margin-inline: auto;
+    align-items: flex-start;
+    text-align: start;
     padding-block-end: 0;
     margin-block-end: clamp(1.5rem, 4vw, 3rem);
   }
@@ -260,10 +276,6 @@
     margin-block-end: clamp(1.5rem, 4vw, 3rem);
   }
 
-  .back {
-    justify-content: center;
-  }
-
   .title {
     text-wrap: balance;
   }
@@ -280,12 +292,12 @@
     display: none;
   }
 
+  /* Full width like the text panel above it (the cover and transport above stay in their narrower column) */
   .suggestionsMobile {
     display: block;
     order: 5;
     width: 100%;
-    max-width: 22rem;
-    margin-inline: auto;
+    box-sizing: border-box;
   }
 
   .body,
