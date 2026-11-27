@@ -11,6 +11,10 @@ export const fa: Dictionary = {
   skipLink: 'رفتن به محتوای اصلی',
   language: { code: 'FA', label: 'انتخاب زبان' },
   backToTop: 'بازگشت به بالا',
+  testimonials: {
+    label: 'نظر همکاران',
+    listLabel: 'توصیه‌نامه‌های کسانی که با آن‌ها کار کرده‌ام',
+  },
   nav: {
     aria: 'منوی اصلی',
     home: 'خانه',

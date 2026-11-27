@@ -22,6 +22,10 @@ export const en = {
   skipLink: 'Skip to main content',
   language: { code: 'EN', label: 'Select language' },
   backToTop: 'Back to top',
+  testimonials: {
+    label: 'WHAT PEOPLE SAY',
+    listLabel: 'Recommendations from people I have worked with',
+  },
   nav: {
     aria: 'Main navigation',
     home: 'Home',
