@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { Reveal, type RevealVariant } from './Reveal';
+import styles from './AnimatedSection.module.css';
 
 type SectionDepth = 'stage' | 'sink' | 'unfold';
 
@@ -31,7 +32,7 @@ export function AnimatedSection({
       as="section"
       id={id}
       className={clsx(
-        fullScreen && 'flex min-h-dvh flex-col justify-center',
+        fullScreen && styles.fullScreen,
         depth && '[perspective:var(--depth-perspective)]',
       )}
       amount={viewAmount}

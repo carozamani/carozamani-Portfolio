@@ -1,0 +1,23 @@
+.fullScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+/* The complement of ScrollHold: wherever a section is not pinned (a narrow screen, a touch screen, or reduced
+   motion) it is no longer a full screen centred in its own height, which left a different amount of empty
+   space around every section. It is as tall as its content plus half of --section-gap above and below, so
+   the gap between any two sections is the same. The module inside brings its own vertical padding, which
+   would add to that and differ from module to module, so it is dropped here. */
+@media (max-width: 63.99rem), (pointer: coarse), (pointer: none), (prefers-reduced-motion: reduce) {
+  .fullScreen {
+    min-height: 0;
+    justify-content: flex-start;
+    padding-block: calc(var(--section-gap) / 2);
+  }
+
+  .fullScreen > div > * {
+    padding-block: 0;
+  }
+}
