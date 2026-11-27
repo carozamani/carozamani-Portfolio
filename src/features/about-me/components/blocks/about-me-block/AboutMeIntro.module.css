@@ -3,19 +3,6 @@
   overflow: hidden;
   border-radius: var(--radius-card);
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(1rem);
-  border: 1px solid var(--color-border-default);
-  box-shadow: 0 0 15px var(--drop-shadow);
-}
-
-.hoverBorder {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid var(--color-border-emphasis);
-  pointer-events: none;
-  opacity: 0;
 }
 
 .gridPattern {
@@ -68,4 +55,18 @@
 .highlight {
   color: var(--color-brand-primary-hsl);
   font-weight: 600;
+}
+
+/* Very dark, nearly solid fill (the shared .cardFrame fill is rgba(9, 12, 22, 0.74)) and a compact shadow:
+   a short black drop underneath plus a blue glow (the site's secondary blue, not the cyan primary) tight to
+   the card and a small halo. */
+.wrapper:global(.cardFrame) {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006) 42%),
+    rgba(2, 3, 8, 0.96);
+  box-shadow:
+    0 1.5rem 3rem -1rem rgba(0, 0, 0, 1),
+    0 0 1.5rem -0.25rem color-mix(in srgb, var(--color-secondary) 55%, transparent),
+    0 0 3rem -0.75rem color-mix(in srgb, var(--color-secondary) 30%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }

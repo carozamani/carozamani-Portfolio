@@ -6,11 +6,10 @@
   --grid-gap: 1.5rem;
   --block-backdrop-blur: 1.5rem;
   --tag-radius: 0.875rem;
-  --tag-blur: 0.8rem;
-  --tag-shadow: 0 0 0.3125rem rgb(0, 0, 0);
   --offset-top: 1rem;
   --tag-height: 4rem; /* ارتفاع کارت‌ها کمی بیشتر شد */
   --scroll-column-width: 50%; /* عرض ستون‌ها نصف بخش راست */
+  --tag-bg: #050b1a; /* very dark navy, almost black */
 
   position: relative;
   width: 100%;
@@ -18,9 +17,6 @@
   overflow: hidden;
   border-radius: var(--block-radius);
   padding: var(--block-padding);
-  background-color: rgba(18, 18, 24, 0.26);
-  backdrop-filter: blur(var(--block-backdrop-blur));
-  border: var(--card-border-md);
   z-index: 0;
   transition: none; /* حذف transition برای transform */
 }
@@ -51,6 +47,15 @@
   align-items: flex-start;
 }
 
+/* When the block is one column (title above, tags below) a dashed line under the title separates the two,
+   running the full width of the block. Side by side there is nothing to separate. */
+@media (max-width: 767px) {
+  .leftSection {
+    padding-block-end: 0.75rem;
+    border-block-end: 1px dashed var(--color-border-default);
+  }
+}
+
 @media (min-width: 768px) {
   .leftSection {
     grid-column: span 5;
@@ -67,6 +72,57 @@
 /* کلمه‌های بلند عنوان کوچک‌تر می‌شوند تا روی ستون کارت‌ها نیفتند */
 .longWord {
   font-size: 0.62em;
+}
+
+/* Only when the title sits beside the tags: a white dashed line with an arrowhead at each end sits between
+   the subtitle and the title, running the full width of the column */
+.measure {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .measure {
+    --arrow-size: 0.75rem;
+    --measure-width: 2px;
+    --measure-color: #fff;
+
+    display: flex;
+    flex: none;
+    align-items: center;
+    width: 100%;
+    height: var(--arrow-size);
+    margin-block: 0.25rem 0.75rem;
+  }
+
+  .measureLine {
+    position: relative;
+    flex: 1;
+    border-block-start: var(--measure-width) dashed var(--measure-color);
+  }
+
+  .measureLine::before,
+  .measureLine::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--measure-width) / -2);
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+    border: 0 solid var(--measure-color);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* a rotated square's corner is its arrow tip: 0.21 x the side puts the tip on the line's end */
+  .measureLine::before {
+    left: calc(var(--arrow-size) * 0.21);
+    border-left-width: var(--measure-width);
+    border-bottom-width: var(--measure-width);
+  }
+
+  .measureLine::after {
+    right: calc(var(--arrow-size) * 0.21);
+    border-right-width: var(--measure-width);
+    border-top-width: var(--measure-width);
+  }
 }
 
 /* بخش راست */
@@ -129,18 +185,22 @@
   will-change: transform;
 }
 
-/* کارت‌ها (Tag Items) */
+/* کارت‌ها (Tag Items). The height is a minimum: when a tag is too narrow for its name and picture side by
+   side, the picture moves above the name (see .tagContent) and the card grows to hold both. The column
+   loops by its total height, so cards of different heights are fine. The side padding is small so a
+   name has the most room to stay on one line. */
 .tagItem {
   position: relative;
   width: 100%;
-  height: var(--tag-height); /* ارتفاع کارت بیشتر */
+  min-height: var(--tag-height); /* ارتفاع کارت بیشتر */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem; /* متن جمع و جورتر */
+  padding: 0.5rem 0.75rem; /* متن جمع و جورتر */
   border-radius: var(--tag-radius);
+  /* Solid, very dark navy fill (the column scrolls behind the tags, so a see-through fill would show them) and the shared border token */
+  background: var(--tag-bg);
   border: var(--card-border-md);
-  box-shadow: var(--tag-shadow);
   color: white;
   font-weight: 500; /* سبک‌تر */
   font-size: 0.875rem; /* متن کوچک‌تر */
@@ -151,21 +211,49 @@
   transition: all 0.3s;
 }
 
-.tagItem::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--tag-radius);
-  border: 1px solid transparent;
-  background: var(--tag-bg-gradiant);
-  opacity: 0.4;
-  filter: blur(var(--tag-blur));
-  pointer-events: none;
-  transition: opacity 0.3s;
+/* A tag with a picture: the name, then the logo or icon, in one row with 8px between them, centred as one
+   group like the plain-text tags. When the card is too narrow for both in a row, the row wraps with the
+   picture above and the name below (wrap-reverse puts the wrapped line on top), 4px apart. */
+.tagContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+  min-width: 0;
+  max-width: 100%;
 }
 
-.tagItem:hover::before {
-  opacity: 0.6;
+/* The name always stays on one line: when it does not fit beside the picture, the picture moves up
+   instead of the name breaking in two */
+.tagLabel {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* The logo and the icon share one size, a little taller than the name's line (1.5 x the font size against
+   1.25 x), so the picture reads clearly beside the words. The logo cannot be picked up by the pointer: the
+   column scrolls by dragging, and a draggable image would swallow the gesture. */
+.tagLogo,
+.tagIcon {
+  flex: none;
+  height: 1.5em;
+}
+
+.tagLogo {
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Icons are square and drawn as outlines in the brand's primary colour (white where it is not set) */
+.tagIcon {
+  width: 1.5em;
+  color: var(--color-primary, currentColor);
+  pointer-events: none;
 }
 
 .offsetTop {
@@ -235,4 +323,13 @@
   .rightSection {
     grid-column: span 12;
   }
+}
+
+/* A darker fill than the shared faint card, and one flat, very faint brand blue for this box's outline instead of the shared card gradient */
+.blockContainer:global(.cardFrame.cardFrameFaint) {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.blockContainer:global(.cardFrame)::after {
+  background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
 }

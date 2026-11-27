@@ -25,7 +25,7 @@ export default function BlockIntro({
   const highlightText = highlightProp ?? about.highlight;
 
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <div className={clsx('cardFrame', styles.wrapper, className)}>
       {/* Grid Pattern */}
       <div className={styles.gridPattern} />
 
@@ -57,7 +57,6 @@ export default function BlockIntro({
       </div>
 
       {/* Hover Border */}
-      <div className={styles.hoverBorder} />
     </div>
   );
 }
