@@ -35,10 +35,15 @@
   transition: opacity var(--logo-fade-ms, 610ms) var(--ease-out);
 }
 
-/* The glow sits on this wrapper: on the masked element itself a filter would run before the mask and
-   be cut away with it */
+/* The mark with the wordmark under it. The one colour is set here and both take it: the mark fills
+   with currentColor, and the wordmark's "uniform" mode inherits it. The glow sits on this wrapper: on
+   the masked element itself a filter would run before the mask and be cut away with it. */
 .badge {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-brand-primary);
   filter: drop-shadow(0 0 0.75rem hsla(195, 100%, 50%, 0.45));
 }
 
@@ -46,13 +51,18 @@
   display: block;
   width: clamp(2.75rem, 5vw, 3.75rem);
   aspect-ratio: 84 / 66;
-  background-color: var(--color-brand-primary);
+  background-color: currentColor;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
+}
+
+/* Under the mark, a little larger than the menu text so it reads at splash distance */
+.name {
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
 }
 
 .logo[data-visible='true'] .badge {
