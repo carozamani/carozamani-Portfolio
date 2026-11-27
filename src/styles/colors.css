@@ -1,7 +1,7 @@
 :root {
   /* ============================= */
   /* Display Sci-Fi Teal/Cyan      */
-  /* H: 190 (Teal/Blue-Green), S: 70%, L: 50% (Base) */
+  /* (used by the 404 stage only)  */
   /* ============================= */
   --display-pine-scale-0: #04061c;
   --display-pine-scale-1: #070b2e;
@@ -21,11 +21,22 @@
   --display-pine-fgColor: var(--display-pine-scale-6);
 
   /* ====================== */
+  /* Brand: two blues       */
+  /* ====================== */
+  /* Primary is Tiffany blue: the logo, text accents, links, the hero ring and focus outlines.
+     Secondary is the deep blue of the active-menu border (rgb 0 81 255): borders, glows, tinted
+     surfaces and the planet's halo are built from it. Do not add a third hue. */
+  --color-primary: hsl(195, 100%, 50%);
+  --color-secondary: hsl(221, 100%, 50%);
+
+  /* ====================== */
   /* Semantic Color Tokens  */
   /* ====================== */
-  --color-brand-primary: hsl(195, 100%, 50%);
-  --color-brand-secondary: hsl(196, 100%, 23%);
-  --color-brand-emphasis: hsl(184, 100%, 50%);
+  --color-brand-primary: var(--color-primary);
+  /* Section headings inside long text: the brand blue one step below the page title */
+  --color-brand-subtitle: hsl(195, 100%, 40%);
+  --color-brand-secondary: var(--color-secondary);
+  --color-brand-emphasis: var(--color-primary);
 
   /* Text */
   --color-text-primary: hsl(0, 0%, 100%);
@@ -38,12 +49,11 @@
   /* Icons */
   --color-icon-primary: hsl(0, 0%, 100%);
   --color-icon-secondary: hsla(0, 0%, 100%, 0.6);
-  --color-icon-progress-bg: hsla(180, 100%, 50%, 0.3);
-  --color-icon-progress: hsl(180, 100%, 50%);
+  --color-icon-progress-bg: hsla(195, 100%, 50%, 0.3);
+  --color-icon-progress: var(--color-primary);
 
   /* Surfaces */
   --color-page-bg: hsl(0, 0%, 0%);
-  --color-footer-bg: #000;
   --color-surface-canvas: hsl(233, 100%, 5%);
   --color-surface-canvas-alt: hsl(235, 33%, 7%);
   --color-surface-elevated: hsl(0, 0%, 12%);
@@ -51,22 +61,51 @@
   --color-surface-card: hsl(240, 39%, 12%);
 
   /* Borders */
-  --color-border-default: rgba(0, 110, 255, 0.322);
-  --color-border-emphasis: rgba(0, 81, 255, 0.5);
+  --color-border-default: hsla(214, 100%, 50%, 0.322);
+  --color-border-emphasis: hsla(221, 100%, 50%, 0.5);
   --color-border-subtle: hsla(0, 0%, 100%, 0.1);
   --color-border-muted: hsla(0, 0%, 100%, 0.2);
 
   /* Glass effects */
-  --color-glass-bg: rgba(15, 20, 40, 0.65);
-  --color-glass-border: rgba(0, 60, 255, 0.2);
-  --color-glass-hover: rgba(0, 81, 255, 0.35);
+  --color-glass-bg: hsla(228, 45%, 11%, 0.65);
+  --color-glass-border: hsla(226, 100%, 50%, 0.2);
+  --color-glass-hover: hsla(221, 100%, 50%, 0.35);
+  --color-glass-fill: hsla(0, 0%, 100%, 0.1);
+  --color-glass-fill-strong: hsla(0, 0%, 100%, 0.2);
+  --color-glass-card: hsla(240, 14%, 8%, 0.55);
+  /* The header's glass: the language box, the tablet logo badge and the compact menu boxes all use it */
+  --header-glass-bg: hsla(0, 0%, 0%, 0.3);
+  --color-glass-card-faint: hsla(240, 14%, 8%, 0.26);
+  --color-glass-button: hsla(0, 0%, 7.5%, 0.62);
+
+  /* Blue tint for panel gradients (login, password gate, contact) */
+  --color-panel-tint: hsla(231, 100%, 50%, 0.171);
+  /* The blue-to-clear wash those panels share: set it as --glass-fill on a .glassPanel */
+  --gradient-panel-tint: linear-gradient(
+    45deg,
+    var(--color-panel-tint),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.048),
+    hsla(0, 0%, 100%, 0.021),
+    transparent,
+    transparent,
+    transparent
+  );
+
+  /* Black shadows and drop-shadows */
+  --color-shadow-soft: hsla(0, 0%, 0%, 0.2);
+  --color-shadow-strong: hsla(0, 0%, 0%, 0.5);
 
   /* Interactive states */
-  --color-scrollbar: rgb(0, 81, 255);
-  --color-focus-ring: rgba(0, 81, 255, 0.6);
+  --color-scrollbar: var(--color-secondary);
+  --color-focus-ring: hsla(221, 100%, 50%, 0.6);
 
   /* Gradients */
-  --gradient-card: linear-gradient(to bottom right, rgba(0, 68, 255, 0.2), rgba(0, 85, 119, 0.2));
+  --gradient-card: linear-gradient(
+    to bottom right,
+    hsla(224, 100%, 50%, 0.2),
+    hsla(197, 100%, 23%, 0.2)
+  );
   --gradient-hero-bg: linear-gradient(
     to bottom,
     hsla(0, 0%, 0%, 0),
@@ -78,7 +117,11 @@
     hsla(229, 100%, 50%, 0.027),
     hsla(0, 0%, 0%, 0)
   );
-  --gradient-tag: radial-gradient(circle at center, rgb(0, 110, 255), rgba(0, 68, 255, 0.774));
+  --gradient-tag: radial-gradient(
+    circle at center,
+    hsl(214, 100%, 50%),
+    hsla(224, 100%, 50%, 0.774)
+  );
 
   /* Page-transition blast: the hero background blue (--gradient-hero-bg) at full strength */
   --color-blast-primary: hsl(226, 100%, 50%);
@@ -96,18 +139,39 @@
   /* Glow */
   --color-glow: hsla(212, 100%, 50%, 0.6);
   --color-glow-subtle: hsla(226, 100%, 50%, 0.308);
+  --color-glow-accent: hsla(195, 100%, 50%, 0.6);
 
-  /* Social brand colors (fixed to each platform's own brand — independent of the theme's brand tokens) */
+  /* The two skill groups on a dark sky: the brand hues at the lightness a glow needs. These match
+     the constellation canvas (DESIGN / BUILD in SkillConstellation.tsx). */
+  --color-skill-design: hsl(195, 100%, 55%);
+  --color-skill-build: hsl(221, 100%, 64%);
+
+  /* Card surfaces. On a black page a flat dark fill disappears and black shadows are invisible,
+     so depth comes from a lit top edge, a gradient surface and a blue tint on hover / active. */
+  --color-ambient-accent: hsla(221, 100%, 50%, 0.22);
+  --color-ambient-accent-faint: hsla(221, 100%, 50%, 0.1);
+  --color-edge-highlight: hsla(0, 0%, 100%, 0.16);
+  --gradient-card-surface: linear-gradient(
+    155deg,
+    hsla(0, 0%, 100%, 0.07) 0%,
+    hsla(0, 0%, 100%, 0.025) 45%,
+    hsla(221, 100%, 50%, 0.07) 100%
+  );
+  --shadow-card: inset 0 1px 0 var(--color-edge-highlight), 0 12px 32px var(--color-shadow-strong);
+  --shadow-card-hover:
+    inset 0 1px 0 var(--color-edge-highlight), 0 0 28px var(--color-ambient-accent),
+    0 12px 32px var(--color-shadow-strong);
+
+  /* Social brand colors (fixed to each platform's own brand, independent of the theme) */
   --color-social-linkedin: #0a66c2;
 
-  /* Neutral gray (true gray, not tinted toward the brand hue) */
+  /* Neutral gray (true gray) */
   --color-neutral-gray: hsl(0, 0%, 60%);
   --color-neutral-gray-soft: hsla(0, 0%, 60%, 0.1);
 
   /* Legacy aliases (consumed by sub-components not yet migrated) */
   --color-brand-primary-hsl: var(--color-brand-primary);
-  --color-neon-primary: hsl(184, 100%, 50%);
-  --color-neon-secondary: hsl(265, 100%, 50%);
+  --color-neon-primary: var(--color-primary);
   --color-bg-canvas: var(--color-surface-canvas);
   --color-bg-canvas-alt: var(--color-surface-canvas-alt);
   --color-bg-elevated: var(--color-surface-elevated);
@@ -119,8 +183,8 @@
   --hero-ring-color: var(--color-hero-ring);
   --card-bg-gradiant: linear-gradient(
     to bottom right,
-    rgba(0, 191, 255, 0.2),
-    rgba(0, 12, 119, 0.2)
+    hsla(195, 100%, 50%, 0.2),
+    hsla(234, 100%, 23%, 0.2)
   );
   --tag-bg-gradiant: var(--gradient-tag);
   --card-bg-circle-gradiant: radial-gradient(
@@ -141,6 +205,6 @@
     linear-gradient(hsla(0, 0%, 100%, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, hsla(0, 0%, 100%, 0.05) 1px, transparent 1px);
   --grid-pattern-brand:
-    linear-gradient(rgba(0, 191, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 191, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(hsla(195, 100%, 50%, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(195, 100%, 50%, 0.06) 1px, transparent 1px);
 }
