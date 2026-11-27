@@ -92,7 +92,7 @@ export const heroStageConfig: HeroStageConfig = {
   scroll: {
     dolly: 0.36,
     planetLag: 0.22,
-    follow: { rate: 14, damping: 1 },
+    follow: { rate: 45, damping: 1 },
   },
   layers: {
     near: { depth: 0.22, fade: [0.2, 0.66] },

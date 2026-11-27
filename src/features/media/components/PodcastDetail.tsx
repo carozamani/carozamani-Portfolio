@@ -9,12 +9,19 @@ import { SectionRulerNav } from '@/components/shared/SectionRulerNav';
 import { useSectionHeadings } from '@/hooks/useSectionHeadings';
 import { renderRichText } from '@/lib/rich-text/render';
 import { format, useLocale } from '@/lib/i18n/LocaleProvider';
+import { PodcastSuggestions } from './PodcastSuggestions';
 import { PodcastTransport } from './PodcastTransport';
 import { ProseSections } from './ProseSections';
 import styles from './PodcastDetail.module.css';
 import '@/styles/rich-content.css';
 
-export function PodcastDetail({ episode }: { episode: CardProps }) {
+type Props = {
+  episode: CardProps;
+  /** Other episodes to listen to next; the box is left out when there are none. */
+  suggestions?: CardProps[];
+};
+
+export function PodcastDetail({ episode, suggestions = [] }: Props) {
   const { locale, dict } = useLocale();
   const meta = [
     episode.date,
@@ -49,18 +56,18 @@ export function PodcastDetail({ episode }: { episode: CardProps }) {
           </Link>
 
           {meta && <p className={styles.meta}>{meta}</p>}
+        </header>
+
+        <div className={`${styles.textPanel} ${styles.textHeading}`}>
           <h1 className={styles.title}>{episode.title}</h1>
 
           {episode.summary && (
-            <section
-              className={`${styles.about} ${styles.aboutMobile}`}
-              aria-label={dict.media.podcasts.about}
-            >
+            <section className={styles.about} aria-label={dict.media.podcasts.about}>
               <h2 className={styles.aboutLabel}>{dict.media.podcasts.about}</h2>
-              <p className={styles.aboutText}>{episode.summary}</p>
+              <blockquote className={styles.aboutText}>{episode.summary}</blockquote>
             </section>
           )}
-        </header>
+        </div>
 
         <aside className={styles.sidebar}>
           <div className={styles.cover}>
@@ -84,18 +91,12 @@ export function PodcastDetail({ episode }: { episode: CardProps }) {
             className={styles.sidebarTransport}
           />
 
-          {episode.summary && (
-            <section
-              className={`${styles.about} ${styles.aboutDesktop}`}
-              aria-label={dict.media.podcasts.about}
-            >
-              <h2 className={styles.aboutLabel}>{dict.media.podcasts.about}</h2>
-              <p className={styles.aboutText}>{episode.summary}</p>
-            </section>
-          )}
+          <PodcastSuggestions episodes={suggestions} className={styles.suggestionsDesktop} />
         </aside>
 
-        <article className={styles.content}>
+        <article
+          className={`${styles.content} ${episode.content || episode.body?.length ? styles.textPanel : ''}`}
+        >
           {episode.content ? (
             <div
               ref={proseRef}
@@ -108,6 +109,9 @@ export function PodcastDetail({ episode }: { episode: CardProps }) {
             </div>
           ) : null}
         </article>
+
+        {/* Narrow screens: the sidebar sits above the text, so the suggestions go after it instead */}
+        <PodcastSuggestions episodes={suggestions} className={styles.suggestionsMobile} />
       </div>
     </div>
   );

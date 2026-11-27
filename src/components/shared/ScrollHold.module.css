@@ -1,0 +1,23 @@
+.track {
+  position: relative;
+}
+
+/* The pin lives in the track's content box, and the spacer after it is the extra scroll it stays pinned for.
+   No ancestor may use overflow other than `clip`, or sticky would bind to that ancestor instead of the page.
+
+   Only on a desktop: wide enough for the side-by-side layouts (64rem, the same breakpoint depth.css uses)
+   and driven by a mouse or trackpad. On phones and tablets, in either orientation, the primary pointer is
+   a finger, so the sections never pin and the page scrolls by hand with nothing in the way. Without the
+   spacer measureHolds() finds no hold, so scrollToTarget animates over the real distance there. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) and (pointer: fine) {
+  .pin {
+    position: sticky;
+    top: var(--pin-top, 0px);
+  }
+
+  .track::after {
+    content: '';
+    display: block;
+    height: calc(var(--hold) * 1vh);
+  }
+}

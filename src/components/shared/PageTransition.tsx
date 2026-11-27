@@ -4,7 +4,10 @@ import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { COVER_MS, createBlastEngine } from '@/lib/transition/blastEngine';
 import type { Point } from '@/lib/transition/blastMath';
+import { registerTransitionRunner } from '@/lib/transition/transitionBus';
 import { resolveTransitionHref } from '@/lib/transition/transitionTarget';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import { Wordmark } from '@/components/ui/Wordmark';
 import styles from './PageTransition.module.css';
 
 // A navigation that never lands (offline, a redirect back to the same path) must not strand the
@@ -16,7 +19,8 @@ const PAINT_FALLBACK_MS = 120;
 // mask over a solid colour instead
 const LOGO_MASK = 'url(/image/LogoMark.svg)';
 
-type Arrival = { from: string; resolve: () => void };
+// What the black screen is waiting for: `isDone` is checked whenever the route or the language changes
+type Arrival = { isDone: () => boolean; resolve: () => void };
 
 const nextPaint = () =>
   new Promise<void>((resolve) => {
@@ -30,35 +34,39 @@ const nextPaint = () =>
     );
   });
 
-// A keyboard activation reports detail 0 and no pointer position, so the blast starts at the link
-const clickOrigin = (event: MouseEvent, anchor: HTMLAnchorElement): Point => {
+// A keyboard activation reports detail 0 and no pointer position, so the blast starts at the element
+const clickOrigin = (event: MouseEvent, element: Element): Point => {
   if (event.detail > 0) return { x: event.clientX, y: event.clientY };
-  const rect = anchor.getBoundingClientRect();
+  const rect = element.getBoundingClientRect();
   return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 };
 
 /**
- * Plays the blast on every internal link that changes page: the screen is blown to black from the
- * click point, the route changes underneath, then the black is burned away to reveal the new page.
- * A small logo in the brand colour is in the middle of the screen from the first frame: it fades up
+ * Plays the blast on every internal link that changes page, and on a language switch: the screen is
+ * blown to black from the click point, the route (or the language) changes underneath, then the black
+ * is burned away to reveal the new page.
+ * A small logo in the brand colour, with the "carozamani" wordmark under it in that same colour, is in
+ * the middle of the screen from the first frame: it fades up
  * over the same `COVER_MS` the blast takes to spread, so it reaches full opacity exactly when the
  * screen is fully black, never before. The black clears as soon as the new page is ready, with no
  * extra hold.
  * Links opt out with `data-page-transition="off"` on themselves or an ancestor.
+ * Other code (the language switch) plays it through the transition bus.
  */
 export function PageTransition() {
   const router = useRouter();
   const pathname = usePathname();
+  const { locale } = useLocale();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
-  const pathnameRef = useRef(pathname);
+  const latestRef = useRef({ pathname, locale });
   const arrivalRef = useRef<Arrival | null>(null);
 
   useEffect(() => {
-    pathnameRef.current = pathname;
+    latestRef.current = { pathname, locale };
     const waiting = arrivalRef.current;
-    if (waiting && pathname !== waiting.from) waiting.resolve();
-  }, [pathname]);
+    if (waiting?.isDone()) waiting.resolve();
+  }, [pathname, locale]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,12 +74,14 @@ export function PageTransition() {
     if (!engine) return;
 
     let busy = false;
+    // Where the last click landed: a language switch starts its blast from the button that was pressed
+    let lastOrigin: Point | null = null;
 
     const showLogo = (visible: boolean) => {
       if (logoRef.current) logoRef.current.dataset.visible = String(visible);
     };
 
-    const waitForArrival = () =>
+    const waitForArrival = (isDone: () => boolean) =>
       new Promise<void>((resolve) => {
         let timer = 0;
         const arrive = () => {
@@ -80,18 +90,19 @@ export function PageTransition() {
           resolve();
         };
         timer = window.setTimeout(arrive, NAVIGATION_TIMEOUT_MS);
-        arrivalRef.current = { from: pathnameRef.current, resolve: arrive };
+        arrivalRef.current = { isDone, resolve: arrive };
       });
 
-    const play = async (href: string, origin: Point) => {
+    // `change` is what happens under the black screen; `isDone` says when its result is on screen
+    const play = async (change: () => void, isDone: () => boolean, origin: Point) => {
       busy = true;
       // Shown before the blast starts, not after it ends: the fade is a compositor transition that
-      // is already running when the main thread gets busy with the route change
+      // is already running when the main thread gets busy with the change
       showLogo(true);
       try {
         await engine.cover(origin);
-        const arrival = waitForArrival();
-        router.push(href);
+        const arrival = waitForArrival(isDone);
+        change();
         await arrival;
         await nextPaint();
       } finally {
@@ -105,7 +116,12 @@ export function PageTransition() {
     // Capture phase on window: this runs before Next's <Link> handler, which skips any click that
     // is already default-prevented, while other onClick handlers on the link still fire
     const onClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || !(event.target instanceof Element)) return;
+      if (!(event.target instanceof Element)) return;
+      lastOrigin = clickOrigin(
+        event,
+        event.target.closest('button, a[href], [role="option"]') ?? event.target,
+      );
+      if (event.defaultPrevented) return;
       const anchor = event.target.closest('a[href]');
       if (!(anchor instanceof HTMLAnchorElement)) return;
 
@@ -122,12 +138,31 @@ export function PageTransition() {
       if (!href) return;
 
       event.preventDefault();
-      if (!busy) void play(href, clickOrigin(event, anchor));
+      if (busy) return;
+      const from = latestRef.current.pathname;
+      void play(
+        () => router.push(href),
+        () => latestRef.current.pathname !== from,
+        lastOrigin ?? clickOrigin(event, anchor),
+      );
     };
+
+    // The language switch: the same black screen, with the new language swapped in underneath it
+    const unregister = registerTransitionRunner((start) => {
+      if (busy || latestRef.current.pathname.startsWith('/admin')) return false;
+      const from = latestRef.current.locale;
+      void play(
+        start,
+        () => latestRef.current.locale !== from,
+        lastOrigin ?? { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+      );
+      return true;
+    });
 
     window.addEventListener('click', onClick, true);
     return () => {
       window.removeEventListener('click', onClick, true);
+      unregister();
       arrivalRef.current = null;
       showLogo(false);
       engine.destroy();
@@ -149,6 +184,7 @@ export function PageTransition() {
             className={styles.mark}
             style={{ maskImage: LOGO_MASK, WebkitMaskImage: LOGO_MASK }}
           />
+          <Wordmark uniform className={styles.name} />
         </span>
       </div>
     </>

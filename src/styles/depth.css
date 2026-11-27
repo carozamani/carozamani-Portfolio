@@ -16,8 +16,12 @@
   --depth-perspective: 1200px;
   --depth-tilt: 12deg;
   --depth-recede: 120px;
+  --depth-sink: 220px;
   --depth-swing: 18deg;
   --depth-dir: 1;
+  /* Keep each panel settled in the viewport before it begins its exit transition. */
+  --depth-hold-start: 18%;
+  --depth-hold-end: 82%;
 }
 
 :root[dir='rtl'] {
@@ -28,6 +32,7 @@
   :root {
     --depth-tilt: 8deg;
     --depth-recede: 72px;
+    --depth-sink: 120px;
   }
 }
 
@@ -38,8 +43,8 @@
     translate: 0 0 calc(var(--depth-recede) * -0.6);
     scale: 0.97;
   }
-  36%,
-  64% {
+  18%,
+  82% {
     rotate: x 0deg;
     translate: 0 0 0;
     scale: 1;
@@ -48,6 +53,46 @@
     rotate: x calc(var(--depth-tilt) * 0.5);
     translate: 0 0 calc(var(--depth-recede) * -1);
     scale: 0.95;
+  }
+}
+
+/* A whole section, the about-scene move: tips in out of the distance, sits flat while it fills the
+   screen, then sinks back into depth (smaller and dimmer, never blurred) as the next one arrives.
+   Only for sections that fit in about two screens: the sink spans the last third of the section */
+@keyframes depth-sink {
+  0% {
+    rotate: x calc(var(--depth-tilt) * 1.2);
+    translate: 0 0 calc(var(--depth-recede) * -1.4);
+    scale: 0.96;
+    opacity: 1;
+  }
+  18%,
+  82% {
+    rotate: x 0deg;
+    translate: 0 0 0;
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    rotate: x calc(var(--depth-tilt) * 0.4);
+    translate: 0 0 calc(var(--depth-sink) * -1);
+    scale: 0.94;
+    opacity: 0.3;
+  }
+}
+
+/* Phones: stacked sections are several screens tall, so tilting, blurring or dimming that much glass
+   would warp the content being read. Only a gentle scale breathes in and out */
+@keyframes depth-sink-lite {
+  0% {
+    scale: 0.97;
+  }
+  18%,
+  82% {
+    scale: 1;
+  }
+  100% {
+    scale: 0.96;
   }
 }
 
@@ -102,6 +147,11 @@
       animation-range: cover;
     }
 
+    [data-depth='sink'] {
+      animation-name: depth-sink;
+      animation-range: cover;
+    }
+
     [data-depth='unfold'] {
       animation-name: depth-unfold;
       animation-range: entry 0% entry 100%;
@@ -109,21 +159,27 @@
     }
 
     /* Stacked layouts make whole sections several screens tall, and tilting that much glass warps it:
-       below the breakpoint only the individual blocks lean in */
+       below the breakpoint only the individual blocks lean in. `sink` keeps a gentle scale */
     @media (max-width: 63.99rem) {
       [data-depth='stage'],
       [data-depth='unfold'] {
         animation-name: none;
       }
+
+      [data-depth='sink'] {
+        animation-name: depth-sink-lite;
+      }
     }
 
-    /* Blocks finish settling when their own centre reaches the middle of the screen (cover 50%), the
-       siblings staggered so the last one lands exactly there. Below the breakpoint the columns stack,
-       so there is no side to swing from: lean back instead */
+    /* Blocks finish settling the moment they are fully on screen (entry 100%), never later: a section
+       reached with a menu jump or left at rest has every block in view, and each one must already be
+       flat and square, not stuck part-way through its lean until the next scroll. The siblings are
+       staggered only at the start, so they still lean in one after another. Below the breakpoint the
+       columns stack, so there is no side to swing from: lean back instead */
     [data-depth='rise'],
     [data-depth^='swing'] {
       animation-name: depth-rise;
-      animation-range: cover calc(var(--depth-i, 0) * 3%) cover calc(38% + var(--depth-i, 0) * 3%);
+      animation-range: entry calc(var(--depth-i, 0) * 4%) entry 100%;
     }
 
     [data-depth='swing-start'] {

@@ -1,13 +1,18 @@
+/*
+  Reveal only moves the element in (slide / scale), it never fades it.
+
+  Everything it wraps is made of glass: cards, boxes and whole sections with a `backdrop-filter`.
+  An ancestor with `opacity` below 1 is a "backdrop root", so while it fades in the blur inside it
+  has nothing behind it to blur and the glass has no background; the blur then pops in the moment
+  the fade ends. Keeping the opacity at 1 means the blur and the background are there from the
+  first frame the box is on screen.
+*/
 .reveal {
-  opacity: 0;
   transform: var(--reveal-from);
-  transition:
-    opacity var(--reveal-duration) var(--ease-out) var(--reveal-delay),
-    transform var(--reveal-duration) var(--ease-out) var(--reveal-delay);
+  transition: transform var(--reveal-duration) var(--ease-out) var(--reveal-delay);
 }
 
 .visible {
-  opacity: 1;
   transform: none;
 }
 

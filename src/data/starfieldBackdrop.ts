@@ -1,7 +1,7 @@
 import { earthHorizonConfig } from './earthHorizon';
 
-// The page sky is the hero's sky: same star field, same drift, same lens. Only the scroll parallax
-// and the quality limits are specific to the page-wide backdrop.
+// The page sky is the hero's sky: same drift, same lens. Only the scroll sweep and the quality limits
+// are specific to the page-wide backdrop.
 const { camera, motion } = earthHorizonConfig;
 
 export const starfieldBackdropConfig = {
@@ -12,9 +12,14 @@ export const starfieldBackdropConfig = {
   },
   motion: {
     starDrift: motion.starDrift,
-    initialStarRotation: motion.initialStarRotation,
-    /** How fast the stars trail the page while scrolling: 0.15 means they move at 15% of its speed. */
-    scrollParallax: 0.15,
+    // Start with the gaze tilted above the planet; the former positive pitch pointed down.
+    initialCameraPitch: -Math.abs(motion.initialStarRotation),
+    /** Camera pitch from the upper sky toward the planet below, across the full page. */
+    scrollSweep: Math.PI,
+  },
+  dim: {
+    /** Keep the page-wide sky at full brightness from the top to the bottom. */
+    floor: 1,
   },
   quality: {
     maxPixelRatio: 1.5,

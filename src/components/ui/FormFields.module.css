@@ -132,7 +132,7 @@
   width: 100%;
   padding: 12px;
   padding-inline: 14px 44px;
-  background: #000;
+  background: var(--color-page-bg);
   border: 1px solid transparent;
   border-radius: var(--field-radius);
   color: var(--color-text-primary);

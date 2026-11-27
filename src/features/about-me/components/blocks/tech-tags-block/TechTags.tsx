@@ -1,6 +1,17 @@
 'use client';
 
+import Image from 'next/image';
+import {
+  Component,
+  Lightbulb,
+  MousePointerClick,
+  PanelsTopLeft,
+  UserSearch,
+  Workflow,
+  type LucideIcon,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
+import { techLogos } from '@/data/techLogos';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import styles from './TechTags.module.css';
 import TypographyComponent from '@/components/ui/Typography';
@@ -14,6 +25,37 @@ interface AutoScrollColumnProps {
 
 const LOOP_SECONDS = 90;
 const FRICTION = 0.94;
+// Intrinsic size handed to next/image; the logos are SVG and are drawn at the height set in the CSS
+const LOGO_PX = 64;
+
+// A tag is looked up by its text, which differs by language. The Persian word for Figma is the same
+// product, so it takes Figma's logo.
+const LOGO_ALIASES: Record<string, string> = {
+  فیگما: 'Figma',
+};
+
+// The design skills have no product logo, so each gets an icon that shows the idea instead, in both
+// languages. Keyed by the tag's text, like techLogos.
+const TAG_ICONS: Record<string, LucideIcon> = {
+  // Product thinking: an idea
+  'Product Thinking': Lightbulb,
+  'تفکر محصول': Lightbulb,
+  // User research: looking into a person
+  'User Research': UserSearch,
+  'پژوهش کاربر': UserSearch,
+  // UX flows: steps joined into a path
+  'UX Flows': Workflow,
+  'مسیرهای UX': Workflow,
+  // UI design: a screen laid out in panels
+  'UI Design': PanelsTopLeft,
+  'طراحی UI': PanelsTopLeft,
+  // Prototyping: an interface you click through
+  Prototyping: MousePointerClick,
+  نمونه‌سازی: MousePointerClick,
+  // Design systems: reusable components
+  'Design Systems': Component,
+  'سیستم طراحی': Component,
+};
 
 function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrollColumnProps) {
   const infiniteTags = useMemo(() => [...tags, ...tags, ...tags], [tags]);
@@ -92,12 +134,39 @@ function AutoScrollColumn({ tags, reverse = false, offsetClass = '' }: AutoScrol
       onPointerLeave={() => (drag.current.hovered = false)}
     >
       <div ref={targetRef} className={styles.scrollTarget}>
-        {infiniteTags.map((tag, index) => (
-          <div key={`${tag}-${index}`} className={styles.tagItem}>
-            {tag}
-            <div className={styles.glowBackground}></div>
-          </div>
-        ))}
+        {infiniteTags.map((tag, index) => {
+          const logo = techLogos[LOGO_ALIASES[tag] ?? tag];
+          const Icon = logo ? undefined : TAG_ICONS[tag];
+          return (
+            <div key={`${tag}-${index}`} className={styles.tagItem}>
+              {logo || Icon ? (
+                // Every tag shows its name first and a picture after it, in one row: the product's logo
+                // where there is one, otherwise an icon for the idea. The name carries the meaning, so
+                // the picture is decorative.
+                <span className={styles.tagContent}>
+                  <span className={styles.tagLabel}>{tag}</span>
+                  {logo ? (
+                    <Image
+                      src={logo.src}
+                      alt=""
+                      width={LOGO_PX}
+                      height={LOGO_PX}
+                      className={styles.tagLogo}
+                      draggable={false}
+                    />
+                  ) : (
+                    Icon && (
+                      <Icon className={styles.tagIcon} strokeWidth={1.75} aria-hidden="true" />
+                    )
+                  )}
+                </span>
+              ) : (
+                tag
+              )}
+              <div className={styles.glowBackground}></div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -110,13 +179,17 @@ export default function BlockTechTags() {
   const allTags = useMemo(() => [...about.tagsLeft, ...about.tagsRight], [about]);
 
   return (
-    <div className={styles.blockContainer}>
+    <div className={`cardFrame cardFrameFaint ${styles.blockContainer}`}>
       <div className={styles.gridContainer}>
         {/* بخش چپ */}
         <div className={styles.leftSection}>
           <TypographyComponent variant="body2" color="text-secondary" className="mb-2">
             {about.techSubtitle}
           </TypographyComponent>
+          {/* خط‌چین با فلش دو سر، بین ساب‌تایتل و تایتل */}
+          <div className={styles.measure} aria-hidden="true">
+            <span className={styles.measureLine} />
+          </div>
           <TypographyComponent variant="h2" color="text-primary" className="mb-4">
             {about.techTitle.split(' ').map((word, index) => (
               <span key={index}>

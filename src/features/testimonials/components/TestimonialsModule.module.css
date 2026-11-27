@@ -1,0 +1,301 @@
+/* The recommendations row: glass cards in a sideways carousel. The card in the middle is full size; the
+   ones beside it are smaller and dimmer, and TestimonialsModule.tsx sets --focus on every slide (1 =
+   exactly in the middle, 0 = a card away or more) while the row scrolls, which drives the scale, the
+   fade and the glow below. */
+
+.section {
+  --card-width: min(40rem, 90vw);
+  --card-radius: 1.5rem;
+  --card-pad: clamp(1.25rem, 4vw, 1.75rem);
+  --card-gap: 1rem;
+  --card-fill: rgba(9, 12, 22, 0.74);
+  --mark-height: 1.5rem;
+  --avatar-size: 3rem;
+  --name-size: var(--font-size-body1);
+  --role-size: var(--font-size-caption);
+  --quote-size: var(--font-size-subtitle1);
+  --quote-lines: 5;
+  --quote-line-height: 1.6;
+
+  width: 100%;
+  padding-block: clamp(2.5rem, 7vw, 5rem);
+}
+
+/* The row scrolls sideways and snaps so one card rests in the middle; the padding lets the first and last
+   cards reach the middle too. */
+.track {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: 100%;
+  margin: 0;
+  padding: 1.5rem calc(50% - var(--card-width) / 2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  list-style: none;
+  cursor: grab;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: -2px;
+}
+
+.track[data-dragging='true'] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.slide {
+  --focus: 0;
+
+  position: relative;
+  flex: none;
+  width: var(--card-width);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transform: scale(calc(0.8 + var(--focus) * 0.2));
+  opacity: calc(0.45 + var(--focus) * 0.55);
+  /* A hint here would put the slide on its own layer and stop the card's backdrop blur from seeing the sky */
+  will-change: auto;
+}
+
+/* Every card is the same height: the words are cut after --quote-lines lines, so the row never jumps. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  box-sizing: border-box;
+  height: calc(
+    var(--card-pad) * 2 + var(--mark-height) + var(--quote-lines) * var(--quote-size) *
+      var(--quote-line-height) + var(--avatar-size) + var(--card-gap) * 3 + 1px
+  );
+  margin: 0;
+  padding: var(--card-pad);
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012) 42%),
+    var(--card-fill);
+  backdrop-filter: blur(24px);
+  box-shadow:
+    0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.7),
+    inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* The gradient outline: a 1px ring cut out of a gradient, brighter as the card nears the middle */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--color-primary) 80%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 42%, transparent) 34%,
+    color-mix(in srgb, var(--color-secondary) 14%, transparent) 64%,
+    color-mix(in srgb, var(--color-secondary) 46%, transparent) 100%
+  );
+  opacity: calc(0.5 + var(--focus) * 0.5);
+  pointer-events: none;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+/* Glow in two corners, stronger in the middle card */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      90% 70% at 0% 0%,
+      color-mix(in srgb, var(--color-secondary) 30%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      70% 60% at 100% 100%,
+      color-mix(in srgb, var(--color-primary) 13%, transparent),
+      transparent 66%
+    );
+  opacity: calc(0.3 + var(--focus) * 0.7);
+  pointer-events: none;
+}
+
+.slide[dir='rtl'] .card::after {
+  transform: scaleX(-1);
+}
+
+/* A thin bright line along the top edge, only on the card in the middle */
+.rim {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 22%;
+  z-index: 2;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-primary) 85%, white),
+    transparent
+  );
+  box-shadow: 0 0 0.75rem color-mix(in srgb, var(--color-primary) 70%, transparent);
+  opacity: var(--focus);
+  pointer-events: none;
+}
+
+/* The words sit above the glow */
+.mark,
+.quote,
+.author {
+  position: relative;
+  z-index: 1;
+}
+
+.mark {
+  flex: none;
+  width: calc(var(--mark-height) * 1.4);
+  height: var(--mark-height);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='5 7 14 10'%3E%3Cpath d='M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.slide[dir='rtl'] .mark {
+  transform: scaleX(-1);
+}
+
+.quote {
+  height: calc(var(--quote-lines) * var(--quote-size) * var(--quote-line-height));
+  margin: 0;
+  overflow: hidden;
+}
+
+/* The words are cut after --quote-lines lines, with an ellipsis where they stop */
+.quote p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--quote-lines);
+  line-clamp: var(--quote-lines);
+  font-size: var(--quote-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--quote-line-height);
+  color: rgba(255, 255, 255, 0.92);
+  text-wrap: pretty;
+}
+
+/* Persian needs more room between lines */
+.slide:lang(fa) {
+  --quote-line-height: var(--line-height-loose);
+}
+
+/* A fading rule, then the person */
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding-block-start: var(--card-gap);
+  border-block-start: 1px solid;
+  border-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-secondary) 45%, transparent),
+      transparent 85%
+    )
+    1;
+}
+
+.slide[dir='rtl'] .author {
+  border-image-source: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--color-secondary) 45%, transparent),
+    transparent 85%
+  );
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 25%,
+    color-mix(in srgb, var(--color-secondary) 55%, #05070f),
+    #070b18
+  );
+  box-shadow:
+    0 0 0 2px var(--card-fill),
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 65%, transparent);
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
+}
+
+/* Tracking would break up joined Persian letters */
+.slide[dir='rtl'] .avatar {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.name,
+.role {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  font-size: var(--name-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.role {
+  font-size: var(--role-size);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-brand-subtitle);
+}
+
+/* Tracking and capitals do not exist in Persian */
+.slide[dir='rtl'] .role {
+  letter-spacing: 0;
+  text-transform: none;
+}

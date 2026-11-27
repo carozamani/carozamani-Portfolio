@@ -2,6 +2,7 @@ import type { EarthHorizonConfig, Rgb } from '@/data/earthHorizon';
 
 import { earthHorizonFragmentShader, earthHorizonVertexShader } from './earthHorizonShader';
 import { createFullscreenTriangle, createProgram } from './glProgram';
+import { planetJourney } from './planetJourney';
 
 /** How far the camera has slid the planet across the frame, in half-widths of the hero, y up. */
 export interface PlanetShift {
@@ -13,7 +14,8 @@ const NO_SHIFT: PlanetShift = { x: 0, y: 0 };
 
 export interface EarthHorizonRenderer {
   resize: (width: number, height: number) => void;
-  render: (elapsedSec: number, shift?: PlanetShift) => void;
+  /** `scrollProgress` is how far the hero has scrolled out, 0 to 1: the planet's light follows it. */
+  render: (elapsedSec: number, shift?: PlanetShift, scrollProgress?: number) => void;
   dispose: () => void;
 }
 
@@ -33,8 +35,8 @@ const uniformNames = [
   'uFocal',
   'uCamDist',
   'uSurfaceRot',
-  'uStarRot',
   'uSun',
+  'uDim',
   'uScale',
   'uDeep',
   'uCore',
@@ -55,7 +57,9 @@ export function createEarthHorizonRenderer(
   config: EarthHorizonConfig,
 ): EarthHorizonRenderer | null {
   const gl = canvas.getContext('webgl', {
-    alpha: false,
+    // Transparent around the planet: the page-wide sky (PageStarfield) shows through behind it
+    alpha: true,
+    premultipliedAlpha: true,
     antialias: false,
     depth: false,
     stencil: false,
@@ -73,7 +77,7 @@ export function createEarthHorizonRenderer(
     uniformNames.map((name) => [name, gl.getUniformLocation(program, name)]),
   ) as Record<UniformName, WebGLUniformLocation | null>;
 
-  const { camera, motion, look, colors } = config;
+  const { camera, motion, look, colors, journey } = config;
   const limbAngle = toRadians(camera.limbAngleDeg);
   const focal = 1 / Math.tan(toRadians(camera.horizontalFovDeg) / 2);
   const swayAmplitude = toRadians(camera.swayDeg);
@@ -85,10 +89,17 @@ export function createEarthHorizonRenderer(
   gl.uniform1f(uniforms.uFocal, focal);
   gl.uniform1f(uniforms.uCamDist, 1 / Math.sin(limbAngle));
   gl.uniform1f(uniforms.uScale, scale);
-  gl.uniform3f(uniforms.uSun, 0, Math.cos(sunAngle), Math.sin(sunAngle));
+  gl.uniform1f(uniforms.uDim, 1);
+  // The sun sits just beyond the horizon; the azimuth swings it round the camera, so one flank of the
+  // limb is lit and the other falls into shadow
+  const azimuth = toRadians(look.sunAzimuthDeg);
+  gl.uniform3f(
+    uniforms.uSun,
+    Math.sin(sunAngle) * Math.sin(azimuth),
+    Math.cos(sunAngle),
+    Math.sin(sunAngle) * Math.cos(azimuth),
+  );
   gl.uniform1f(uniforms.uCloudAmount, look.cloudAmount);
-  gl.uniform1f(uniforms.uSurfaceBrightness, look.surfaceBrightness);
-  gl.uniform1f(uniforms.uCityStrength, look.cityStrength);
   setColor('uDeep', colors.deep);
   setColor('uCore', colors.core);
   setColor('uHot', colors.hot);
@@ -122,18 +133,17 @@ export function createEarthHorizonRenderer(
       gl.uniform2f(uniforms.uRes, width, height);
     },
 
-    render(elapsedSec, shift = NO_SHIFT) {
+    render(elapsedSec, shift = NO_SHIFT, scrollProgress = 0) {
       const sway = swayAmplitude * Math.sin((TAU * elapsedSec) / camera.swayPeriodSec);
       gl.uniform2f(uniforms.uShift, shift.x, shift.y);
       gl.uniform1f(uniforms.uTime, elapsedSec);
+      const lighting = planetJourney(scrollProgress, journey);
+      gl.uniform1f(uniforms.uSurfaceBrightness, look.surfaceBrightness * lighting.surface);
+      gl.uniform1f(uniforms.uCityStrength, look.cityStrength * lighting.cities);
       gl.uniform1f(uniforms.uPitch, basePitch + sway);
       gl.uniform1f(
         uniforms.uSurfaceRot,
         (motion.initialSurfaceRotation + (elapsedSec * motion.surfaceSpeed) / scale) % TAU,
-      );
-      gl.uniform1f(
-        uniforms.uStarRot,
-        (motion.initialStarRotation + elapsedSec * motion.starDrift) % TAU,
       );
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },

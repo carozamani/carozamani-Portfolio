@@ -34,21 +34,23 @@ export default function ArticleDetail({ article }: { article: CardProps }) {
           {dict.media.articles.title}
         </Link>
 
-        {meta && <p className={styles.meta}>{meta}</p>}
-        <h1 className={styles.title}>{article.title}</h1>
-        {article.summary && <p className={styles.summary}>{article.summary}</p>}
+        <div className={styles.textPanel}>
+          {meta && <p className={styles.meta}>{meta}</p>}
+          <h1 className={styles.title}>{article.title}</h1>
+          {article.summary && <p className={styles.summary}>{article.summary}</p>}
 
-        {article.content ? (
-          <div
-            ref={proseRef}
-            className={`rich-content ${styles.richBody}`}
-            dangerouslySetInnerHTML={{ __html: richHtml }}
-          />
-        ) : article.body?.length ? (
-          <div ref={proseRef}>
-            <ProseSections paragraphs={article.body} className={styles.body} />
-          </div>
-        ) : null}
+          {article.content ? (
+            <div
+              ref={proseRef}
+              className={`rich-content ${styles.richBody} ${styles.panel}`}
+              dangerouslySetInnerHTML={{ __html: richHtml }}
+            />
+          ) : article.body?.length ? (
+            <div ref={proseRef} className={styles.panel}>
+              <ProseSections paragraphs={article.body} className={styles.body} />
+            </div>
+          ) : null}
+        </div>
       </div>
     </article>
   );

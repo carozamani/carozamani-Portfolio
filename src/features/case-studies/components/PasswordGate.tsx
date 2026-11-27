@@ -46,7 +46,12 @@ export function PasswordGate({ image, onUnlock }: PasswordGateProps) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={image} alt="" aria-hidden="true" className={styles.cover} />
       )}
-      <div className={styles.card} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <div
+        className={`cardFrame ${styles.card}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className={styles.gridPattern} aria-hidden="true" />
         <div className={styles.brandBlock}>
           <LogoRing className={styles.lockRing}>

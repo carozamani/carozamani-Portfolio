@@ -5,8 +5,11 @@ export const earthHorizonVertexShader = fullscreenVertexShader;
 // The planet is an analytic unit sphere ray-traced per pixel; the camera hovers above it looking along
 // the surface. "Travelling" is the ground texture rotating about the X axis, never the camera moving.
 // The look follows an orbital photo: daylit blue ocean, broken white cloud cover, a thin hot atmosphere
-// line on the limb, a dense natural star field with a faint galactic haze, and a surface that sinks
-// into darkness towards the bottom of the frame.
+// line on the limb, and a surface that sinks into darkness away from the limb.
+// The frame is mirrored top to bottom: the planet hangs from the top of the hero.
+// There are no stars in here: the page-wide starfield (see PageStarfield) is the sky behind the whole
+// page, and this canvas is transparent around the planet so it shows through. The output is premultiplied
+// alpha: the planet is opaque, the atmosphere glow is added on top of the stars behind it.
 export const earthHorizonFragmentShader = /* glsl */ `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -15,7 +18,7 @@ precision mediump float;
 #endif
 
 uniform vec2 uRes;
-// How far the hero camera has slid the whole view, in half-widths (y up): pointer parallax, plus the
+// How far the hero camera has slid the whole view, in half-widths (y up, on screen): pointer parallax, plus the
 // planet falling behind the page while the hero scrolls out
 uniform vec2 uShift;
 uniform float uTime;
@@ -23,11 +26,12 @@ uniform float uPitch;
 uniform float uFocal;
 uniform float uCamDist;
 uniform float uSurfaceRot;
-uniform float uStarRot;
 // Direction the light comes from: just behind the far horizon
 uniform vec3 uSun;
 // Keeps rim thickness and ground detail the same on screen however close the camera sits
 uniform float uScale;
+// Overall brightness of the planet and its glow (1 = untouched)
+uniform float uDim;
 uniform vec3 uDeep;
 uniform vec3 uCore;
 uniform vec3 uHot;
@@ -39,7 +43,6 @@ uniform float uCloudAmount;
 uniform float uSurfaceBrightness;
 uniform float uCityStrength;
 
-const float PI = 3.14159265359;
 const mat3 OCTAVE = mat3(0.00, 0.80, 0.60, -0.80, 0.36, -0.48, -0.60, -0.48, 0.64);
 
 float hash12(vec2 p) {
@@ -91,55 +94,7 @@ vec3 rotX(vec3 v, float a) {
   return vec3(v.x, v.y * c - v.z * s, v.y * s + v.z * c);
 }
 
-// Equal-area grid around the X axis: rotating the sky is just shifting the longitude, with no pole in view
-vec3 starLayer(float sx, float lam, float cosLat, float nv, float nu, float prob,
-               float rMin, float rMax, float bMin, float bMax, float pixAng) {
-  float u = (lam / (2.0 * PI) + 0.5) * nu;
-  float v = (sx * 0.5 + 0.5) * nv;
-  vec2 id = floor(vec2(u, v));
-  vec2 fr = vec2(u, v) - id;
-  if (hash12(id + vec2(nv, nu) * 0.37) < 1.0 - prob) return vec3(0.0);
-
-  vec2 pos = vec2(hash12(id + 11.1), hash12(id + vec2(23.7, 5.3))) * 0.6 + 0.2;
-  vec2 d = (fr - pos) * vec2(2.0 * PI / nu * cosLat, 2.0 / nv / cosLat);
-  float dpx = length(d) / pixAng;
-  float r = mix(rMin, rMax, hash12(id + vec2(5.5, 1.1)));
-  float br = mix(bMin, bMax, hash12(id + vec2(41.3, 2.2)));
-  float tw = 0.82 + 0.18 * sin(uTime * (0.8 + 2.4 * hash12(id + vec2(7.7, 3.3))) + 6.2831 * hash12(id + vec2(91.1, 4.4)));
-  // Tight core plus a faint wide halo: bright stars read as lens-soft points, faint ones as dust
-  float body = exp(-dpx * dpx / (r * r)) + 0.10 * exp(-dpx * dpx / (10.0 * r * r));
-  vec3 tint = mix(vec3(0.66, 0.80, 1.0), vec3(1.0, 0.94, 0.88), hash12(id + vec2(63.9, 6.6)));
-  return tint * body * br * tw;
-}
-
-// Faint band of unresolved stars and dust across the sky; deliberately subtle so it reads as depth, not as an effect
-vec3 galaxy(vec3 s) {
-  vec3 bandNormal = normalize(vec3(0.45, 0.80, 0.43));
-  float lat = dot(s, bandNormal);
-  float band = exp(-lat * lat / 0.045);
-  if (band < 0.012) return vec3(0.0);
-  float cloud = fbm(s * 3.4 + 9.0, 5);
-  float lanes = smoothstep(0.40, 0.70, fbm(s * 8.0 + 2.0, 4));
-  float density = band * (0.20 + 0.80 * cloud) * (1.0 - 0.45 * lanes);
-  vec3 tint = mix(vec3(0.30, 0.42, 0.80), vec3(0.85, 0.72, 0.62), smoothstep(0.45, 0.8, cloud));
-  return tint * density * 0.30;
-}
-
-vec3 stars(vec3 rd, float pixAng) {
-  vec3 s = rotX(rd, uStarRot);
-  float lam = atan(s.y, s.z);
-  float cosLat = sqrt(max(1.0 - s.x * s.x, 0.001));
-  // Dense faint dust first, then progressively rarer and brighter stars
-  vec3 c = starLayer(s.x, lam, cosLat, 230.0, 724.0, 0.20, 0.45, 0.7, 0.07, 0.22, pixAng);
-  c += starLayer(s.x, lam, cosLat, 110.0, 346.0, 0.12, 0.55, 0.9, 0.18, 0.5, pixAng);
-  c += starLayer(s.x, lam, cosLat, 46.0, 144.0, 0.14, 0.75, 1.2, 0.35, 0.75, pixAng);
-  c += starLayer(s.x, lam, cosLat, 22.0, 70.0, 0.20, 1.0, 1.6, 0.6, 1.1, pixAng);
-  c += starLayer(s.x, lam, cosLat, 12.0, 38.0, 0.12, 1.5, 2.4, 1.0, 1.6, pixAng);
-  c += galaxy(s);
-  return c;
-}
-
-vec3 surfaceColor(vec3 ro, vec3 rd, float tca, float b) {
+vec3 surfaceColor(vec3 ro, vec3 rd, float tca, float b, float yv) {
   // For rays grazing past the limb the clamp returns the tangent point, which keeps the edge anti-aliased
   float t0 = tca - sqrt(max(1.0 - b * b, 0.0));
   vec3 n = normalize(ro + rd * t0);
@@ -149,8 +104,7 @@ vec3 surfaceColor(vec3 ro, vec3 rd, float tca, float b) {
   float nSun = dot(n, uSun);
   float sunLit = smoothstep(uSun.y - 0.30, 0.95, nSun);
 
-  // Daylight falls off towards the bottom of the frame, the way the reference sinks into the dark
-  float yv = gl_FragCoord.y / uRes.y;
+  // Daylight falls off away from the limb (yv is 0 at the far edge of the frame), the way the reference sinks into the dark
   float dusk = pow(smoothstep(0.0, 0.30, yv), 1.2);
   float lit = (0.30 + 0.70 * sunLit) * mix(0.04, 1.0, dusk);
 
@@ -192,7 +146,10 @@ vec3 surfaceColor(vec3 ro, vec3 rd, float tca, float b) {
 }
 
 void main() {
-  vec2 p = (gl_FragCoord.xy * 2.0 - uRes) / uRes.x - uShift;
+  // Mirror the frame top to bottom so the planet sits at the top of the hero;
+  // the shift is flipped with it so pointer parallax and the scroll-out still move the way they read on screen
+  vec2 flipY = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+  vec2 p = (flipY * 2.0 - uRes) / uRes.x - vec2(uShift.x, -uShift.y);
 
   float ca = cos(uPitch);
   float sa = sin(uPitch);
@@ -213,26 +170,27 @@ void main() {
   float h = max(b - 1.0, 0.0) * uScale;
   vec3 cn = cp / max(b, 0.0001);
   float atmoLit = mix(0.55, 1.0, smoothstep(0.30, 0.95, dot(cn, uSun)));
-  vec3 glow = (uDeep * 0.55 * exp(-h / 0.060) + uCore * 0.70 * exp(-h / 0.0120) + uHot * 1.35 * exp(-h / 0.0026)) * atmoLit;
-  float glowLum = dot(glow, vec3(0.3, 0.5, 0.2));
+  vec3 sky = (uDeep * 0.55 * exp(-h / 0.060) + uCore * 0.70 * exp(-h / 0.0120) + uHot * 1.35 * exp(-h / 0.0026)) * atmoLit;
 
-  vec3 sky = glow;
-  if (b > 1.0 - eps) {
-    // A rectilinear lens stretches off-axis stars radially; shrinking the angular pixel keeps them round dots
-    float offAxis = clamp(dot(rd, fwd), 0.25, 1.0);
-    sky += stars(rd, pixAng * pow(offAxis, 1.5)) * (1.0 - clamp(glowLum * 1.8, 0.0, 1.0));
-  }
-
+  // How much of this pixel the planet itself covers: 1 inside the disc, 0 outside, soft on the limb
+  float cover = 0.0;
   vec3 col = sky;
   if (b < 1.0 + eps) {
-    col = mix(surfaceColor(ro, rd, tca, b), sky, smoothstep(-eps, eps, b - 1.0));
+    cover = 1.0 - smoothstep(-eps, eps, b - 1.0);
+    col = mix(sky, surfaceColor(ro, rd, tca, b, flipY.y / uRes.y), cover);
   }
 
   // Soft shoulder keeps the whites from clipping
   col = 1.0 - exp(-col * 1.35);
+  col *= uDim;
   // Dither: the dark blue gradients band badly in 8 bits
-  col += (hash12(gl_FragCoord.xy + mod(uTime, 1000.0)) - 0.5) / 255.0;
+  col = max(col + (hash12(gl_FragCoord.xy + mod(uTime, 1000.0)) - 0.5) / 255.0, 0.0);
 
-  gl_FragColor = vec4(col, 1.0);
+  // Premultiplied alpha: the planet is opaque; around it the glow is the only thing drawn, and it lets the
+  // stars behind it show through in proportion to how little of them it covers
+  float glow = max(col.r, max(col.g, col.b));
+  float alpha = max(mix(glow, 1.0, cover), glow);
+
+  gl_FragColor = vec4(col, alpha);
 }
 `;

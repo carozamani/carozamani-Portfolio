@@ -19,19 +19,13 @@ export async function NotFoundModule() {
         <Numeral />
 
         <div className={styles.copy}>
-          <p className={styles.eyebrow} style={step(0)}>
-            <span className={styles.dot} aria-hidden="true" />
-            {notFound.eyebrow}
-            <span className={styles.divider} aria-hidden="true" />
-            {notFound.status}
-          </p>
-          <h1 className={styles.title} style={step(1)}>
+          <h1 className={styles.title} style={step(0)}>
             {notFound.title}
           </h1>
-          <p className={styles.text} style={step(2)}>
+          <p className={styles.text} style={step(1)}>
             {notFound.text}
           </p>
-          <div className={styles.actionsRow} style={step(3)}>
+          <div className={styles.actionsRow} style={step(2)}>
             <NotFoundActions />
           </div>
         </div>

@@ -1,6 +1,7 @@
 /* "Where am I?" for a case study: the titles of the sections around the one in view, scrolling
    past a fixed marker. The current title is large and bright, its neighbours fade with distance.
-   Pinned left in both languages, so it is laid out physically rather than by text direction.
+   Pinned to the right in English and to the left in Persian. The text inside always reads left to
+   right, so it is laid out physically rather than by text direction.
    Live values from useRulerMotion:
    --d         each row's distance from the focus point (scroll position)
    --velocity  0–1 smoothed scroll speed */
@@ -17,13 +18,20 @@
   .nav {
     display: block;
     position: fixed;
-    left: 1rem;
+    right: 1rem;
     top: 50%;
     z-index: 40;
     width: 10rem;
     direction: ltr;
     transform: translateY(-50%);
     animation: nav-in 1200ms var(--ease-expo) both;
+  }
+}
+
+@media (min-width: 90rem) {
+  :global(html[dir='rtl']) .nav {
+    right: auto;
+    left: 1rem;
   }
 }
 
@@ -34,17 +42,16 @@
   mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
 }
 
+/* The line is drawn by .list::before so that it is exactly as tall as the titles and slides with them:
+   it starts at the first title and ends at the last, instead of running the full height of the rail. */
 .spine {
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 1px;
-  background: hsla(0, 0%, 100%, 0.12);
+  display: none;
 }
 
 /* stays on the current row; stretches and glows with scroll speed */
 .marker {
   position: absolute;
+  z-index: 1;
   top: 50%;
   left: -1px;
   width: 3px;
@@ -56,10 +63,20 @@
 }
 
 .list {
+  position: relative;
   margin: 0;
   padding: 0;
   list-style: none;
   will-change: transform;
+}
+
+.list::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background: hsla(0, 0%, 100%, 0.12);
 }
 
 .slot {
@@ -112,6 +129,29 @@
   transition:
     color 400ms var(--ease-out),
     font-weight 400ms var(--ease-out);
+}
+
+/* Pinned to the right (English): the mirror image, so the spine, the marker and the numbers all sit on the
+   edge of the screen side of the rail. */
+:global(html[dir='ltr']) .list::before {
+  left: auto;
+  right: 0;
+}
+
+:global(html[dir='ltr']) .marker {
+  left: auto;
+  right: -1px;
+}
+
+:global(html[dir='ltr']) .row {
+  flex-direction: row-reverse;
+  padding-left: 0;
+  padding-right: 1.125rem;
+  transform-origin: right center;
+}
+
+:global(html[dir='ltr']) .name {
+  text-align: right;
 }
 
 .active .num {
@@ -179,7 +219,7 @@
 
 .pill {
   position: fixed;
-  left: 1rem;
+  right: 1rem;
   bottom: 1rem;
   z-index: 40;
   display: flex;
@@ -196,6 +236,11 @@
     0 12px 28px -12px hsla(0, 0%, 0%, 0.7);
   direction: ltr;
   animation: nav-in 1200ms var(--ease-expo) both;
+}
+
+:global(html[dir='rtl']) .pill {
+  right: auto;
+  left: 1rem;
 }
 
 @media (min-width: 90rem) {

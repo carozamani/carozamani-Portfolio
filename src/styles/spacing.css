@@ -3,7 +3,12 @@
   --section-min-height: 56rem;
 
   /* vertical breathing room on each side of every non-hero section: gap between sections = 2x this */
-  --section-padding-y: 6rem;
+  --section-padding-y: clamp(1rem, 0.8rem + 1vw, 2rem);
+
+  /* Space between the content of one landing section and the next, wherever the sections do not pin
+     (phones, tablets, reduced motion; see AnimatedSection). The same everywhere, and it grows with the
+     screen: about 13rem on a phone, 16rem on a tablet. Half of it sits above each section and half below. */
+  --section-gap: clamp(13rem, 10rem + 12vw, 19rem);
 
   /* ====================== */
   /* 8px Fluid Spacing      */

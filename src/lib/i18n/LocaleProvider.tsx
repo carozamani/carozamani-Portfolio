@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { useRouter } from 'next/navigation';
+import { runTransition } from '@/lib/transition/transitionBus';
 import { LOCALE_COOKIE, type Locale } from './config';
 import type { Dictionary } from './dictionaries';
 
@@ -51,15 +52,21 @@ export function LocaleProvider({
       dict,
       setLocale: (next) => {
         if (next === locale) return;
-        const root = document.documentElement;
 
-        // Fade the page out first so the direction/font swap happens out of sight.
+        const apply = () => {
+          document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${ONE_YEAR}; samesite=lax`;
+          startTransition(() => router.refresh());
+        };
+
+        // The same black screen with the logo that internal links play: the language, direction and
+        // font swap happens underneath it and the black clears once the new language has arrived
+        if (runTransition(apply)) return;
+
+        // No transition to play (the admin panel): fade the page out first so the swap happens out of sight.
+        const root = document.documentElement;
         root.classList.add(SWITCHING_CLASS);
         timers.current.push(
-          window.setTimeout(() => {
-            document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${ONE_YEAR}; samesite=lax`;
-            startTransition(() => router.refresh());
-          }, FADE_MS),
+          window.setTimeout(apply, FADE_MS),
           window.setTimeout(() => root.classList.remove(SWITCHING_CLASS), SWITCH_TIMEOUT_MS),
         );
       },

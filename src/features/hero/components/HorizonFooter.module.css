@@ -1,0 +1,37 @@
+.horizonFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(22rem, 56vh, 32rem);
+  overflow: hidden;
+}
+
+/* Backdrop: the hero's dark sheet (HeroModule.module.css, `.heroSection::before`) with the same
+   stops and the same --hero-backdrop-opacity, over the planet (PlanetBackdrop) and under the footer
+   text. The hero's sheet holds its darkness over nearly its whole height and clears only at the edge
+   where it meets the page; this one does the same from the bottom up, clearing where the footer meets
+   the page above, so the two ends of the page are shaded alike.
+   Keep the two in sync. */
+.horizonFooter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 0%,
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 88%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.8)) 91%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.52)) 94.5%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.22)) 97.5%,
+    transparent 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}

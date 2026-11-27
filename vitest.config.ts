@@ -10,5 +10,12 @@ export default defineConfig({
     globals: true,
     css: true,
     exclude: ['node_modules', '.next'],
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true,
+      },
+    },
+    fileParallelism: false,
   },
 });

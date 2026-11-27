@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  padding: var(--section-padding-y) var(--space-l);
+  padding: clamp(3rem, 7vh, 6rem) var(--space-l);
 
   color: white;
   overflow: visible;
@@ -22,17 +22,26 @@
   text-align: start;
 }
 
+/* The grid lives only inside the glow: same ellipse as .glowEffect, strongest at the centre and
+   fading smoothly to fully transparent before the glow itself ends, so the corners and the outside
+   of the glow stay clear. */
 .gridBackground {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(0, 191, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 191, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(hsla(0, 0%, 100%, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(0, 0%, 100%, 0.07) 1px, transparent 1px);
   background-size: 100px 100px;
-  /* Same ellipse as the glow; soft fade toward the corners */
   z-index: 2;
-  --grid-mask: radial-gradient(ellipse 72% 68% at 50% 50%, #fff 0%, #fff 38%, transparent 78%);
+  --grid-mask: radial-gradient(
+    ellipse 72% 68% at 50% 50%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.85) 22%,
+    rgba(255, 255, 255, 0.45) 44%,
+    rgba(255, 255, 255, 0.12) 60%,
+    transparent 72%
+  );
   mask-image: var(--grid-mask);
   -webkit-mask-image: var(--grid-mask);
 }
@@ -46,7 +55,7 @@
   background: radial-gradient(
     ellipse 72% 68% at 50% 50%,
     var(--color-bg-canvas-alt) 0%,
-    rgba(0, 110, 255, 0.12) 42%,
+    hsla(214, 100%, 50%, 0.12) 42%,
     transparent 78%
   );
   z-index: 1;
@@ -54,5 +63,5 @@
 }
 
 .viewMore {
-  margin-top: 1.5rem;
+  margin-top: 0.25rem;
 }

@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { LazyToaster } from '@/components/shared/LazyToaster';
 import { PageScrollbar } from '@/components/shared/PageScrollbar';
+import { PageStarfield } from '@/components/shared/PageStarfield';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { SiteChrome } from '@/components/shared/SiteChrome';
+import { SiteFooter } from '@/components/shared/SiteFooter';
 import { SmoothScroll } from '@/components/shared/SmoothScroll';
 import { PodcastPlayerProvider } from '@/features/media/components/PodcastPlayerProvider';
 import { ContentProvider } from '@/lib/ContentProvider';
@@ -18,6 +20,7 @@ import '@/styles/typography.css';
 import '@/styles/spacing.css';
 import '@/styles/shadows.css';
 import '@/styles/shapes.css';
+import '@/styles/glass.css';
 import '@/styles/motion.css';
 import '@/styles/depth.css';
 import '@/styles/lenis.css';
@@ -99,6 +102,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <PageStarfield />
         <LocaleProvider locale={locale} dict={dict}>
           <ContentProvider content={content}>
             <PodcastPlayerProvider>
@@ -114,6 +118,8 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
               <main id="main-content" className="relative z-20 h-full w-full">
                 {children}
               </main>
+
+              <SiteFooter />
 
               <LazyToaster />
               <SmoothScroll />

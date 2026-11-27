@@ -10,9 +10,6 @@ export default function DesignPhilosophyCard() {
 
   return (
     <Reveal distance={25} duration={0.6} className={styles.cardContainer}>
-      {/* Neon Blue Glow */}
-      <div className={styles.neonGlow} />
-
       {/* Heading */}
       <TypographyComponent variant="h3" color="text-primary" className={styles.heading}>
         {about.philosophyTitle}

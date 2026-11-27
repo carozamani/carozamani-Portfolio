@@ -6,7 +6,7 @@ import type { EarthHorizonConfig, Rgb } from '@/data/earthHorizon';
 // through deep royal blue into black. The deep layer is the menu's active blue (rgb(0, 81, 255)),
 // pushed above 1.0 on the blue channel because the shader weights and tone-maps it down again.
 const HORIZON_LAYERS: { deep: Rgb; core: Rgb; hot: Rgb } = {
-  /** Wide halo above the limb: royal blue, the same hue as the active menu border */
+  /** Wide halo above the limb: royal blue, the same hue as the active menu border (--color-secondary) */
   deep: [0.0, 0.4, 1.45],
   /** Tight shoulder just above the line: brighter, lighter sky blue */
   core: [0.18, 0.62, 1.3],

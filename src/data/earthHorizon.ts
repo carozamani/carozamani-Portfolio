@@ -11,7 +11,7 @@ export interface EarthHorizonConfig {
      * crop the sides, the way background-size: cover would, instead of squeezing it all in.
      */
     referenceAspect: number;
-    /** Where the top of the curve sits, as a fraction of the hero height measured from the bottom. */
+    /** Where the lowest point of the curve sits, as a fraction of the hero height measured from the top (the planet hangs from the top edge). Bigger = planet lower. */
     horizonHeight: number;
     swayDeg: number;
     swayPeriodSec: number;
@@ -30,6 +30,18 @@ export interface EarthHorizonConfig {
     surfaceBrightness: number;
     /** Night-side city lights; they only show where the daylight has faded out near the bottom. */
     cityStrength: number;
+    /** Turns the sun sideways around the camera. 0 lights the limb evenly; larger values light one side and leave the other in shadow, like a crescent. */
+    sunAzimuthDeg: number;
+  };
+  /**
+   * The planet follows the hero's scroll-out: as the page leaves, the ground sinks into night while
+   * the atmosphere stays lit, so the limb glow is what is left. Light only; the hues stay put.
+   */
+  journey: {
+    /** Ground and cloud brightness once the hero is fully scrolled out, as a share of the resting value. */
+    surfaceDim: number;
+    /** City lights at the end of the scroll, as a multiple of `look.cityStrength`. */
+    cityBoost: number;
   };
   colors: {
     /** The three atmosphere colours are replaced at runtime by the menu's active blue (see resolveEarthHorizonConfig); the values here are the fallback. */
@@ -52,16 +64,17 @@ export interface EarthHorizonConfig {
 }
 
 // Tuned against an orbital photograph of Earth's limb: blue daylit ocean, white broken clouds,
-// a thin pale atmosphere line, and a surface that falls into darkness towards the bottom.
-// The curve matches the photo: across half the frame width the limb drops about 12% of that
-// half-width below its crest (75° limb angle at a 96° field of view), and the crest sits at 43%
-// of the frame height.
+// a thin pale atmosphere line, and a surface that falls into darkness away from the limb.
+// The curve: across half the frame width the limb drops about 10% of that half-width below its
+// crest (77° limb angle at a 96° field of view; the photo's own 75° gave about 12%, a rounder
+// ball). The frame is mirrored top to bottom (see earthHorizonShader), so the planet hangs from
+// the top edge and the limb's lowest point sits `horizonHeight` of the frame height down from the top.
 export const earthHorizonConfig: EarthHorizonConfig = {
   camera: {
-    limbAngleDeg: 75,
+    limbAngleDeg: 77,
     horizontalFovDeg: 96,
     referenceAspect: 1.6,
-    horizonHeight: 0.43,
+    horizonHeight: 0.15,
     swayDeg: 0.5,
     swayPeriodSec: 16,
   },
@@ -75,6 +88,11 @@ export const earthHorizonConfig: EarthHorizonConfig = {
     cloudAmount: 0.95,
     surfaceBrightness: 0.3,
     cityStrength: 0.5,
+    sunAzimuthDeg: 0,
+  },
+  journey: {
+    surfaceDim: 0.25,
+    cityBoost: 3,
   },
   colors: {
     deep: [0, 0.41, 0.55],
@@ -89,5 +107,23 @@ export const earthHorizonConfig: EarthHorizonConfig = {
     maxPixelRatio: 1.5,
     minRenderScale: 0.55,
     slowFrameMs: 34,
+  },
+};
+
+/**
+ * The footer's planet: the same world seen from higher up, so the whole limb curves like the top of a
+ * globe instead of running across the page, and lit from one side so its glow reads as a crescent.
+ * The hero's 77 degree limb angle is a wide, shallow arc; 56 degrees keeps the planet as wide as the frame
+ * but bends the limb noticeably rounder, the way a sphere does.
+ */
+export const earthFooterConfig: EarthHorizonConfig = {
+  ...earthHorizonConfig,
+  camera: {
+    ...earthHorizonConfig.camera,
+    limbAngleDeg: 56,
+  },
+  look: {
+    ...earthHorizonConfig.look,
+    sunAzimuthDeg: 35,
   },
 };

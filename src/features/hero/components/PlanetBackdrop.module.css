@@ -1,0 +1,53 @@
+/* The frame is always one section tall, whatever it sits in: the planet's curve is placed at a fraction of
+   the canvas height, so a canvas that matched the footer's own height would draw a flatter, smaller planet
+   than the hero's. The parent clips what it does not show (the footer has overflow hidden). */
+.frame {
+  --planet-fade-dir: to bottom;
+
+  position: absolute;
+  inset-inline: 0;
+  z-index: 0;
+  height: var(--section-min-height);
+  pointer-events: none;
+  /* Thins out away from the planet and is fully transparent at the frame's far edge, so it melts into the
+     page-wide sky behind instead of ending on a hard line */
+  mask-image: linear-gradient(
+    var(--planet-fade-dir),
+    hsla(0, 0%, 0%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 62%,
+    hsla(0, 0%, 0%, 0.72) 74%,
+    hsla(0, 0%, 0%, 0.42) 84%,
+    hsla(0, 0%, 0%, 0.16) 93%,
+    hsla(0, 0%, 0%, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    var(--planet-fade-dir),
+    hsla(0, 0%, 0%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 62%,
+    hsla(0, 0%, 0%, 0.72) 74%,
+    hsla(0, 0%, 0%, 0.42) 84%,
+    hsla(0, 0%, 0%, 0.16) 93%,
+    hsla(0, 0%, 0%, 0) 100%
+  );
+}
+
+.frame[data-placement='top'] {
+  top: 0;
+}
+
+/* Turned over: the mask is on the frame, outside the flip, so it still fades toward the top of the screen */
+.frame[data-placement='bottom'] {
+  --planet-fade-dir: to top;
+
+  bottom: 0;
+}
+
+.turn {
+  position: absolute;
+  inset: 0;
+}
+
+/* Flipping the element rather than the shader leaves the planet's own code untouched */
+.frame[data-placement='bottom'] .turn {
+  transform: scaleY(-1);
+}

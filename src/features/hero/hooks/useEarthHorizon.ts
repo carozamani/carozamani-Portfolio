@@ -1,26 +1,27 @@
 import { useEffect, type RefObject } from 'react';
 
-import { earthHorizonConfig } from '@/data/earthHorizon';
+import { earthHorizonConfig, type EarthHorizonConfig } from '@/data/earthHorizon';
+import { createQualityGovernor } from '@/lib/gl/qualityGovernor';
 
 import {
   createEarthHorizonRenderer,
   type EarthHorizonRenderer,
 } from '../lib/createEarthHorizonRenderer';
 import type { HeroStage } from '../lib/createHeroStage';
-import { createQualityGovernor } from '../lib/qualityGovernor';
 import { resolveEarthHorizonConfig } from '../lib/resolveEarthHorizonConfig';
 import { planetShift } from '../lib/stageMath';
 
 export function useEarthHorizon(
   canvasRef: RefObject<HTMLCanvasElement | null>,
   stageRef: RefObject<HeroStage | null>,
+  config: EarthHorizonConfig = earthHorizonConfig,
 ) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const host = canvas?.parentElement;
     if (!canvas || !host) return;
 
-    const { quality } = earthHorizonConfig;
+    const { quality } = config;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const pixelRatio = Math.min(window.devicePixelRatio || 1, quality.maxPixelRatio);
     const governor = createQualityGovernor({
@@ -41,13 +42,17 @@ export function useEarthHorizon(
     // The planet is the farthest thing in the hero's camera: the turn of the lens moves it the most and
     // it falls behind the page on scroll. Passing the frame time lets whichever renderer ticks first move the
     // stage for all of them; a redraw without one just reads where the stage already is.
-    const shiftAt = (frameMs?: number) => {
+    const stageAt = (frameMs?: number) => {
       const stage = stageRef.current;
       if (!stage) return undefined;
-      return planetShift(frameMs === undefined ? stage.read() : stage.advance(frameMs), widthPx);
+      return frameMs === undefined ? stage.read() : stage.advance(frameMs);
     };
 
-    const draw = (frameMs?: number) => renderer?.render(elapsed, shiftAt(frameMs));
+    // Its light follows the same scroll: the ground sinks into night as the hero leaves (planetJourney)
+    const draw = (frameMs?: number) => {
+      const state = stageAt(frameMs);
+      renderer?.render(elapsed, state && planetShift(state, widthPx), state?.progress);
+    };
 
     const resize = () => {
       widthPx = host.clientWidth;
@@ -99,7 +104,7 @@ export function useEarthHorizon(
     };
 
     const init = () => {
-      renderer = createEarthHorizonRenderer(canvas, resolveEarthHorizonConfig(earthHorizonConfig));
+      renderer = createEarthHorizonRenderer(canvas, resolveEarthHorizonConfig(config));
       if (!renderer) return;
       resize();
       canvas.dataset.ready = 'true';
@@ -138,5 +143,5 @@ export function useEarthHorizon(
       renderer?.dispose();
       delete canvas.dataset.ready;
     };
-  }, [canvasRef, stageRef]);
+  }, [canvasRef, stageRef, config]);
 }

@@ -12,6 +12,11 @@
   --shadow-glow-md: 0 0 25px var(--color-glow);
   --shadow-glow-lg: 0 0 25px hsla(195, 100%, 50%, 0.6), inset 0 0 20px hsla(195, 100%, 50%, 0.3);
 
+  /* Card surface: a faint halo at rest, a wider one on hover; the blur behind the glass */
+  --shadow-card: 0 0 5px var(--color-glow);
+  --shadow-card-hover: 0 0 25px var(--color-glow);
+  --blur-card: blur(40px);
+
   /* Focus ring */
   --shadow-focus: 0 0 0 3px var(--color-focus-ring);
 }

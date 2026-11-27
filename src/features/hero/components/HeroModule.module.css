@@ -1,6 +1,5 @@
-/* The background is plain page black, not --gradient-hero-bg: that blue gradient showed for a moment
-   before the planet canvas drew its first frame, then jumped to the planet. Now the planet fades in
-   out of black instead. */
+/* No background of its own: the page-wide sky (PageStarfield) is fixed behind every section, and the
+   planet canvas is transparent around the planet, so the stars show through the hero like the rest. */
 .heroSection {
   /* The visible gap between the name line, the title and the subtitle: the empty space from the
      lowest ink of one line to the highest ink of the next, the same in English and Persian.
@@ -21,7 +20,6 @@
   justify-content: center;
   padding: var(--space-xl) var(--space-l);
   color: var(--color-text-primary);
-  background: var(--color-page-bg, #000);
   overflow: hidden;
 }
 
@@ -35,14 +33,45 @@
 }
 
 /* Backdrop: a dark sheet over the planet canvas and under the grid and content.
-   --hero-backdrop-opacity is how dark the sheet is (0 = clear, 1 = solid black). */
+   --hero-backdrop-opacity is how dark the sheet is (0 = clear, 1 = solid black). It holds that
+   darkness over nearly the whole hero, then eases out over the last eighth to fully transparent at the
+   bottom edge, where the hero meets the page. HorizonFooter.module.css mirrors these stops: keep the two in sync. */
 .heroSection::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-color: hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4));
+  background: linear-gradient(
+    to bottom,
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 0%,
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 88%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.8)) 91%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.52)) 94.5%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.22)) 97.5%,
+    transparent 100%
+  );
+}
+
+/* The hero's blue haze: a translucent wash of the secondary blue over the whole section, the same
+   transparent navy that the footer's sky shows above its planet. It sits at the very back of the hero,
+   under the planet, so the planet is never tinted by it, and the dark sheet lies over both. Like the
+   sheet and the planet it fades out over the last eighth, so the hero melts into the page instead of ending on a line. */
+.haze {
+  --hero-haze-top: 12%;
+  --hero-haze: 8%;
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-secondary) var(--hero-haze-top), transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) var(--hero-haze), transparent) 40%,
+    color-mix(in srgb, var(--color-secondary) var(--hero-haze), transparent) 88%,
+    transparent 100%
+  );
 }
 
 .gridOverlay {
@@ -178,7 +207,7 @@
 
 .greeting {
   font-family: var(--font-brand), system-ui, sans-serif;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   line-height: 1;
   color: var(--color-text-primary);
 }
@@ -212,6 +241,12 @@
   z-index: 10;
   text-align: center;
   margin-bottom: 2.5rem;
+}
+
+/* The hero title is set at 400 (regular), the same as the greeting above it. Scoped here so the shared
+   light display weight of h1 elsewhere is untouched. */
+.titleContainer h1 {
+  font-weight: 400;
 }
 
 .subtitle {
@@ -254,6 +289,19 @@
 @media (max-width: 480px) {
   .heroSection {
     --hero-text-gap: 1.25rem;
+    /* On a phone one line of the title can only get a little bigger before it runs out of width, so it
+       is allowed to break in two, balanced, and set much larger. The name line and the subtitle spacing
+       read this same variable, so they follow it. 19vw is as big as "A Product" (the wider line, about
+       4.1em) can be and still keep roughly a tenth of the width spare: 74px on a 390px phone. */
+    --font-size-h1: clamp(3.5rem, 19vw, 5.5rem);
+  }
+
+  :global(html[lang='fa']) .heroSection {
+    --font-size-h1: clamp(3rem, 12.5vw, 4rem);
+  }
+
+  .titleContainer h1 {
+    text-wrap: balance;
   }
 
   .flipCard {
@@ -261,8 +309,9 @@
     height: 140px;
   }
 
+  /* Small on a phone, so the title below it is the line that carries the hero */
   .nameLine {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -373,27 +422,4 @@
       animation-name: hero-fly-far;
     }
   }
-}
-
-/* The planet sinks into the black page: this veil sits above the canvas and the grid but below the
-   content layers, so the bottom of the hero fades to --color-page-bg and meets the next section
-   with no visible edge. The stops are eased (not linear) so the falloff reads as natural shadow.
-   --hero-fade-height is how tall the fade is; a smaller value gives a shorter fade to black. */
-.heroSection::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: 2;
-  height: var(--hero-fade-height, 9%);
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    hsla(0, 0%, 0%, 0) 0%,
-    hsla(0, 0%, 0%, 0.12) 20%,
-    hsla(0, 0%, 0%, 0.38) 45%,
-    hsla(0, 0%, 0%, 0.72) 72%,
-    hsla(0, 0%, 0%, 0.92) 90%,
-    var(--color-page-bg) 100%
-  );
 }

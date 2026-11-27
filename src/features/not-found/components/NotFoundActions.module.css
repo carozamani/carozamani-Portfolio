@@ -36,6 +36,34 @@
   animation: blink 1.1s steps(1) infinite;
 }
 
+.suggestion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.suggestionLink {
+  padding-block: 0.25rem;
+  font-weight: 600;
+  color: hsl(195, 100%, 80%);
+  text-decoration: underline;
+  text-decoration-color: hsla(195, 100%, 70%, 0.4);
+  text-underline-offset: 0.35em;
+  transition:
+    color 0.25s ease,
+    text-decoration-color 0.25s ease;
+}
+
+.suggestionLink:hover,
+.suggestionLink:focus-visible {
+  color: var(--color-text-primary);
+  text-decoration-color: var(--color-brand-primary);
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

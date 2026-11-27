@@ -11,6 +11,10 @@ export const fa: Dictionary = {
   skipLink: 'رفتن به محتوای اصلی',
   language: { code: 'FA', label: 'انتخاب زبان' },
   backToTop: 'بازگشت به بالا',
+  testimonials: {
+    label: 'نظر همکاران',
+    listLabel: 'توصیه‌نامه‌های کسانی که با آن‌ها کار کرده‌ام',
+  },
   nav: {
     aria: 'منوی اصلی',
     home: 'خانه',
@@ -107,6 +111,7 @@ export const fa: Dictionary = {
       description: 'اپیزودهایی درباره‌ی طراحی، تجربه کاربری، تفکر محصولی و چالش‌ها.',
       viewMore: 'مشاهده‌ی همه‌ی اپیزودها',
       about: 'درباره این قسمت',
+      suggested: 'قسمت‌های پیشنهادی',
     },
     articles: {
       title: 'مقالات',
@@ -240,8 +245,7 @@ export const fa: Dictionary = {
     title: 'این صفحه از دید خارج شد',
     text: 'صفحه‌ای که دنبالش هستید وجود ندارد یا جابه‌جا شده است.',
     home: 'بازگشت به خانه',
-    eyebrow: 'خطای ۴۰۴',
-    status: 'سیگنال قطع شد',
+    suggest: 'نزدیک‌ترین مورد',
     requested: 'آدرس درخواستی',
     back: 'بازگشت',
     jump: 'یا برو به',
