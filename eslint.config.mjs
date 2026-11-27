@@ -16,7 +16,7 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
     'coverage/**',
     // Local screenshot/debug helpers are not application source.
-    '.tmp-*.cjs',
+    '.tmp-*',
     'src/fix-panel.js',
   ]),
 ]);
