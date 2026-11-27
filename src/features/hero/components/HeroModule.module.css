@@ -53,30 +53,6 @@
   );
 }
 
-/* The planet scene (sky haze and atmosphere; the stars are the layout's) thins out toward the bottom of the hero and is fully
-   transparent at its edge, so it melts into the page-wide sky behind instead of ending on a hard line.
-   The canvas is the only child of the hero that paints a colour field, hence the mask is set on it. */
-.heroSection > canvas {
-  mask-image: linear-gradient(
-    to bottom,
-    hsla(0, 0%, 0%, 1) 0%,
-    hsla(0, 0%, 0%, 1) 62%,
-    hsla(0, 0%, 0%, 0.72) 74%,
-    hsla(0, 0%, 0%, 0.42) 84%,
-    hsla(0, 0%, 0%, 0.16) 93%,
-    hsla(0, 0%, 0%, 0) 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    hsla(0, 0%, 0%, 1) 0%,
-    hsla(0, 0%, 0%, 1) 62%,
-    hsla(0, 0%, 0%, 0.72) 74%,
-    hsla(0, 0%, 0%, 0.42) 84%,
-    hsla(0, 0%, 0%, 0.16) 93%,
-    hsla(0, 0%, 0%, 0) 100%
-  );
-}
-
 /* The hero's blue haze: a translucent wash of the secondary blue over the whole section, the same
    transparent navy that the footer's sky shows above its planet. It sits at the very back of the hero,
    under the planet, so the planet is never tinted by it, and the dark sheet lies over both. Like the
@@ -313,6 +289,19 @@
 @media (max-width: 480px) {
   .heroSection {
     --hero-text-gap: 1.25rem;
+    /* On a phone one line of the title can only get a little bigger before it runs out of width, so it
+       is allowed to break in two, balanced, and set much larger. The name line and the subtitle spacing
+       read this same variable, so they follow it. 19vw is as big as "A Product" (the wider line, about
+       4.1em) can be and still keep roughly a tenth of the width spare: 74px on a 390px phone. */
+    --font-size-h1: clamp(3.5rem, 19vw, 5.5rem);
+  }
+
+  :global(html[lang='fa']) .heroSection {
+    --font-size-h1: clamp(3rem, 12.5vw, 4rem);
+  }
+
+  .titleContainer h1 {
+    text-wrap: balance;
   }
 
   .flipCard {
@@ -320,8 +309,9 @@
     height: 140px;
   }
 
+  /* Small on a phone, so the title below it is the line that carries the hero */
   .nameLine {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
   }
 }
 

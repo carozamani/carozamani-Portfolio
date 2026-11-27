@@ -7,7 +7,6 @@ import { FiArrowDown } from 'react-icons/fi';
 
 import Button from '@/components/ui/Button';
 import SocialIcons from '@/components/ui/SocialIcons';
-import { earthFooterConfig } from '@/data/earthHorizon';
 import { heroSocialLinks } from '@/data/hero';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { useDictionary } from '@/lib/i18n/LocaleProvider';
@@ -15,7 +14,7 @@ import { scrollToTarget } from '@/lib/scroll/scrollEngine';
 import TypographyComponent from '@/components/ui/Typography';
 import { useHeroStage } from '../hooks/useHeroStage';
 import type { HeroStage } from '../lib/createHeroStage';
-import { EarthHorizonCanvas } from './EarthHorizonCanvas';
+import { PlanetBackdrop } from './PlanetBackdrop';
 import styles from './HeroModule.module.css';
 
 export function HeroModule() {
@@ -60,7 +59,7 @@ export function HeroModule() {
   return (
     <section ref={sectionRef} className={styles.heroSection} aria-labelledby="hero-title">
       <div className={styles.haze} aria-hidden="true" />
-      <EarthHorizonCanvas stageRef={stageRef} config={earthFooterConfig} />
+      <PlanetBackdrop placement="top" stageRef={stageRef} />
       <div ref={gridRef} className={styles.gridOverlay} data-stage-grid aria-hidden="true" />
 
       <div className={styles.layer} data-stage-layer="near">
