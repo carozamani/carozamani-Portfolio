@@ -19,28 +19,35 @@ lenis.css         →  the rules Lenis needs (see "Scrolling" below)
 
 ## Color tokens
 
-| Token                                                                                                                                 | Value                        | Use for                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------ |
-| `--color-text-primary`                                                                                                                | `hsl(0 0% 100%)`             | primary text, headings                                                         |
-| `--color-text-secondary`                                                                                                              | `hsla(0 0% 100% / 0.6)`      | secondary/supporting text                                                      |
-| `--color-text-muted`                                                                                                                  | `hsla(0 0% 100% / 0.4)`      | disabled/tertiary text                                                         |
-| `--color-icon-primary`                                                                                                                | `hsl(0 0% 100%)`             | default icon fill                                                              |
-| `--color-icon-progress` / `-bg`                                                                                                       | cyan @ 100%/30%              | podcast progress ring                                                          |
-| `--color-brand-primary-hsl`                                                                                                           | `hsl(195 100% 50%)`          | brand accent (deep sky blue)                                                   |
-| `--color-brand-secondary-hsl`                                                                                                         | `hsl(196 100% 23%)`          | brand accent, darker                                                           |
-| `--color-neon-primary`                                                                                                                | `hsl(184 100% 50%)`          | the neon-cyan accent used for focus states, form field borders, CTA highlights |
-| `--color-neon-secondary`                                                                                                              | `hsl(265 100% 50%)`          | secondary neon accent (violet)                                                 |
-| `--color-bg-canvas`                                                                                                                   | `hsl(233 100% 5%)`           | page background                                                                |
-| `--color-bg-canvas-alt`                                                                                                               | `hsl(235 33% 7%)`            | secondary background (glow gradients)                                          |
-| `--color-bg-elevated`                                                                                                                 | `hsl(0 0% 12%)`              | raised surface (near-black)                                                    |
-| `--color-bg-card-dark`                                                                                                                | `hsl(240 39% 12%)`           | dark navy card surface                                                         |
-| `--image-border-color`                                                                                                                | `rgba(0 217 255 / .877)`     | hover border on cards/buttons                                                  |
-| `--card-border-color`                                                                                                                 | `rgba(0 110 255 / .322)`     | default card border color                                                      |
-| `--card-border-md` / `-xl`                                                                                                            | composite `border` shorthand | apply directly as `border: var(--card-border-md);`                             |
-| `--drop-shadow`                                                                                                                       | `hsla(212 100% 50% / .6)`    | glow color used in `box-shadow`                                                |
-| `--hero-bg-gradient`, `--card-bg-gradiant`, `--tag-bg-gradiant`, `--card-bg-circle-gradiant`, `--grid-pattern`, `--grid-pattern-card` | composite gradients          | large decorative backgrounds                                                   |
+| Token                                                                                                                                 | Value                        | Use for                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ----------------------------------------------------------------- |
+| `--color-text-primary`                                                                                                                | `hsl(0 0% 100%)`             | primary text, headings                                            |
+| `--color-text-secondary`                                                                                                              | `hsla(0 0% 100% / 0.6)`      | secondary/supporting text                                         |
+| `--color-text-muted`                                                                                                                  | `hsla(0 0% 100% / 0.55)`     | disabled/tertiary text                                            |
+| `--color-icon-primary`                                                                                                                | `hsl(0 0% 100%)`             | default icon fill                                                 |
+| `--color-icon-progress` / `-bg`                                                                                                       | cyan @ 100%/30%              | podcast progress ring                                             |
+| `--color-brand-primary` / `--color-primary`                                                                                           | `hsl(221 100% 50%)`          | royal blue: active-menu border, glows, interactive states         |
+| `--color-brand-secondary` / `--color-secondary`                                                                                       | `hsl(195 100% 50%)`          | sky blue: hero portrait glow, ring, links                         |
+| `--color-neon-primary`                                                                                                                | `var(--color-secondary)`     | legacy alias for focus states, form field borders, CTA highlights |
+| `--color-bg-canvas`                                                                                                                   | `hsl(233 100% 5%)`           | page background                                                   |
+| `--color-bg-canvas-alt`                                                                                                               | `hsl(235 33% 7%)`            | secondary background (glow gradients)                             |
+| `--color-bg-elevated`                                                                                                                 | `hsl(0 0% 12%)`              | raised surface (near-black)                                       |
+| `--color-bg-card-dark`                                                                                                                | `hsl(240 39% 12%)`           | dark navy card surface                                            |
+| `--image-border-color`                                                                                                                | `rgba(0 217 255 / .877)`     | hover border on cards/buttons                                     |
+| `--card-border-color`                                                                                                                 | `rgba(0 110 255 / .322)`     | default card border color                                         |
+| `--card-border-md` / `-xl`                                                                                                            | composite `border` shorthand | apply directly as `border: var(--card-border-md);`                |
+| `--drop-shadow`                                                                                                                       | `hsla(212 100% 50% / .6)`    | glow color used in `box-shadow`                                   |
+| `--hero-bg-gradient`, `--card-bg-gradiant`, `--tag-bg-gradiant`, `--card-bg-circle-gradiant`, `--grid-pattern`, `--grid-pattern-card` | composite gradients          | large decorative backgrounds                                      |
 
 **Rule:** never write `#hex` or a raw `rgb()/rgba()` solid color in a `.module.css` file. If the exact value already has a token, use it. If it's a genuinely new, reused color, add it to `colors.css` first — HSL format, with a comment — then consume it via `var()`. One-off alpha variants of an existing hue (e.g. a border at a different opacity) can stay as a literal `hsla()`/`rgba()` using that hue's known HSL values, but must not be written as `#hex`.
+
+## Two blues: primary and secondary
+
+The palette is two blues on black. `--color-primary` (`hsl(221 100% 50%)`, rgb 0 81 255) is the royal blue of the active-menu border; borders, glows, tinted surfaces, the hero planet's halo and interactive states are built from it. `--color-secondary` (`hsl(195 100% 50%)`) is the sky blue of the glow around the hero portrait; it carries the hero ring, links and text accents. `--color-brand-primary` resolves to primary, `--color-brand-secondary`, `--color-brand-emphasis` and `--color-neon-primary` to secondary. Do not add a third hue, and no teal/cyan around 184: that read as a flat Tiffany blue. The 404 stage keeps its own `--display-pine-*` scale.
+
+Do not name a token `--color-accent`: `globals.css` maps that name to the shadcn `--accent` for the admin panel.
+
+**Card surfaces.** A flat dark fill vanishes on the black page, and black shadows are invisible on it, so cards get their depth from `--gradient-card-surface` (a lit top-left corner), `--shadow-card` (a 1px top edge highlight) and, only on hover or when active, `--color-border-emphasis` with `--shadow-card-hover` and the blue `--color-ambient-accent` tint. Use these tokens on any new card instead of a local fill.
 
 ## Spacing scale (`spacing.css`)
 
@@ -85,6 +92,10 @@ Don't write raw `font-size`/`font-weight` in a component. Use the `TypographyCom
 Variants: `h1`–`h6`, `subtitle1`, `subtitle2`, `body1`, `body2`, `caption`, `overline`, `button`.
 Colors: `text-primary`, `text-secondary`, `text-disabled` (also accepts the shared `ColorType` union).
 Props: `ellipsis` (truncate with `…`), `id` (forwarded to the underlying `div`), `className` (merged in).
+
+**Scale.** One very large, light display h1 (`--font-weight-display`, 300) against small, firm supporting text; h2 to h6 use weight 600. Every role has its own size (`body1` and `subtitle1`, `h5` and `h6` no longer coincide). Tight tracking (`--letter-spacing-display` / `-heading`) is for Latin only.
+
+**Persian.** `html[lang=fa]` in `typography.css` overrides the display sizes (one step smaller, Vazirmatn is taller), loosens the line heights, uses weight 400 for the display and sets all letter-spacing to 0, because tracking breaks Arabic-script joins. Never add `letter-spacing` or `text-transform` to text that can render in Persian without a `html[lang=fa]` reset.
 
 ## CSS custom property scoping
 
@@ -152,6 +163,10 @@ Inertial page scrolling comes from Lenis. `components/shared/SmoothScroll.tsx` i
 
 **Programmatic scrolling goes through `scrollToTarget`** (`lib/scroll/scrollEngine.ts`), never `window.scrollTo` or `scrollIntoView` directly. It takes a pixel offset, a selector or an element, plus `{ offset, immediate }`, and uses Lenis when it is running, the browser's smooth scroll when it is not, and an instant jump for reduced motion. It returns a Promise that resolves when the scroll lands **or at a deadline**, because Lenis never calls `onComplete` when a wheel or touch gesture interrupts the animation; anything that locks UI while a scroll runs (the `GlassMenu` observer) must wait on that promise, not on a fixed timeout. `GlassMenu`, `HeroModule` and `PageScrollbar` use it. `BackToTop` and `CaseImageNav` use the browser's smooth scroll on purpose: they only exist on the case-study detail pages, where Lenis is off.
 
+## Glass panel
+
+Card-like surfaces share `.glassPanel` (`styles/glass.css`, a global class): lit top edge, gradient fill, hairline border and a blurred backdrop, built from the `--gradient-card-surface`, `--shadow-card` and `--card-border-md` tokens. Add it next to the module class (`glassPanel glassPanelInteractive` for panels that light up on hover) and tune it only with `--glass-blur` and `--glass-fill`; do not redeclare `background`, `border`, `box-shadow` or `backdrop-filter` in the module. Used by `AboutMeIntro`, `DesignPhilosophy`, `TechTags` and the media `Card`.
+
 ## Page sky (`PageStarfield`, `lib/gl/`)
 
 The stars are one fixed WebGL canvas behind the whole landing page (`/` only), mounted once in `layout.tsx`. `<main>` stacks above it, so every section and box sits in front of the same sky; sections must stay transparent (no `--color-page-bg` fill on a section wrapper) or they hide it. The hero's planet canvas is transparent around the planet for the same reason.
@@ -166,7 +181,10 @@ On the landing page each section is wrapped in `components/shared/ScrollHold`, w
 
 **Desktop only.** The pin and its spacer exist only under `(min-width: 64rem) and (pointer: fine)` and no reduced-motion preference. Phones and tablets, in either orientation, scroll freely with nothing pinned. With no spacer `measureHolds()` finds no hold, so `scrollToTarget` animates over the real distance there and needs no special case.
 
+## Card frame
+
+Every card-like surface wears the media `Card`'s frame: `.cardFrame` (`styles/glass.css`). A soft gradient fill over a dark base, a blurred backdrop, a lit top edge and a 1px gradient hairline for the border (bright cyan where the light comes from, falling to the site's blue), drawn with `::after`. Add the class next to the module class and do not redeclare background, border, box-shadow or backdrop-filter in the module. Used by `AboutMeIntro`, `TechTags`, `DesignPhilosophy` and the case-study `PasswordGate`. `Card`, `ContactModule` and the testimonial cards carry their own copy of the same recipe (change one, change all). List rows, reading columns (`PodcastDetail`, `ArticleDetail`) and the admin keep their own edges on purpose.
+
 ## Known debt (not yet unified)
 
-- `QuantumCarousel`'s feature cards (`.featureItem`) and the media `Card` component both implement their own "glass panel" look (border + blur + glow) independently rather than sharing a `.glassPanel` base class. Low priority — they serve different content shapes (audio player vs. static feature card) — but worth extracting if a third card type is added.
 - `case-studies/card/card.module.css` (`FeatureCard`) is currently unused dead code, kept token-consistent but not wired into any page.
