@@ -47,7 +47,7 @@ export function PasswordGate({ image, onUnlock }: PasswordGateProps) {
         <img src={image} alt="" aria-hidden="true" className={styles.cover} />
       )}
       <div
-        className={`glassPanel ${styles.card}`}
+        className={`cardFrame ${styles.card}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
