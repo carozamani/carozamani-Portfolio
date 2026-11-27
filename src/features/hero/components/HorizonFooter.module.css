@@ -8,37 +8,26 @@
   overflow: hidden;
 }
 
-/* Turned over: the planet's body is at the top of the footer and its limb curves down. The mask is
-   the hero's bottom-edge mask (HeroModule.module.css, `.heroSection > canvas`) with the same stops,
-   read from the bottom up, so the planet's far edge melts into the page at the top of the footer the
-   way the hero's does at its bottom.
-   The dark sheet applies only here, over the planet itself, not as a rectangle over the whole footer:
-   a full-width sheet would end in a hard edge where the footer meets the page above. brightness()
-   only darkens the canvas's own drawn pixels, so the transparent rest of the frame is untouched, and
-   the mask still melts the planet's far edge into the page. Keep the darkness in sync with the hero's
-   own sheet (HeroModule.module.css, `.heroSection::before`), via the same --hero-backdrop-opacity. */
-.planet {
+/* Backdrop: the hero's dark sheet (HeroModule.module.css, `.heroSection::before`) with the same
+   stops and the same --hero-backdrop-opacity, over the planet (PlanetBackdrop) and under the footer
+   text. The hero's sheet holds its darkness over nearly its whole height and clears only at the edge
+   where it meets the page; this one does the same from the bottom up, clearing where the footer meets
+   the page above, so the two ends of the page are shaded alike.
+   Keep the two in sync. */
+.horizonFooter::before {
+  content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  filter: brightness(calc(1 - var(--hero-backdrop-opacity, 0.4)));
-  mask-image: linear-gradient(
+  background: linear-gradient(
     to top,
-    hsla(0, 0%, 0%, 1) 0%,
-    hsla(0, 0%, 0%, 1) 62%,
-    hsla(0, 0%, 0%, 0.72) 74%,
-    hsla(0, 0%, 0%, 0.42) 84%,
-    hsla(0, 0%, 0%, 0.16) 93%,
-    hsla(0, 0%, 0%, 0) 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to top,
-    hsla(0, 0%, 0%, 1) 0%,
-    hsla(0, 0%, 0%, 1) 62%,
-    hsla(0, 0%, 0%, 0.72) 74%,
-    hsla(0, 0%, 0%, 0.42) 84%,
-    hsla(0, 0%, 0%, 0.16) 93%,
-    hsla(0, 0%, 0%, 0) 100%
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 0%,
+    hsla(0, 0%, 0%, var(--hero-backdrop-opacity, 0.4)) 88%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.8)) 91%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.52)) 94.5%,
+    hsla(0, 0%, 0%, calc(var(--hero-backdrop-opacity, 0.4) * 0.22)) 97.5%,
+    transparent 100%
   );
 }
 
